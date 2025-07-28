@@ -57,7 +57,7 @@ const blogscard = [
     Title: 'The Brain of Ai bla bla bla',
     category: ['IT', 'ComputerScience', 'tech'],
     description:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel consectetur placeat non mollitia aliquam...',
+      'yhjjjjjjjbkuigkhggggyyyyyytbffffffffffffffffffffffffffffffffffffffffff6uyfffffffffffffffffmollialiquamgutjcjjjjjjjjjjjjjjjjjjhviyiyfffffhufyhvfyuvhjivhjugiiiiijkvdtsrxfhvjgvhhhhhhhhhhhhhhhhhhhhhhhhhhhhuhvgyfvhhvjjvhifyvhguuuuuuuuuuuuuuuuuuujhvghcfyhvghcfdtfygvcxsdrtuiyohlkkkkkkhjbhjgfhkkkkkkkkkkj...',
   },
 ];
 

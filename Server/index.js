@@ -18,7 +18,6 @@ app.use(cookieParser());
 
 
 
-
 app.post("/api/login", (req, res) => {
     const {username, password} = req.body;
     if((username === Eusername) && (password === Epassword)){
@@ -28,12 +27,6 @@ app.post("/api/login", (req, res) => {
         res.status(200).json({message:'Invalid username or password!', islogin: false});
     }
 })
-
-
-
-
-
-
 
 
 

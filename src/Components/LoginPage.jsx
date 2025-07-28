@@ -13,7 +13,11 @@ const LoginPage = () => {
     e.preventDefault();
 
     const updatedusername = username.trim().replace(/\s+/g, '').toLowerCase()
-    
+
+    if((username === "")|| (password === "")){
+      alert("all fields must be filled")
+    }
+    else{
     try {
       const userdata = await axios.post('/api/login', {username: updatedusername , password: password});
       if(userdata.data.islogin){
@@ -27,6 +31,7 @@ const LoginPage = () => {
        } catch (error) {
                console.error(error);
        }
+      }
 };
 
 
