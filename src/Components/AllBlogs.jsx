@@ -12,7 +12,7 @@ const blogscard = [
   },
   {
     Thumbnail: '/img/braindemo.png',
-    Title: 'The Brain of Ai bla bla bla',
+    Title: 'Rui Norrish Dsouza',
     category: ['IT', 'tech'],
     description:
       'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel consectetur placeat non mollitia aliquam...',
