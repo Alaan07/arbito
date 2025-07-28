@@ -12,6 +12,13 @@ const blogscard = [
   },
   {
     Thumbnail: '/img/braindemo.png',
+    Title: 'The Brain ',
+    category: ['IT',],
+    description:
+      'Lorem',
+  },
+  {
+    Thumbnail: '/img/braindemo.png',
     Title: 'The Brain of Ai bla bla bla',
     category: ['IT', 'tech'],
     description:
