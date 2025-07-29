@@ -6,6 +6,12 @@ import 'dotenv/config';
 
 
 
+mongoose.connect(process.env.MONGO_URL)
+.then(() => console.log('MongoDB connected'))
+.catch((err) => console.error('MongoDB error:', err));
+
+
+
 const app = express();
 const port = process.env.PORT || 3000;
 const Eusername = process.env.USER_NAME;
@@ -27,10 +33,6 @@ app.post("/api/login", (req, res) => {
         res.status(200).json({message:'Invalid username or password!', islogin: false});
     }
 })
-
-
-
-
 
 
 
