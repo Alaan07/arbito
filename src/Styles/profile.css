@@ -1,0 +1,83 @@
+.adm-profile-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.adm-profile-pic {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+
+.adm-profile-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: var(--form-bg, #1e1e2f);
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 15px;
+  width: 260px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.adm-profile-image img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.adm-profile-info p {
+  color: #ccc;
+  font-size: 14px;
+  margin: 5px 0;
+  margin-bottom: 10px;
+}
+
+.adm-edit-btn {
+  margin-left: 0px;
+  margin-top: 10px;
+  width: 100%;
+  padding: 6px 10px;
+  background-color: #fccc42;
+  color: white;
+  border: none;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.adm-edit-btn:hover {
+  background-color: #c79a10;
+}
+
+/* Responsive */
+@media screen and (max-width: 300px) {
+  .adm-profile-dropdown {
+    right: 10px;
+    width: 90%;
+  }
+
+  .adm-profile-pic {
+    width: 40px;
+    height: 40px;
+  }
+
+  .adm-profile-image img {
+    width: 60px;
+    height: 60px;
+  }
+}
+

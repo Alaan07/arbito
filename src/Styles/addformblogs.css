@@ -1,0 +1,132 @@
+/* ===== Google Font Import - Poppins ===== */
+@import url('https://fonts.googleapis.com/css2?family=Kodchasan:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Montserrat:wght@500&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Kodchasan', sans-serif;
+}
+
+:root {
+    /* ===== Colors ===== */
+    --primary-color: #f7f7f5;
+    --panel-color: #FFF;
+    --text-color: #000;
+    --black-light-color: #707070;
+    --box1-color: #4DA3FF;
+    --orange-color: #ff5835;
+    --yellow-color: #fccc42;
+    --purple-color: #be94f5;
+    /* ====== Transition ====== */
+    --tran-05: all 0.5s ease;
+    --tran-03: all 0.3s ease;
+    --tran-03: all 0.2s ease;
+}
+
+
+.adm-blog-add-form {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #000;
+  background: #f1f1f1;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.adm-blog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.adm-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-form-group label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.adm-form-group input,
+.adm-form-group textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: white;
+}
+
+.adm-form-group input[type="file"] {
+  padding: 5px;
+}
+
+.adm-blog-submit-btn {
+  padding: 10px 20px;
+  background-color: var(--orange-color);
+  color: white;
+  border: 1px solid #000;
+  border-radius: 5px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background-color 0.3s ease;
+}
+
+.adm-blog-submit-btn:hover {
+  background-color: #fb4723;
+}
+
+
+.adm-form-group select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 5px;
+  background-color: var(--input-bg, #fff);
+  color: var(--text-color, #333);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2210%22%20height%3D%226%22%20viewBox%3D%220%200%2010%206%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M0%200l5%206%205-6z%22%20fill%3D%22%23666%22/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+  cursor: pointer;
+}
+
+/* Optional: Remove arrow for older Safari */
+.adm-form-group select::-ms-expand {
+  display: none;
+}
+
+/* On focus */
+.adm-form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color, #4a90e2);
+  box-shadow: 0 0 3px var(--primary-color, #4a90e2);
+}
+
+
+@media screen and (max-width: 600px) {
+  .adm-blog-add-form {
+    padding: 15px;
+  }
+
+  .adm-blog-form {
+    gap: 12px;
+  }
+
+  .adm-form-group input,
+  .adm-form-group textarea {
+    font-size: 15px;
+  }
+
+  .adm-blog-submit-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
