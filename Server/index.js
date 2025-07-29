@@ -35,6 +35,27 @@ app.post("/api/login", (req, res) => {
 })
 
 
+app.post("/api/addblogs", (req, res) => {
+  const { BlogTitle, blogintro, blogdesc } = req.body;
+
+  console.log("Received Blog:", BlogTitle, blogintro, blogdesc);
+
+  res.status(200).json({
+    message: "Blog received",
+    blog: {
+      BlogTitle,
+      blogintro,
+      blogdesc
+    }
+  });
+});
+
+
+
+
+
+
+
 
 app.listen(port, () => {
     console.log(`the Server is started at port http://localhost:${port}`);

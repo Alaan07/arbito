@@ -2,12 +2,14 @@ import React, { useState} from 'react';
 import '../App.css';
 import LoginIcon from '../assets/LoginIcon.png'; // image import
 import axios from '../api/axios.js'
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
     
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
 
   const handleLogin = async(e) => {
     e.preventDefault();
@@ -22,6 +24,7 @@ const LoginPage = () => {
       const userdata = await axios.post('/api/login', {username: updatedusername , password: password});
       if(userdata.data.islogin){
         alert("login Succesfull");
+        navigate('/dashbord')
       }
       else{
         alert("failed fool u fool")

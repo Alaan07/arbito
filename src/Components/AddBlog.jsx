@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
 import "../Styles/addformevents.css";
+import axios from '../api/axios.js'
 
 const AddBlog = () => {
   const [isDarkMode, setIsDarkMode] = useState(
@@ -43,6 +44,43 @@ const AddBlog = () => {
     phone: "+91 9876543210",
     image: "/img/user-profile.jpg",
   });
+
+
+  // *****************backend ********************add*************
+
+
+    const [BlogTitle, setBlogTitle] = useState("");
+    const [blogCategory, setBlogCategory] = useState([]);
+    const [blogintro, setblogintro] = useState("");
+    const [blogdesc, setblogdesc] = useState("");
+    const [blogThumb, setblogThumb] = useState("");
+
+
+     const handleaddblogclick = async (e) => {
+              e.preventDefault();
+
+              console.log(BlogTitle, blogintro, blogdesc);
+
+              try {
+                const res = await axios.post('/api/addblogs', {
+                  BlogTitle,
+                  blogintro,
+                  blogdesc
+                });
+                console.log(res.data);
+              } catch (err) {
+                console.error("Error adding blog:", err);
+              }
+            };
+
+
+
+
+
+
+
+// *****************backend ********************add*************
+
 
   const toggleProfile = () => setShowProfile(!showProfile);
 
@@ -130,6 +168,8 @@ const AddBlog = () => {
           </div>
         </div>
 
+
+{/* *********************************************************main form file */}
         <div className="adm-dash-content">
           <div className="overview">
             <div className="adm-title">
@@ -142,7 +182,8 @@ const AddBlog = () => {
             <div className="adm-blog-add-form">
               <form
                 className="adm-blog-form"
-                onSubmit={(e) => e.preventDefault()}
+                onSubmit={handleaddblogclick}
+                encType="multipart/form-data"
               >
                 <div className="adm-form-group">
                   <label htmlFor="title">Title</label>
@@ -150,6 +191,7 @@ const AddBlog = () => {
                     type="text"
                     id="title"
                     placeholder="Enter blog title"
+                    onChange={(e)=>setBlogTitle(e.target.value)}
                     required
                   />
                 </div>
@@ -173,6 +215,7 @@ const AddBlog = () => {
                     id="intro"
                     placeholder="Short introduction"
                     required
+                    onChange={(e)=>setblogintro(e.target.value)}
                   />
                 </div>
 
@@ -183,6 +226,7 @@ const AddBlog = () => {
                     rows="5"
                     placeholder="Detailed description"
                     required
+                    onChange={(e)=>setblogdesc(e.target.value)}
                   />
                 </div>
 
