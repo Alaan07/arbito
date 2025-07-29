@@ -1,0 +1,576 @@
+/*Dashboard starts*/
+
+/* ===== Google Font Import - Poppins ===== */
+@import url('https://fonts.googleapis.com/css2?family=Kodchasan:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Montserrat:wght@500&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Kodchasan', sans-serif;
+}
+
+:root {
+    /* ===== Colors ===== */
+    --primary-color: #f7f7f5;
+    --panel-color: #FFF;
+    --text-color: #000;
+    --black-light-color: #707070;
+    --box1-color: #4DA3FF;
+    --orange-color: #ff5835;
+    --yellow-color: #fccc42;
+    --purple-color: #be94f5;
+    /* ====== Transition ====== */
+    --tran-05: all 0.5s ease;
+    --tran-03: all 0.3s ease;
+    --tran-03: all 0.2s ease;
+}
+
+body {
+    min-height: 100vh;
+    background-color: var(--primary-color);
+}
+
+.adm-dashboard {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 20px;
+  overflow: hidden;
+  background-color: #383838; 
+}
+
+.adm-dashboard::before {
+  content: "";
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("/img/Bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 1; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; 
+}
+
+/* === Custom Scroll Bar CSS === */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0b3cc1;
+}
+
+body.dark::-webkit-scrollbar-thumb:hover,
+body.dark .activity-data::-webkit-scrollbar-thumb:hover {
+    background: #3A3B3C;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    padding: 10px 14px;
+    background-color: var(--primary-color);
+    border-right: 1px solid var(--border-color);
+    transition: var(--tran-05);
+}
+
+nav.close {
+    width: 73px;
+}
+
+nav .adm-logo-name {
+    display: flex;
+    align-items: center;
+}
+
+nav .adm-logo-image {
+    display: flex;
+    justify-content: center;
+    min-width: 45px;
+}
+
+nav .adm-logo-image img {
+    width: 40px;
+    object-fit: cover;
+    border-radius: 20%;
+}
+
+nav .adm-logo-name .adm-logo_name {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-left: 14px;
+    transition: var(--tran-05);
+}
+
+nav.close .adm-logo_name {
+    opacity: 0;
+    pointer-events: none;
+}
+
+nav .adm-menu-items {
+    margin-top: 40px;
+    height: calc(100% - 90px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.adm-menu-items li {
+    list-style: none;
+}
+
+.adm-menu-items li a {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    text-decoration: none;
+    position: relative;
+}
+
+.nav-links li a:hover:before {
+    content: "";
+    position: absolute;
+    left: -7px;
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+}
+
+body.dark li a:hover:before {
+    background-color: var(--text-color);
+}
+
+.adm-menu-items li a i {
+    font-size: 24px;
+    min-width: 45px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--black-light-color);
+}
+
+.adm-menu-items li a .adm-link-name {
+    font-size: 18px;
+    font-weight: 400;
+    color: black;
+    font-weight: bold;
+    transition: var(--tran-05);
+}
+
+nav.close li a .adm-link-name {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Hide the text when nav is closed */
+nav.close .adm-link-name {
+  display: none;
+}
+
+.adm-nav-links, li{
+    margin-bottom: 20px;
+}
+
+/* Center the icon when nav is closed */
+nav.close .adm-nav-links li a,
+nav.close .adm-logout-mode li a {
+  justify-content: center;
+}
+
+/* Make sure icons always show */
+.adm-logo {
+  font-size: 20px;
+  color: var(--text-color); /* Or any color you want */
+}
+
+
+.nav-links li a:hover i,
+.nav-links li a:hover .adm-link-name {
+    color: var(--primary-color);
+}
+
+body.dark .nav-links li a:hover i,
+body.dark .nav-links li a:hover .adm-link-name {
+    color: var(--text-color);
+}
+
+.adm-menu-items .adm-logout-mode {
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.adm-menu-items .mode {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.adm-menu-items .mode-toggle {
+    position: absolute;
+    right: 14px;
+    height: 50px;
+    min-width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.mode-toggle .switch {
+    position: relative;
+    display: inline-block;
+    height: 22px;
+    width: 40px;
+    border-radius: 25px;
+    background-color: var(--toggle-color);
+}
+
+.switch:before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 15px;
+    width: 15px;
+    background-color: var(--panel-color);
+    border-radius: 50%;
+    transition: var(--tran-03);
+}
+
+body.dark .switch:before {
+    left: 20px;
+}
+
+.adm-dashboard {
+    position: relative;
+    left: 250px;
+    background-color: var(--panel-color);
+    min-height: 100vh;
+    width: calc(100% - 250px);
+    padding: 10px 14px;
+    transition: var(--tran-05);
+}
+
+nav.close~.adm-dashboard {
+    left: 73px;
+    width: calc(100% - 73px);
+}
+
+nav.close .adm-logo{
+    margin-right: 0px;
+}
+
+.adm-dashboard .adm-top {
+    position: fixed;
+    top: 0;
+    left: 250px;
+    display: flex;
+    width: calc(100% - 250px);
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background-color: var(--panel-color);
+    transition: var(--tran-05);
+    z-index: 10;
+}
+
+.adm-text{
+    color: white;
+    font-size: 35px;
+}
+
+.adm-logo-left{
+    color: white;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+nav.close~.adm-dashboard .adm-top {
+    left: 73px;
+    width: calc(100% - 73px);
+}
+
+.adm-dashboard .adm-top .adm-sidebar-toggle {
+    font-size: 26px;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.adm-dashboard .adm-top .search-box {
+    position: relative;
+    height: 45px;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 30px;
+}
+
+.adm-top .search-box input {
+    position: absolute;
+    border: 1px solid var(--border-color);
+    background-color: var(--panel-color);
+    padding: 0 25px 0 50px;
+    border-radius: 5px;
+    height: 100%;
+    width: 100%;
+    color: var(--text-color);
+    font-size: 15px;
+    font-weight: 400;
+    outline: none;
+}
+
+.adm-top .search-box i {
+    position: absolute;
+    left: 15px;
+    font-size: 22px;
+    z-index: 10;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--black-light-color);
+}
+
+.adm-top img {
+    width: 40px;
+    border-radius: 50%;
+}
+
+.adm-dashboard .adm-dash-content {
+    padding-top: 50px;
+}
+
+.adm-dash-content .adm-title {
+    display: flex;
+    align-items: center;
+    margin: 30px 0 30px 0;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.adm-dash-content .adm-title i {
+    position: relative;
+    height: 35px;
+    width: 35px;
+    background-color: var(--primary-color);
+    border-radius: 6px;
+    color: var(--title-icon-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.adm-dash-content .adm-title .text {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-left: 10px;
+}
+
+.adm-dash-content .adm-boxes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.adm-dash-content .adm-boxes .adm-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 12px;
+    width: calc(100% / 3 - 15px);
+    padding: 15px 20px;
+    background-color: var(--box1-color);
+    transition: var(--tran-05);
+}
+
+.adm-boxes .adm-box i {
+    font-size: 35px;
+    color: var(--text-color);
+}
+
+.adm-boxes .adm-box .text {
+    white-space: nowrap;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.adm-boxes .adm-box .number {
+    font-size: 40px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.adm-boxes .adm-box.adm-box2 {
+    background-color: var(--orange-color);
+    border: 1px solid #000;
+}
+
+.adm-boxes .adm-box.adm-box1 {
+    background-color: var(--purple-color);
+    border: 1px solid #000;
+}
+
+.adm-boxes .adm-box.adm-box3 {
+    background-color: var(--yellow-color);
+    border: 1px solid #000;
+}
+
+.adm-dash-content .activity .activity-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.activity .activity-data {
+    display: flex;
+}
+
+.activity-data .data {
+    display: flex;
+    flex-direction: column;
+    margin: 0 15px;
+}
+
+.activity-data .data-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.activity-data .data .data-list {
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 20px;
+    white-space: nowrap;
+    color: var(--text-color);
+}
+
+.adm-logo {
+    color: #000;
+    margin-right: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.adm-logo-add{
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+}
+
+@media (max-width: 1000px) {
+  /* No inversion of logic here */
+  nav {
+    width: 250px;
+  }
+
+  nav.close {
+    width: 73px;
+  }
+
+  nav .logo_name {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  nav.close .logo_name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav li a .link-name {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  nav.close li a .link-name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav ~ .adm-dashboard,
+  nav ~ .adm-dashboard .adm-top {
+    left: 250px;
+    width: calc(100% - 250px);
+  }
+
+  nav.close ~ .adm-dashboard,
+  nav.close ~ .adm-dashboard .adm-top {
+    left: 73px;
+    width: calc(100% - 73px);
+  }
+}
+
+/* Smaller screens layout tweaks */
+@media (max-width: 780px) {
+  .adm-dash-content .adm-boxes .adm-box {
+    width: calc(50% - 15px);
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 560px) {
+  .adm-dash-content .adm-boxes .adm-box {
+    width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  nav {
+    width: 0;
+  }
+
+  nav.close {
+    width: 73px;
+  }
+
+  nav .logo_name,
+  nav li a .link-name {
+    display: none;
+  }
+
+  nav.close .logo_name,
+  nav.close li a .link-name {
+    display: none;
+  }
+
+  nav ~ .adm-dashboard,
+  nav ~ .adm-dashboard .adm-top {
+    left: 0;
+    width: 100%;
+  }
+
+  nav.close ~ .adm-dashboard,
+  nav.close ~ .adm-dashboard .adm-top {
+    left: 73px;
+    width: calc(100% - 73px);
+  }
+}
+
+/*Dashboard ends*/
