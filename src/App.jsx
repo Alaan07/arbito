@@ -17,6 +17,7 @@ import EditBlogs from "./Components/EditBlog";
 import EditEvent from "./Components/EditEvent";
 import EditAchievement from "./Components/EditAchievement";
 import EditProfile from "./Components/EditProfile";
+import Eventpage from "./Components/Eventpage";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="/editevents" element={<EditEvent />} />
           <Route path="/editachievement" element={<EditAchievement />} />
           <Route path="/editprofile" element={<EditProfile />} />
+          <Route path="/eventpage" element={<Eventpage />} />
         </Routes>
       </BrowserRouter>
     </>

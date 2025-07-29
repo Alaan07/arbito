@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Kodchasan:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Montserrat:wght@500&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Kodchasan', sans-serif;
+}
+
+:root {
+    /* ===== Colors ===== */
+    --primary-color: #f7f7f5;
+    --panel-color: #FFF;
+    --text-color: #000;
+    --black-light-color: #707070;
+    --box1-color: #4DA3FF;
+    --orange-color: #ff5835;
+    --yellow-color: #fccc42;
+    --purple-color: #be94f5;
+    /* ====== Transition ====== */
+    --tran-05: all 0.5s ease;
+    --tran-03: all 0.3s ease;
+    --tran-03: all 0.2s ease;
+}
+
+.hero-section-events {
+  position: relative;
+  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)),
+    url('/img/Eventbg.jpg') center/cover no-repeat;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  color: white;
+}
+
+.hero-content-events {
+  max-width: 600px;
+  z-index: 1;
+}
+
+.hero-title-events {
+  font-size: 3.3rem;
+  font-weight: bold;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.hero-description-events {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color:whitesmoke;
+}
+
+.cta-button-events {
+  display: inline-block;
+  background-color: var(--yellow-color);
+  color: #000000;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #000;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.cta-button-events:hover {
+  background-color: #ffeaea;
+}
+
+.category{
+  padding: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-title-events {
+    font-size: 2rem;
+  }
+}
