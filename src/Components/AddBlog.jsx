@@ -200,28 +200,28 @@ const AddBlog = () => {
                   <label>Category</label>
                   <div className="adm-radio-options">
                     <label>
-                      <input type="radio" name="category" value="IT" required />
+                      <input type="checkbox" name="category" value="IT" required />
                       IT
                     </label>
                     <label>
                       <input
-                        type="radio"
+                        type="checkbox"
                         name="category"
                         value="Computer Applications"
                       />
                       Computer Applications
                     </label>
                     <label>
-                      <input type="radio" name="category" value="Tech" />
+                      <input type="checkbox" name="category" value="Tech" />
                       Tech
                     </label>
                     <label>
-                      <input type="radio" name="category" value="AI/ML" />
+                      <input type="checkbox" name="category" value="AI/ML" />
                       AI/ML
                     </label>
                     <label>
                       <input
-                        type="radio"
+                        type="checkbox"
                         name="category"
                         value="Cloud Computing"
                       />

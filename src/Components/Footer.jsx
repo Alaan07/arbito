@@ -1,0 +1,55 @@
+import '../App.css';
+import doodleImg from '../assets/StudentDoodle.png';
+import arbitoLogo from '../assets/arbito_new_logo.png';
+import { Link } from 'react-router-dom';
+
+
+const Footer = () => {
+  return (
+    <>
+    
+      <div class="footer-spacer"></div>
+      <div className="doodle-wrapper">
+        <img src={doodleImg} alt="Student Doodle" className="student-doodle" />
+      </div>
+
+      <footer className="footer">
+        <div className="footer-content">
+           <div className="footer-left">
+             <Link to="/" className="logo-section">
+               <img src={arbitoLogo} alt="Arbito Logo" className="logo-img" />
+               <p className="logo-caption">Powered by Cynux Era</p>
+             </Link>
+          </div>
+          <div className="footer-right">
+            <div className="footer-section">
+              <h3>Company</h3>
+              <a href="#about">About</a>
+              <a href="#blog">Blog</a>
+              <a href="#events">Events</a>
+            </div>
+            <div className="footer-section">
+              <h3>Support</h3>
+              <a href="/contact" className="footer-link">Contact</a>
+              <a href="mailto:arbitostudentcommunity@gmail.com">Mail us</a>
+            </div>
+            <div className="footer-section">
+              <h3>Socials</h3>
+              <a href="https://www.linkedin.com/company/arbito-student-community/posts/?feedView=all">LinkedIn</a>
+              <a href="https://www.instagram.com/arbito2025?igsh=N3Q3ZjQ2YjF5bW1n">Instagram</a>
+            </div>
+          </div>
+        </div>
+        <div className="footer-copy">
+          <span>© 2025 Arbito. All rights reserved.</span>
+          <div className="footer-links">
+            <a href="/login" className="footer-link">Admin</a>
+            <a href="/" className="footer-link">Back to Home</a>
+          </div>
+        </div>
+      </footer>
+    </>
+  );
+};
+
+export default Footer;
