@@ -155,15 +155,37 @@ const AddBlog = () => {
                 </div>
 
                 <div className="adm-form-group">
-                  <label htmlFor="category">Category</label>
-                  <select id="category" name="category" required>
-                    <option value="">Select Category</option>
-                    <option value="Frontend">IT</option>
-                    <option value="Backend">Computer Applications</option>
-                    <option value="Fullstack">Tech</option>
-                    <option value="AI">AI/ML</option>
-                    <option value="Cloud">Cloud Computing</option>
-                  </select>
+                  <label>Category</label>
+                  <div className="adm-radio-options">
+                    <label>
+                      <input type="radio" name="category" value="IT" required />
+                      IT
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="category"
+                        value="Computer Applications"
+                      />
+                      Computer Applications
+                    </label>
+                    <label>
+                      <input type="radio" name="category" value="Tech" />
+                      Tech
+                    </label>
+                    <label>
+                      <input type="radio" name="category" value="AI/ML" />
+                      AI/ML
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="category"
+                        value="Cloud Computing"
+                      />
+                      Cloud Computing
+                    </label>
+                  </div>
                 </div>
 
                 <div className="adm-form-group">
