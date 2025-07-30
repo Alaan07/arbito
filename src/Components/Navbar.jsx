@@ -1,58 +1,51 @@
-import React, { useState } from "react";
-import "../App.css";
-import arbitoLogo from "../assets/arbito_new_logo.png";
-import LoginPage from "./LoginPage";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import '../App.css';
+import arbitoLogo from '../assets/arbito_new_logo.png';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showLoginPage, setShowLoginPage] = useState(false);
+  const [scrollingUp, setScrollingUp] = useState(true);
 
   const toggleMenu = () => setIsOpen(!isOpen);
-  const handleLoginClick = () => setShowLoginPage(true);
 
-  if (location.pathname === "/dashbord") return null;
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      if (window.scrollY < lastScrollY) {
+        setScrollingUp(true); // Scrolling up
+      } else {
+        setScrollingUp(false); // Scrolling down
+      }
+      lastScrollY = window.scrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <>
-      <nav className="navbar">
-        <img src={arbitoLogo} alt="Arbito Logo" className="logo-img" />
+    <nav className={`navbar ${scrollingUp ? 'show' : 'hide'}`}>
+      <Link to="/" className="logo-section">
+  <img src={arbitoLogo} alt="Arbito Logo" className="logo-img" />
+  <p className="logo-caption">Powered by Cynux Era</p>
+</Link>
 
-        <div className="hamburger" onClick={toggleMenu}>
-          ☰
-        </div>
 
-        <ul className={`nav-links ${isOpen ? "open" : ""}`}>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
 
-          <li>
-            <a href="#">About</a>
-          </li>
-          <li>
-            <a href="/eventpage">Events</a>
-          </li>
-          <li>
-            <Link to="/contact">Contact</Link>
-          </li>
-          <li>
-            <Link to="/dashbord">Dashboard</Link>
-          </li>
-          <li>
-            <Link to="/allblogs">Blogs</Link>
-          </li>
+      <div className="hamburger" onClick={toggleMenu}>
+        ☰
+      </div>
 
-          <li>
-            <Link to="/login">
-              <button className="login-btn">Login</button>
-            </Link>
-          </li>
-        </ul>
-      </nav>
-
-      {showLoginPage && <LoginPage />}
-    </>
+      <ul className={`nav-links ${isOpen ? 'open' : ''}`}>
+        <li><Link to="/">Home</Link></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Events</a></li>
+        <li><Link to="/contact">Contact</Link></li>
+        <li><Link to="/allblogs">Blogs</Link></li>
+      </ul>
+    </nav>
   );
 };
 

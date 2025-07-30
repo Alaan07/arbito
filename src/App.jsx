@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AllBlogs from "./Components/AllBlogs.jsx";
 import ContactPage from "./Components/ContactPage";
 import Navbar from "./Components/Navbar";
-import Homepage from "./Components/Homepage";
+import Homepage from "./Components/HomePage";
 import LoginPage from "./Components/LoginPage";
 import "./App.css";
 import Dashboard from "./Components/Dashboard";
@@ -18,6 +18,7 @@ import EditEvent from "./Components/EditEvent";
 import EditAchievement from "./Components/EditAchievement";
 import EditProfile from "./Components/EditProfile";
 import Eventpage from "./Components/Eventpage";
+import Footer from './Components/Footer';
 
 function App() {
   return (
@@ -25,8 +26,8 @@ function App() {
       <BrowserRouter>
       <Navbar/>
         <Routes>
-          <Route path="/dashbord" element={<Dashboard />} />
           <Route path="/" element={<Homepage />} />
+          <Route path="/dashbord" element={<Dashboard />} />
           <Route path="/allblogs" element={<AllBlogs />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/contact" element={<ContactPage />} />
@@ -42,6 +43,7 @@ function App() {
           <Route path="/editprofile" element={<EditProfile />} />
           <Route path="/eventpage" element={<Eventpage />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </>
   );

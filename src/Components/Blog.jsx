@@ -11,6 +11,7 @@ import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
+import axios from "../api/axios.js";
 
 const Blog = () => {
   const [isDarkMode, setIsDarkMode] = useState(
@@ -36,35 +37,55 @@ const Blog = () => {
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(null);
-  const [blogData, setBlogData] = useState([
-    {
-      title: "React Basics",
-      intro: "Intro to React library",
-      category: "Front-end Development",
-    },
-    {
-      title: "Node.js Basics",
-      intro: "Intro to Node library",
-      category: "Back-end Development",
-    },
-  ]);
 
-  const handleDeleteClick = (index) => {
-    setDeleteIndex(index);
-    setShowConfirm(true);
-  };
 
-  const confirmDelete = () => {
-    const updatedData = [...blogData];
-    updatedData.splice(deleteIndex, 1);
-    setBlogData(updatedData);
-    setShowConfirm(false);
-  };
+  const [blogData, setBlogData] = useState([]);
+  const [deleteId, setDeleteId] = useState(null);
+
+        useEffect(() => {
+          const fetchBlogs = async () => {
+            try {
+              const res = await axios.get("/api/blogs");
+              setBlogData(res.data);
+            } catch (error) {
+              console.error("Failed to fetch blogs:", error);
+            }
+          };
+
+          fetchBlogs();
+        }, []);
+
+  
+        
+      const handleDeleteClick = (id) => {
+        setDeleteId(id);
+        setShowConfirm(true);
+      };
+
+      const confirmDelete = async () => {
+        try {
+          await axios.delete(`/api/blogs/${deleteId}`);
+          const updatedData = blogData.filter((blog) => blog._id !== deleteId);
+          setBlogData(updatedData);
+          setShowConfirm(false);
+        } catch (error) {
+          console.error("Failed to delete blog:", error);
+        }
+      };
+
+  // const confirmDelete = () => {
+  //   const updatedData = [...blogData];
+  //   updatedData.splice(deleteIndex, 1);
+  //   setBlogData(updatedData);
+  //   setShowConfirm(false);
+  // };
 
   const cancelDelete = () => {
     setShowConfirm(false);
     setDeleteIndex(null);
   };
+
+  // **************************************************************************
 
   const [showProfile, setShowProfile] = useState(false);
   const [adminData, setAdminData] = useState({
@@ -185,19 +206,20 @@ const Blog = () => {
                   </tr>
                 </thead>
                 <tbody>
+                {/* ***********************************************************main */}
                   {blogData.map((blog, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{blog.title}</td>
-                      <td>{blog.intro}</td>
-                      <td>{blog.category}</td>
+                      <td>{blog.intoduction}</td>
+                      <td>{Array.isArray(blog.category) ? blog.category.join(", ") : blog.category}</td>
                       <td>
                         <Link to="/editblogs" className="adm-blog-edit-btn">
                           Edit
                         </Link>
                         <button
                           className="adm-blog-delete-btn"
-                          onClick={() => handleDeleteClick(index)}
+                          onClick={() => handleDeleteClick(blog._id)}
                         >
                           Delete
                         </button>

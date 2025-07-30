@@ -1,12 +1,19 @@
 import React, { useState} from 'react';
 import '../App.css';
-import LoginIcon from '../assets/LoginIcon.png'; // image import
+import LoginIcon from '../assets/LoginIcon.png'; 
 import axios from '../api/axios.js'
+import { useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const LoginPage = () => {
     
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
+
+
 
 
   const handleLogin = async(e) => {
@@ -22,6 +29,7 @@ const LoginPage = () => {
       const userdata = await axios.post('/api/login', {username: updatedusername , password: password});
       if(userdata.data.islogin){
         alert("login Succesfull");
+        navigate('/dashbord')
       }
       else{
         alert("failed fool u fool")
@@ -45,7 +53,8 @@ const LoginPage = () => {
       </div>
 
       <div className="login-container">
-        <h1>Sign in to ARBITO</h1>
+        <h1>Sign in to <span class="arbito-hover">ARBITO</span></h1>
+
         <p>Welcome back! Please sign in to continue</p>
 
         <label htmlFor="username" className="email-label">Username</label>
@@ -61,26 +70,19 @@ const LoginPage = () => {
         <label htmlFor="password" className="email-label">Password</label>
           <div className="password-wrapper">
             <input
-              type="password" 
+              type={showPassword ? "text" : "password"} 
               id="password"
               className="input-field"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-          />
+            />
 
-          
+            <span className="eye-icon" onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </span>
         </div>
-        <div className="forgot-password">
-  <a href="#" onClick={(e) => {
-    e.preventDefault();
-    alert('Redirecting to password reset 🔐');
-    // You can navigate or trigger modal here
-  }}>
-    Forgot Password?
-  </a>
-</div>
-
+        
 
         <button className="login-btn" onClick={handleLogin}>
           Continue
