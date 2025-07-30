@@ -56,20 +56,51 @@ const AddBlog = () => {
     const [blogThumb, setblogThumb] = useState("");
 
 
-     const handleaddblogclick = async (e) => {
-              e.preventDefault();
 
-              console.log(BlogTitle, blogintro, blogdesc);
+
+      const handleCategoryChange = (e) => {
+        const value = e.target.value;
+        const checked = e.target.checked;
+
+        setBlogCategory((prev) => {
+          if (checked) {
+            return prev.includes(value) ? prev : [...prev, value];
+          } else {
+            return prev.filter((cat) => cat !== value);
+          }
+        });
+      };
+
+
+
+
+
+
+
+
+          const handleaddblogclick = async (e) => {
+             e.preventDefault();
+
+              const formData = new FormData();
+              formData.append("BlogTitle", BlogTitle);
+              formData.append("blogintro", blogintro);
+              formData.append("blogdesc", blogdesc);
+              formData.append("blogCategory", blogCategory);
+              formData.append("blogThumb", blogThumb);
 
               try {
-                const res = await axios.post('/api/addblogs', {
-                  BlogTitle,
-                  blogintro,
-                  blogdesc
+                const res = await axios.post('/api/addblogs', formData, {
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  }
                 });
-                console.log(res.data);
+
+                console.log("Success:", res.data);
+                if(res.data.blogcreated){
+                  alert("blogcreated")
+                }
               } catch (err) {
-                console.error("Error adding blog:", err);
+                console.error("Error uploading blog:", err);
               }
             };
 
@@ -200,31 +231,23 @@ const AddBlog = () => {
                   <label>Category</label>
                   <div className="adm-radio-options">
                     <label>
-                      <input type="checkbox" name="category" value="IT" required />
+                      <input type="checkbox" name="category" value="IT" onChange={handleCategoryChange}/>
                       IT
                     </label>
                     <label>
-                      <input
-                        type="checkbox"
-                        name="category"
-                        value="Computer Applications"
-                      />
+                      <input type="checkbox" name="category" value="Computer Applications" onChange={handleCategoryChange}/>
                       Computer Applications
                     </label>
                     <label>
-                      <input type="checkbox" name="category" value="Tech" />
+                      <input type="checkbox" name="category" value="Tech" onChange={handleCategoryChange}/>
                       Tech
                     </label>
                     <label>
-                      <input type="checkbox" name="category" value="AI/ML" />
+                      <input type="checkbox" name="category" value="AI/ML" onChange={handleCategoryChange}/>
                       AI/ML
                     </label>
                     <label>
-                      <input
-                        type="checkbox"
-                        name="category"
-                        value="Cloud Computing"
-                      />
+                      <input type="checkbox" name="category" value="Cloud Computing" onChange={handleCategoryChange}/>
                       Cloud Computing
                     </label>
                   </div>
@@ -254,17 +277,17 @@ const AddBlog = () => {
 
                 <div className="adm-form-group">
                   <label htmlFor="image">Image (JPG, max 20MB)</label>
-                  <input
-                    type="file"
-                    id="image"
-                    accept=".jpg"
+                  <input type="file" id="image" accept=".jpg"
                     onChange={(e) => {
                       const file = e.target.files[0];
-                      if (file && file.size > 20 * 1024 * 1024) {
+                      if (file && file.size <= 20 * 1024 * 1024) {
+                        setblogThumb(file);
+                      } else {
                         alert("File size must be less than 20MB");
-                        e.target.value = ""; // reset
+                        e.target.value = "";
                       }
                     }}
+
                     required
                   />
                 </div>
