@@ -66,6 +66,13 @@
   padding: 5px;
 }
 
+.file-name {
+  margin-top: 5px;
+  display: block;
+  font-size: 0.9rem;
+  color: #555;
+}
+
 .adm-blog-submit-btn {
   padding: 10px 20px;
   background-color: var(--orange-color);

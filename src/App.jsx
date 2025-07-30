@@ -37,7 +37,7 @@ function App() {
           <Route path="/addblog" element={<AddBlog />} />
           <Route path="/addevent" element={<AddEvents />} />
           <Route path="/addachievement" element={<AddAchievement />} />
-          <Route path="/editblogs" element={<EditBlogs />} />
+          <Route path="/editblogs/:id" element={<EditBlogs />} />
           <Route path="/editevents" element={<EditEvent />} />
           <Route path="/editachievement" element={<EditAchievement />} />
           <Route path="/editprofile" element={<EditProfile />} />
