@@ -351,6 +351,51 @@ input[type="text"] {
   right: 12px;        /* Slight tweak for balance */
 }
 
+@media (max-width: 1024px) {
+  .image-container {
+    display: none;
+  }
+
+  .login-wrapper {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    height: 100vh;
+  }
+
+  .login-container {
+    padding: 0.5rem;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+           /* Add this for horizontal centering */
+  }
+
+  input[type="text"],
+  .input-field,
+  .login-btn {
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    padding-right: 40px;
+  }
+
+  .password-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 1.5rem;
+  }
+
+  .eye-icon {
+    font-size: 1.5rem;
+    right: 12px;
+  }
+}
+
 /*Login page ends*/
 
 /*homepage starts*/
@@ -1468,6 +1513,7 @@ input[type="text"] {
 }
 
 /*About Arbito ends*/
+
 /* Trusted by starts*/
 .trusted-logos {
   display: flex;
@@ -1491,3 +1537,108 @@ input[type="text"] {
 }
 
 /*Trusted by ends*/
+
+/* ***************************************************************aboutmm */
+/* about page */
+.about-section {
+  padding: 60px 20px;
+  background-color: #f8f9fa;
+}
+
+.about-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.about-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #222;
+}
+
+.about-highlight {
+  color: #ff5f5f;
+}
+
+.about-subtitle {
+  color: #666;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.about-team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.about-card {
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 20px;
+  width: 300px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-5px);
+}
+
+.about-card-category {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  background-color: #f0f0f0;
+  padding: 6px 12px;
+  border-radius: 50px;
+  margin-bottom: 12px;
+}
+
+.about-card-img {
+  width: 70%;
+  height: 50%;
+  border-radius: 0%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.about-card-name {
+  font-weight: 600;
+  font-size: 18px;
+  color: #000;
+  margin-bottom: 5px;
+}
+
+.about-card-college {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: auto;
+}
+
+.about-card-btn {
+  margin-top: 20px;
+  background-color: #ff5f5f;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 8px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.about-card-btn:hover {
+  background-color: #e84141;
+}
+
+/* about page ends */
+

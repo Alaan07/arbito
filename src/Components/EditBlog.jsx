@@ -8,7 +8,7 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
 import "../Styles/addformevents.css";
@@ -18,6 +18,7 @@ import axios from "../api/axios.js";
 
 
 const AddBlog = () => {
+  const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("mode") === "dark"
   );
@@ -107,6 +108,9 @@ useEffect(() => {
       headers: { "Content-Type": "multipart/form-data" },
     });
     alert("Blog updated!");
+    navigate('/blogs');
+
+
   } catch (err) {
     console.error(err);
     alert("Failed to update blog");

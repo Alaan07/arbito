@@ -19,6 +19,8 @@ import EditAchievement from "./Components/EditAchievement";
 import EditProfile from "./Components/EditProfile";
 import Eventpage from "./Components/Eventpage";
 import Footer from './Components/Footer';
+import About from './Components/About';
+
 
 function App() {
   return (
@@ -36,6 +38,7 @@ function App() {
           <Route path="/events" element={<Event />} />
           <Route path="/addblog" element={<AddBlog />} />
           <Route path="/addevent" element={<AddEvents />} />
+          <Route path="/about" element={<About/>} />
           <Route path="/addachievement" element={<AddAchievement />} />
           <Route path="/editblogs/:id" element={<EditBlogs />} />
           <Route path="/editevents" element={<EditEvent />} />
