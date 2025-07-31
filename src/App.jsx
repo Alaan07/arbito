@@ -19,6 +19,8 @@ import EditAchievement from "./Components/EditAchievement";
 import EditProfile from "./Components/EditProfile";
 import Eventpage from "./Components/Eventpage";
 import Footer from './Components/Footer';
+import About from './Components/About';
+
 
 import { BrowserRouter as Router } from "react-router-dom";
 
@@ -40,6 +42,7 @@ function Layout() {
   const hideNavbar = hideNavbarPaths.includes(location.pathname);  
   return (
     <>
+<<<<<<< HEAD
       {!hideNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Homepage />} />
@@ -60,6 +63,31 @@ function Layout() {
         <Route path="/eventpage" element={<Eventpage />} />
       </Routes>
       <Footer />
+=======
+      <BrowserRouter>
+      <Navbar/>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/dashbord" element={<Dashboard />} />
+          <Route path="/allblogs" element={<AllBlogs />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/achievements" element={<Achievement />} />
+          <Route path="/events" element={<Event />} />
+          <Route path="/addblog" element={<AddBlog />} />
+          <Route path="/addevent" element={<AddEvents />} />
+          <Route path="/about" element={<About/>} />
+          <Route path="/addachievement" element={<AddAchievement />} />
+          <Route path="/editblogs/:id" element={<EditBlogs />} />
+          <Route path="/editevents" element={<EditEvent />} />
+          <Route path="/editachievement" element={<EditAchievement />} />
+          <Route path="/editprofile" element={<EditProfile />} />
+          <Route path="/eventpage" element={<Eventpage />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+>>>>>>> dbce7b4ea2b34068a097dfee1abed3643e9eb412
     </>
   );
 }

@@ -9,13 +9,18 @@ import {
 } from "react-icons/fa";
 
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
 import "../Styles/addformevents.css";
 import axios from '../api/axios.js'
 
+
 const AddBlog = () => {
+
+
+  const navigate = useNavigate();
+
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("mode") === "dark"
   );
@@ -99,6 +104,7 @@ const AddBlog = () => {
                 if(res.data.blogcreated){
                   alert("blogcreated")
                 }
+                navigate('/blogs')
               } catch (err) {
                 console.error("Error uploading blog:", err);
               }

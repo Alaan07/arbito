@@ -86,6 +86,7 @@ const Navbar = () => {
         )}
       </nav>
 
+<<<<<<< HEAD
       {isMobileView && isOpen && (
         <ul className="nav-links mobile" ref={menuRef}>
           <li className="close-btn" onClick={closeMenu}>×</li>
@@ -97,6 +98,21 @@ const Navbar = () => {
         </ul>
       )}
     </div>
+=======
+
+      <div className="hamburger" onClick={toggleMenu}>
+        ☰
+      </div>
+
+      <ul className={`nav-links ${isOpen ? 'open' : ''}`}>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/about">About</Link></li>
+        <li><a href="#">Events</a></li>
+        <li><Link to="/contact">Contact</Link></li>
+        <li><Link to="/allblogs">Blogs</Link></li>
+      </ul>
+    </nav>
+>>>>>>> dbce7b4ea2b34068a097dfee1abed3643e9eb412
   );
 };
 

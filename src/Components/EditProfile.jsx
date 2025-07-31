@@ -11,6 +11,7 @@ import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link } from "react-router-dom";
 import "../App.css";
 import "../Styles/addformblogs.css";
+import axios from "../api/axios.js";
 
 const AddBlog = () => {
   const [isDarkMode, setIsDarkMode] = useState(
@@ -35,34 +36,54 @@ const AddBlog = () => {
   const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
 
   const [formData, setFormData] = useState({
-    name: "Admin Name",
-    email: "admin@example.com",
-    phone: "1234567890",
-    image: null,
+  username: "",
+  email: "",
+  contact: "",
   });
 
+
+
+
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "image") {
-      setFormData({ ...formData, image: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+  const { username, value } = e.target;
+  setFormData((prev) => ({
+    ...prev,
+    [username]: value,
+  }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Updated Profile:", formData);
-    // Handle form submit logic here
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await axios.put('/api/updateuserpro', formData);
+    alert("Profile updated successfully!");
+    console.log(res.data);
+  } catch (err) {
+    console.error("Update failed:", err);
+    alert("Error updating profile.");
+  }
   };
 
   const [showProfile, setShowProfile] = useState(false);
-  const [adminData, setAdminData] = useState({
-    name: "Admin User",
-    email: "admin@arbito.com",
-    phone: "+91 9876543210",
-    image: "/img/user-profile.jpg",
-  });
+
+
+    useEffect(() => {
+      const fetchuserdata = async () => {
+        try {
+          const res = await axios.get('/api/getuserpro');
+          setFormData({
+            username: res.data.username,
+            email: res.data.email,
+            contact: res.data.contact ,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchuserdata();
+    }, []);
+
+
 
   const toggleProfile = () => setShowProfile(!showProfile);
 
@@ -120,7 +141,7 @@ const AddBlog = () => {
           <IoMdMenu className="adm-sidebar-toggle" onClick={toggleSidebar} />
           <div className="adm-profile-container">
             <img
-              src={adminData.image}
+              src="/public/img/user-profile.jpg"
               alt="Admin"
               className="adm-profile-pic"
               onClick={toggleProfile}
@@ -129,17 +150,17 @@ const AddBlog = () => {
             {showProfile && (
               <div className="adm-profile-dropdown">
                 <div className="adm-profile-image">
-                  <img src={adminData.image} alt="Admin Large" />
+                  <img src="/public/img/user-profile.jpg" alt="Admin Large" />
                 </div>
                 <div className="adm-profile-info">
                   <p>
-                    <strong>Name:</strong> {adminData.name}
+                    <strong>Name:</strong> {formData.username}
                   </p>
                   <p>
-                    <strong>Email:</strong> {adminData.email}
+                    <strong>Email:</strong> {formData.email}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {adminData.phone}
+                    <strong>Phone:</strong> {formData.contact}
                   </p>
                   <Link to="/editprofile" className="adm-edit-btn">
                     Edit Profile
@@ -166,7 +187,7 @@ const AddBlog = () => {
                   <input
                     type="text"
                     name="name"
-                    value={formData.name}
+                    value={formData.username}
                     onChange={handleChange}
                     required
                   />
@@ -186,37 +207,12 @@ const AddBlog = () => {
                 <div className="adm-form-group">
                   <label htmlFor="phone">Phone</label>
                   <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="adm-form-group">
-                  <label htmlFor="image">Profile Image</label>
-                  <input
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    onChange={handleChange}
-                  />
-                  {formData.image && (
-                    <div style={{ marginTop: "10px" }}>
-                      <img
-                        src={URL.createObjectURL(formData.image)}
-                        alt="Preview"
-                        style={{
-                          width: "100px",
-                          height: "100px",
-                          borderRadius: "8px",
-                          objectFit: "cover",
-                          marginTop: "10px",
-                        }}
-                      />
-                    </div>
-                  )}
+                  type="tel"
+                  name="phone"
+                  value={formData.contact}
+                  onChange={handleChange}
+                  required
+                />
                 </div>
 
                 <button type="submit" className="adm-blog-submit-btn">

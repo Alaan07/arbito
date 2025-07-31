@@ -7,6 +7,7 @@ import Blog from './userModels/BlogsModel.js'
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
+import User from './userModels/UserModel.js';
 
 
 
@@ -46,6 +47,41 @@ app.post("/api/login", (req, res) => {
         res.status(200).json({message:'Invalid username or password!', islogin: false});
     }
 })
+
+
+ app.get('/api/getuserpro', async (req, res) => {
+  try {
+    const user = await User.findOne();
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+app.put("/api/updateuserpro", async (req, res) => {
+  const { username, email, contact } = req.body;
+
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { email: email },
+      { username, contact },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
 
 
 app.post("/api/addblogs",upload.single('blogThumb'), async(req, res) => {
