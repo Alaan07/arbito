@@ -101,7 +101,7 @@ body, .App {
 }
 
 .navbar {
-  min-width: 480px;
+  /* min-width: 480px; */
 }
 
 
@@ -133,7 +133,7 @@ body, .App {
   overflow: hidden;
   font-family: 'Kodchasan', sans-serif;
     box-sizing: border-box;
-    min-width: 470px;
+    /* min-width: 470px; */
 }
 .arbito-hover {
   background: linear-gradient(to right, #f0199d, #6b705c);
@@ -456,7 +456,7 @@ input[type="text"] {
 }
 
 .homepage-banner img {
-  width: 100%;
+  width: auto;
   height: auto;
   border-radius: 12px;
   object-fit: cover;
@@ -466,7 +466,7 @@ input[type="text"] {
 /* Responsive styles */
 @media (max-width: 768px) {
   .homepage {
-    min-width: 460px;
+     /* min-width: 460px;  */
     flex-direction: column;
     padding: 1rem;
   }
@@ -655,7 +655,7 @@ input[type="text"] {
   position: relative;
   z-index: 1;
   display: flex;
-  min-width:410px;
+  /* min-width:410px; */
 }
 
 .footer-section h3 {
@@ -835,7 +835,7 @@ input[type="text"] {
     padding: 3rem 1.5rem;
     flex-direction: column;
     background: linear-gradient(to bottom, #be94f5, #e3d5ca);
-    min-width:430px;
+    /* min-width:430px; */
   }
 
   .banner-content {
@@ -1037,7 +1037,7 @@ input[type="text"] {
 .faq-section {
   padding: 2rem;
   font-family: 'Kodchasan', sans-serif;
-  min-width: 420px;
+  /* min-width: 420px; */
 
 }
 .faq-section h2:hover {
@@ -1089,9 +1089,10 @@ input[type="text"] {
   justify-content: center;
   align-items: center;
   padding: 2rem 0;
+  box-shadow: 0 0 15px rgba(21, 19, 19, 0.1);
   opacity: 0;
   transition: opacity 0.8s ease;
-  min-width: 450px;
+  /* min-width: 450px; */
   
 }
 
@@ -1242,9 +1243,8 @@ input[type="text"] {
   background-color: #f7f7f5;
   color: #151313;
   padding: 3rem 1rem;
-  border-top: 1px solid #fccc42;
   text-align: center;
-  min-width: 430px;
+  /* min-width: 430px; */
 }
 
 .support-title {
@@ -1299,26 +1299,6 @@ input[type="text"] {
   outline: none;
 }
 
-/*.support-form button {
-  margin-top: 1.2rem;
-  padding: 0.7rem 1.8rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 30px;
-  background: linear-gradient(to right, #be94f5, #e3d5ca);
-  color: #3c2a21;
-  cursor: pointer;
-  transition: transform 0.3s ease, background 0.5s ease;
-}
-.support-form button:hover
-{
-  
-  transform: scale(1.05);
-  background: linear-gradient(to right, #f0199d, #d89c67);
-  color: white;
-
-}*/
 
 .support-form input,
 .support-form textarea,
@@ -1355,7 +1335,7 @@ input[type="text"] {
   padding: 1rem 0;
   overflow: hidden;
   white-space: nowrap;
-  min-width: 480px;
+  /* min-width: 480px; */
 }
 
 .tagline-text {
@@ -1364,7 +1344,6 @@ input[type="text"] {
   color: #ffffff;
   font-weight: bold;
   font-size: 1.2rem;
-  font-family: 'Poppins', sans-serif;
   animation: scroll-left 15s linear infinite;
 }
 
@@ -1406,12 +1385,12 @@ input[type="text"] {
   background-color: #f7f7f5;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 0 15px rgba(21, 19, 19, 0.1);
+  /* box-shadow: 0 0 15px rgba(21, 19, 19, 0.1); */
   animation: fadeIn 1.2s ease-in-out;
   max-width: 100%;
   gap: 2rem;
   flex-wrap: wrap;
-  min-width:420px
+  /* min-width:420px */
 }
 
 .student-image img {
@@ -1489,3 +1468,26 @@ input[type="text"] {
 }
 
 /*About Arbito ends*/
+/* Trusted by starts*/
+.trusted-logos {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  align-items: center;
+  justify-content: center; /* Center horizontally */
+}
+
+.trusted-logos img {
+  height: 110px;
+  object-fit: contain;
+  width: 150px;
+}
+
+/* Laptop view media query */
+@media (min-width: 768px) {
+  .trusted-logos {
+    justify-content: center;
+  }
+}
+
+/*Trusted by ends*/
