@@ -61,12 +61,21 @@ app.post("/api/login", (req, res) => {
 
 
 app.put("/api/updateuserpro", async (req, res) => {
-  const { username, email, contact } = req.body;
+  const { _id, username, email, contact, password } = req.body;
+
+  if (!_id) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
 
   try {
-    const updatedUser = await User.findOneAndUpdate(
-      { email: email },
-      { username, contact },
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      {
+        username,
+        email,
+        contact,
+        password,
+      },
       { new: true }
     );
 
@@ -80,6 +89,7 @@ app.put("/api/updateuserpro", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 
 
 

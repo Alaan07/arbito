@@ -19,6 +19,7 @@ import EditAchievement from "./Components/EditAchievement";
 import EditProfile from "./Components/EditProfile";
 import Eventpage from "./Components/Eventpage";
 import Footer from './Components/Footer';
+import About from "./Components/About.jsx";
 
 import { BrowserRouter as Router } from "react-router-dom";
 
@@ -38,6 +39,7 @@ function Layout() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/achievements" element={<Achievement />} />
         <Route path="/events" element={<Event />} />
+        <Route path="/about" element={<About />} />
         <Route path="/addblog" element={<AddBlog />} />
         <Route path="/addevent" element={<AddEvents />} />
         <Route path="/addachievement" element={<AddAchievement />} />

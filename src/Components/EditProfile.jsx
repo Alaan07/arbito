@@ -4,7 +4,6 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
-  FaArrowAltCircleRight,
   FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
@@ -20,72 +19,83 @@ const AddBlog = () => {
   const [isSidebarClosed, setIsSidebarClosed] = useState(
     localStorage.getItem("status") === "close"
   );
+  const [showProfile, setShowProfile] = useState(false);
 
+  // State to hold form data
+  const [formData, setFormData] = useState({
+  _id: "",
+  name: "",
+  email: "",
+  phone: "",
+  password: "",
+});
+
+  // Fetch user data on mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+          const res = await axios.get("/api/getuserpro");
+          setFormData({
+            _id: res.data._id,
+            name: res.data.username || "",
+            email: res.data.email || res.data.emai || "",
+            phone: res.data.contact || "",
+            password: "", // leave empty or res.data.password only if secure
+          }); 
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  // Apply dark mode on toggle
   useEffect(() => {
     document.body.classList.toggle("dark", isDarkMode);
     localStorage.setItem("mode", isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
 
+  // Apply sidebar status on toggle
   useEffect(() => {
     const nav = document.querySelector("nav");
     nav.classList.toggle("close", isSidebarClosed);
     localStorage.setItem("status", isSidebarClosed ? "close" : "open");
   }, [isSidebarClosed]);
 
+  // Toggle handlers
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
   const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
+  const toggleProfile = () => setShowProfile(!showProfile);
 
-  const [formData, setFormData] = useState({
-  username: "",
-  email: "",
-  contact: "",
-  });
-
-
-
-
+  // Input change handler
   const handleChange = (e) => {
-  const { username, value } = e.target;
-  setFormData((prev) => ({
-    ...prev,
-    [username]: value,
-  }));
-  };
+            const { name, value } = e.target;
+            setFormData((prev) => ({
+              ...prev,
+              [name]: value,
+            }));
+          };
 
-  const handleSubmit = async (e) => {
+  // Submit handler
+ const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const res = await axios.put('/api/updateuserpro', formData);
+    const res = await axios.put("/api/updateuserpro", {
+      _id: formData._id,
+      username: formData.name,
+      email: formData.email,
+      contact: formData.phone,
+      password: formData.password,
+    });
     alert("Profile updated successfully!");
-    console.log(res.data);
+    console.log("Updated:", res.data);
   } catch (err) {
     console.error("Update failed:", err);
     alert("Error updating profile.");
   }
-  };
-
-  const [showProfile, setShowProfile] = useState(false);
+};
 
 
-    useEffect(() => {
-      const fetchuserdata = async () => {
-        try {
-          const res = await axios.get('/api/getuserpro');
-          setFormData({
-            username: res.data.username,
-            email: res.data.email,
-            contact: res.data.contact ,
-          });
-        } catch (err) {
-          console.log(err);
-        }
-      };
-      fetchuserdata();
-    }, []);
-
-
-
-  const toggleProfile = () => setShowProfile(!showProfile);
 
   return (
     <>
@@ -154,13 +164,13 @@ const AddBlog = () => {
                 </div>
                 <div className="adm-profile-info">
                   <p>
-                    <strong>Name:</strong> {formData.username}
+                    <strong>Name:</strong> {formData.name}
                   </p>
                   <p>
                     <strong>Email:</strong> {formData.email}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {formData.contact}
+                    <strong>Phone:</strong> {formData.phone}
                   </p>
                   <Link to="/editprofile" className="adm-edit-btn">
                     Edit Profile
@@ -176,7 +186,7 @@ const AddBlog = () => {
             <div className="adm-title">
               <div className="adm-title-left">
                 <FaCalendar className="adm-logo-left" />
-                <span className="adm-text">Events</span>
+                <span className="adm-text">Edit Profile</span>
               </div>
             </div>
 
@@ -187,11 +197,24 @@ const AddBlog = () => {
                   <input
                     type="text"
                     name="name"
-                    value={formData.username}
+                    value={formData.name}
                     onChange={handleChange}
                     required
                   />
                 </div>
+                              
+                              
+              <div className="adm-form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
 
                 <div className="adm-form-group">
                   <label htmlFor="email">Email</label>
@@ -207,12 +230,12 @@ const AddBlog = () => {
                 <div className="adm-form-group">
                   <label htmlFor="phone">Phone</label>
                   <input
-                  type="tel"
-                  name="phone"
-                  value={formData.contact}
-                  onChange={handleChange}
-                  required
-                />
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
 
                 <button type="submit" className="adm-blog-submit-btn">
