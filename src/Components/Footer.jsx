@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <>
     
-      <div class="footer-spacer"></div>
+      <div className="footer-spacer"></div>
       <div className="doodle-wrapper">
         <img src={doodleImg} alt="Student Doodle" className="student-doodle" />
       </div>
@@ -24,9 +24,9 @@ const Footer = () => {
           <div className="footer-right">
             <div className="footer-section">
               <h3>Company</h3>
-              <a href="#about">About</a>
-              <a href="#blog">Blog</a>
-              <a href="#events">Events</a>
+              <Link to="/about">About</Link>
+              <Link to="/allblogs">Blog</Link>
+              <Link to="#">Event</Link>
             </div>
             <div className="footer-section">
               <h3>Support</h3>

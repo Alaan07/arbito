@@ -40,7 +40,7 @@ const Navbar = () => {
 
       <ul className={`nav-links ${isOpen ? 'open' : ''}`}>
         <li><Link to="/">Home</Link></li>
-        <li><a href="#">About</a></li>
+        <li><Link to="/about">About</Link></li>
         <li><a href="#">Events</a></li>
         <li><Link to="/contact">Contact</Link></li>
         <li><Link to="/allblogs">Blogs</Link></li>
