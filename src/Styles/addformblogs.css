@@ -113,6 +113,31 @@
 }
 
 
+.password-group {
+  position: relative;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  padding-right: 2.5rem;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 1.2rem;
+}
+
+
+
 @media screen and (max-width: 600px) {
   .adm-blog-add-form {
     padding: 15px;

@@ -4,8 +4,7 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
-  FaArrowAltCircleRight,
-  FaPlus,
+  FaCalendarAlt,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link } from "react-router-dom";
@@ -20,6 +19,30 @@ const AddBlog = () => {
     localStorage.getItem("status") === "close"
   );
 
+  const [adminData, setAdminData] = useState({
+    name: "Admin User",
+    email: "admin@arbito.com",
+    phone: "9876543210",
+    image: "/img/user-profile.jpg",
+  });
+
+  const [formData, setFormData] = useState({
+    name: "Admin Name",
+    email: "admin@example.com",
+    phone: "1234567890",
+    password: "",
+    image: null,
+  });
+
+  const [showProfile, setShowProfile] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
+  const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
+  const toggleProfile = () => setShowProfile(!showProfile);
+  const togglePasswordVisibility = () =>
+    setShowPassword((prev) => !prev);
+
   useEffect(() => {
     document.body.classList.toggle("dark", isDarkMode);
     localStorage.setItem("mode", isDarkMode ? "dark" : "light");
@@ -30,16 +53,6 @@ const AddBlog = () => {
     nav.classList.toggle("close", isSidebarClosed);
     localStorage.setItem("status", isSidebarClosed ? "close" : "open");
   }, [isSidebarClosed]);
-
-  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
-  const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
-
-  const [formData, setFormData] = useState({
-    name: "Admin Name",
-    email: "admin@example.com",
-    phone: "1234567890",
-    image: null,
-  });
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -52,19 +65,15 @@ const AddBlog = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!/^\d{10}$/.test(formData.phone)) {
+      alert("Phone number must be exactly 10 digits.");
+      return;
+    }
+
     console.log("Updated Profile:", formData);
-    // Handle form submit logic here
+    // Your submit logic here
   };
-
-  const [showProfile, setShowProfile] = useState(false);
-  const [adminData, setAdminData] = useState({
-    name: "Admin User",
-    email: "admin@arbito.com",
-    phone: "+91 9876543210",
-    image: "/img/user-profile.jpg",
-  });
-
-  const toggleProfile = () => setShowProfile(!showProfile);
 
   return (
     <>
@@ -125,7 +134,6 @@ const AddBlog = () => {
               className="adm-profile-pic"
               onClick={toggleProfile}
             />
-
             {showProfile && (
               <div className="adm-profile-dropdown">
                 <div className="adm-profile-image">
@@ -154,8 +162,8 @@ const AddBlog = () => {
           <div className="overview">
             <div className="adm-title">
               <div className="adm-title-left">
-                <FaCalendar className="adm-logo-left" />
-                <span className="adm-text">Events</span>
+                <FaCalendarAlt className="adm-logo-left" />
+                <span className="adm-text">Update Profile</span>
               </div>
             </div>
 
@@ -183,6 +191,31 @@ const AddBlog = () => {
                   />
                 </div>
 
+                <div className="adm-form-group password-group">
+                  <label htmlFor="password">Password</label>
+                  <div className="password-input-wrapper">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="Enter password"
+                      required
+                    />
+                    <span
+                      className="password-toggle-icon"
+                      onClick={togglePasswordVisibility}
+                      style={{
+                        cursor: "pointer",
+                        marginLeft: "10px",
+                        userSelect: "none",
+                      }}
+                    >
+                      {showPassword ? "🙈" : "👁️"}
+                    </span>
+                  </div>
+                </div>
+
                 <div className="adm-form-group">
                   <label htmlFor="phone">Phone</label>
                   <input
@@ -190,34 +223,14 @@ const AddBlog = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
+                    pattern="\d{10}"
+                    maxLength="10"
+                    placeholder="Enter 10-digit phone number"
                     required
                   />
                 </div>
 
-                <div className="adm-form-group">
-                  <label htmlFor="image">Profile Image</label>
-                  <input
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    onChange={handleChange}
-                  />
-                  {formData.image && (
-                    <div style={{ marginTop: "10px" }}>
-                      <img
-                        src={URL.createObjectURL(formData.image)}
-                        alt="Preview"
-                        style={{
-                          width: "100px",
-                          height: "100px",
-                          borderRadius: "8px",
-                          objectFit: "cover",
-                          marginTop: "10px",
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
+                
 
                 <button type="submit" className="adm-blog-submit-btn">
                   Update Profile
