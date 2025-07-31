@@ -1535,6 +1535,29 @@ input[type="text"] {
 
 /*About Arbito ends*/
 
+/* Trusted by starts*/
+.trusted-logos {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  align-items: center;
+  justify-content: center; /* Center horizontally */
+}
+
+.trusted-logos img {
+  height: 110px;
+  object-fit: contain;
+  width: 150px;
+}
+
+/* Laptop view media query */
+@media (min-width: 768px) {
+  .trusted-logos {
+    justify-content: center;
+  }
+}
+
+/*Trusted by ends*/
 
 
 /* ***************************************************************aboutmm */
