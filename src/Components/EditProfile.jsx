@@ -36,19 +36,19 @@ const AddBlog = () => {
   const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
 
   const [formData, setFormData] = useState({
-  name: "",
+  username: "",
   email: "",
-  phone: "",
+  contact: "",
   });
 
 
 
 
   const handleChange = (e) => {
-  const { name, value } = e.target;
+  const { username, value } = e.target;
   setFormData((prev) => ({
     ...prev,
-    [name]: value,
+    [username]: value,
   }));
   };
 
@@ -65,7 +65,6 @@ const AddBlog = () => {
   };
 
   const [showProfile, setShowProfile] = useState(false);
-  const [adminData, setAdminData] = useState([]);
 
 
     useEffect(() => {
@@ -73,9 +72,9 @@ const AddBlog = () => {
         try {
           const res = await axios.get('/api/getuserpro');
           setFormData({
-            name: res.data.name || "",
-            email: res.data.email || "",
-            phone: res.data.phone || "",
+            username: res.data.username,
+            email: res.data.email,
+            contact: res.data.contact ,
           });
         } catch (err) {
           console.log(err);
@@ -155,7 +154,7 @@ const AddBlog = () => {
                 </div>
                 <div className="adm-profile-info">
                   <p>
-                    <strong>Name:</strong> {formData.name}
+                    <strong>Name:</strong> {formData.username}
                   </p>
                   <p>
                     <strong>Email:</strong> {formData.email}
@@ -188,7 +187,7 @@ const AddBlog = () => {
                   <input
                     type="text"
                     name="name"
-                    value={formData.name}
+                    value={formData.username}
                     onChange={handleChange}
                     required
                   />
@@ -210,7 +209,7 @@ const AddBlog = () => {
                   <input
                   type="tel"
                   name="phone"
-                  value={formData.phone}
+                  value={formData.contact}
                   onChange={handleChange}
                   required
                 />

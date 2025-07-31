@@ -61,12 +61,12 @@ app.post("/api/login", (req, res) => {
 
 
 app.put("/api/updateuserpro", async (req, res) => {
-  const { name, email, phone } = req.body;
+  const { username, email, contact } = req.body;
 
   try {
     const updatedUser = await User.findOneAndUpdate(
       { email: email },
-      { name, phone },
+      { username, contact },
       { new: true }
     );
 
