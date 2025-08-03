@@ -5,21 +5,26 @@ body, .App {
   overflow-x: hidden;
   background-color: #f7f7f5;
   width: 100%;
-  margin-top: 0;
+  margin-top: 100px;
 }
 
 /* Navbar container */
 .navbar {
-  display: flex;
+ display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: black;
   padding: 1rem 2rem;
-  position: sticky;
+  position: fixed;
   top: 0;
   width: 100%;
   box-sizing: border-box;
   z-index: 1000;
+}
+.navbar {
+  height: auto;
+  max-height: 130px; 
+  overflow: hidden; 
 }
 
 /* Logo text */
@@ -38,6 +43,11 @@ body, .App {
   max-width: 100%;
 }
 
+/* Content wrapper */
+.body-wrapper {
+  display: block;
+  transition: margin-left 0.3s ease;
+}
 /* Hamburger icon toggle (only visible on mobile) */
 .hamburger {
   display: none;
@@ -75,30 +85,124 @@ body, .App {
   /* font-family: 'Kodchasn', sans-serif; */
 }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
+/* Tablet and Mobile Only */
+@media (max-width: 1024px) {
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0%);
+      opacity: 1;
+    }
+  }
+
+  .nav-links.mobile {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 70%;
+    height: 100vh;
+    background-color: black;
+    padding: 4rem 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: right;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 998;
+    animation: slideInRight 0.4s ease forwards;
+  }
+
   .hamburger {
     display: block;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #fccc42;
+    z-index: 999;
+    background-color: transparent;
   }
+  .close-btn {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #fccc42;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-bottom: 2rem;
+  transition: color 0.3s ease;
+}
 
-  .nav-links {
+.close-btn:hover {
+  color: #c732b0;
+}
+
+  .nav-links.desktop {
     display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    right: 2rem;
-    background-color: #fef9ff;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  .nav-links.open {
+  .nav-links.mobile {
+  z-index: 1001; /* Make this higher than the navbar */
+}
+
+.navbar {
+  z-index: 1000; /* Lower than the mobile menu */
+}
+}
+
+@media (min-width: 1025px) {
+  .hamburger {
+    display: none;
+  }
+
+  .nav-links.desktop {
     display: flex;
-    align-items: flex-end;
-    gap: 0.8rem;
+    gap: 2rem;
+    list-style: none;
+    align-items: center;
+    margin-right: 2rem;
+  }
+
+  .nav-links.desktop li a {
+    text-decoration: none;
+    color: #fccc42;
+    font-weight: 500;
+  }
+
+  .nav-links.mobile {
+    display: none;
+  }
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    padding: 1rem 2rem;
+    position: fixed; /* 💡 Use ONLY fixed here */
+    top: 0;
+    width: 100%;
+    box-sizing: border-box;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 1000;
+  }
+
+  .navbar.hide {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  .navbar.show {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
+
+
+
 
 .navbar {
   /* min-width: 480px; */
@@ -107,7 +211,7 @@ body, .App {
 
 /* Scroll-hide behavior */
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
   z-index: 1000;
@@ -1359,8 +1463,14 @@ input[type="text"] {
   .support-form input,
   .support-form textarea,
   .support-form button {
-    max-width: 100%; /* fills the container on tiny screens */
+    max-width: 100%; 
   }
+}
+.support-form textarea {
+  min-height: 160px;       
+  resize: vertical;
+  max-height: 280px;
+  overflow-y: auto;      
 }
 
 
@@ -1498,8 +1608,7 @@ input[type="text"] {
   }
 
   .student-image {
-    display: flex;
-    justify-content: center;
+    display: flex;content: center;
     margin-bottom: 1rem;
   }
 
@@ -1511,6 +1620,26 @@ input[type="text"] {
     text-align: center;
   }
 }
+@media (max-width: 480px) {
+  .arbito-banner {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .heading {
+    font-size: 1.8rem;
+  }
+
+  .description {
+    font-size: 1.2rem;
+    padding: 0.75rem;
+  }
+
+  .student-image img {
+    width: 180px;
+    height: 180px;
+  }
+}
 
 /*About Arbito ends*/
 
@@ -1519,17 +1648,23 @@ input[type="text"] {
   display: flex;
   gap: 1rem;
   margin-top: 0.5rem;
+  flex-wrap: wrap; 
   align-items: center;
-  justify-content: center; /* Center horizontally */
+  justify-content: center; 
 }
 
 .trusted-logos img {
   height: 110px;
   object-fit: contain;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   width: 150px;
+    width: clamp(100px, 20vw, 150px);
 }
 
-/* Laptop view media query */
+.trusted-logos img:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow:0 0 20px #be94f580;
+}
 @media (min-width: 768px) {
   .trusted-logos {
     justify-content: center;
@@ -1641,4 +1776,3 @@ input[type="text"] {
 }
 
 /* about page ends */
-

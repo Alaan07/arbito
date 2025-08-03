@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AllBlogs from "./Components/AllBlogs.jsx";
 import ContactPage from "./Components/ContactPage";
 import Navbar from "./Components/Navbar";
@@ -19,14 +19,27 @@ import EditAchievement from "./Components/EditAchievement";
 import EditProfile from "./Components/EditProfile";
 import Eventpage from "./Components/Eventpage";
 import Footer from './Components/Footer';
-import About from "./Components/About.jsx";
+import About from './Components/About';
+
 
 import { BrowserRouter as Router } from "react-router-dom";
 
 function Layout() {
-  const location = useLocation();
-  const hideNavbar = location.pathname === "/dashbord";
+  const hideNavbarPaths = [
+    "/dashbord",
+    "/blogs",
+    "/achievements",
+    "/events",
+    "/addblog",
+    "/addevent",
+    "/addachievement",
+    "/editblogs/:id",
+    "/editevents",
+    "/editachievement",
+    "/editprofile"
 
+  ];
+  const hideNavbar = hideNavbarPaths.includes(location.pathname);  
   return (
     <>
       {!hideNavbar && <Navbar />}
@@ -39,17 +52,19 @@ function Layout() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/achievements" element={<Achievement />} />
         <Route path="/events" element={<Event />} />
-        <Route path="/about" element={<About />} />
         <Route path="/addblog" element={<AddBlog />} />
+        <Route path="/about" element={<About />} />
         <Route path="/addevent" element={<AddEvents />} />
         <Route path="/addachievement" element={<AddAchievement />} />
         <Route path="/editblogs/:id" element={<EditBlogs />} />
         <Route path="/editevents" element={<EditEvent />} />
         <Route path="/editachievement" element={<EditAchievement />} />
         <Route path="/editprofile" element={<EditProfile />} />
+         <Route path="/about" element={<About />} />
         <Route path="/eventpage" element={<Eventpage />} />
       </Routes>
       <Footer />
+      
     </>
   );
 }
@@ -63,3 +78,4 @@ function App() {
 }
 
 export default App;
+

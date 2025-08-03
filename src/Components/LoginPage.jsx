@@ -15,7 +15,6 @@ const LoginPage = () => {
 
 
 
-
   const handleLogin = async(e) => {
     e.preventDefault();
 
@@ -29,10 +28,12 @@ const LoginPage = () => {
       const userdata = await axios.post('/api/login', {username: updatedusername , password: password});
       if(userdata.data.islogin){
         alert("login Succesfull");
-        navigate('/dashbord')
+
+         sessionStorage.setItem("redirectedOnce", "true");
+         window.location.href = "/dashbord";
       }
       else{
-        alert("failed fool u fool")
+        alert("failed please try again")
       }
       setPassword('');
       setUsername('');
