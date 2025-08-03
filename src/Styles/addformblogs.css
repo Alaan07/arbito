@@ -59,6 +59,7 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
+  color: black;
   background-color: white;
 }
 
@@ -117,6 +118,31 @@
   border-color: var(--primary-color, #4a90e2);
   box-shadow: 0 0 3px var(--primary-color, #4a90e2);
 }
+
+
+.password-group {
+  position: relative;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  padding-right: 2.5rem;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 1.2rem;
+}
+
 
 
 @media screen and (max-width: 600px) {

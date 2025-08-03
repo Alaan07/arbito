@@ -4,13 +4,12 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
-  FaPlus,
+  FaCalendarAlt,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link } from "react-router-dom";
 import "../App.css";
 import "../Styles/addformblogs.css";
-import axios from "../api/axios.js";
 
 const AddBlog = () => {
   const [isDarkMode, setIsDarkMode] = useState(
@@ -19,83 +18,62 @@ const AddBlog = () => {
   const [isSidebarClosed, setIsSidebarClosed] = useState(
     localStorage.getItem("status") === "close"
   );
-  const [showProfile, setShowProfile] = useState(false);
 
-  // State to hold form data
+  const [adminData, setAdminData] = useState({
+    name: "Admin User",
+    email: "admin@arbito.com",
+    phone: "9876543210",
+    image: "/img/user-profile.jpg",
+  });
+
   const [formData, setFormData] = useState({
-  _id: "",
-  name: "",
-  email: "",
-  phone: "",
-  password: "",
-});
+    name: "Admin Name",
+    email: "admin@example.com",
+    phone: "1234567890",
+    password: "",
+    image: null,
+  });
 
-  // Fetch user data on mount
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-          const res = await axios.get("/api/getuserpro");
-          setFormData({
-            _id: res.data._id,
-            name: res.data.username || "",
-            email: res.data.email || res.data.emai || "",
-            phone: res.data.contact || "",
-            password: "", // leave empty or res.data.password only if secure
-          }); 
-      } catch (err) {
-        console.error("Failed to fetch user data:", err);
-      }
-    };
-    fetchUserData();
-  }, []);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  // Apply dark mode on toggle
+  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
+  const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
+  const toggleProfile = () => setShowProfile(!showProfile);
+  const togglePasswordVisibility = () =>
+    setShowPassword((prev) => !prev);
+
   useEffect(() => {
     document.body.classList.toggle("dark", isDarkMode);
     localStorage.setItem("mode", isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
 
-  // Apply sidebar status on toggle
   useEffect(() => {
     const nav = document.querySelector("nav");
     nav.classList.toggle("close", isSidebarClosed);
     localStorage.setItem("status", isSidebarClosed ? "close" : "open");
   }, [isSidebarClosed]);
 
-  // Toggle handlers
-  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
-  const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
-  const toggleProfile = () => setShowProfile(!showProfile);
-
-  // Input change handler
   const handleChange = (e) => {
-            const { name, value } = e.target;
-            setFormData((prev) => ({
-              ...prev,
-              [name]: value,
-            }));
-          };
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      setFormData({ ...formData, image: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
 
-  // Submit handler
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await axios.put("/api/updateuserpro", {
-      _id: formData._id,
-      username: formData.name,
-      email: formData.email,
-      contact: formData.phone,
-      password: formData.password,
-    });
-    alert("Profile updated successfully!");
-    console.log("Updated:", res.data);
-  } catch (err) {
-    console.error("Update failed:", err);
-    alert("Error updating profile.");
-  }
-};
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
+    if (!/^\d{10}$/.test(formData.phone)) {
+      alert("Phone number must be exactly 10 digits.");
+      return;
+    }
 
+    console.log("Updated Profile:", formData);
+    // Your submit logic here
+  };
 
   const handlelogoutToHome = () => {
     sessionStorage.setItem("homeRedirectOnce", "true");
@@ -155,26 +133,25 @@ const AddBlog = () => {
           <IoMdMenu className="adm-sidebar-toggle" onClick={toggleSidebar} />
           <div className="adm-profile-container">
             <img
-              src="/public/img/user-profile.jpg"
+              src={adminData.image}
               alt="Admin"
               className="adm-profile-pic"
               onClick={toggleProfile}
             />
-
             {showProfile && (
               <div className="adm-profile-dropdown">
                 <div className="adm-profile-image">
-                  <img src="/public/img/user-profile.jpg" alt="Admin Large" />
+                  <img src={adminData.image} alt="Admin Large" />
                 </div>
                 <div className="adm-profile-info">
                   <p>
-                    <strong>Name:</strong> {formData.name}
+                    <strong>Name:</strong> {adminData.name}
                   </p>
                   <p>
-                    <strong>Email:</strong> {formData.email}
+                    <strong>Email:</strong> {adminData.email}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {formData.phone}
+                    <strong>Phone:</strong> {adminData.phone}
                   </p>
                   <Link to="/editprofile" className="adm-edit-btn">
                     Edit Profile
@@ -189,8 +166,8 @@ const AddBlog = () => {
           <div className="overview">
             <div className="adm-title">
               <div className="adm-title-left">
-                <FaCalendar className="adm-logo-left" />
-                <span className="adm-text">Edit Profile</span>
+                <FaCalendarAlt className="adm-logo-left" />
+                <span className="adm-text">Update Profile</span>
               </div>
             </div>
 
@@ -206,19 +183,6 @@ const AddBlog = () => {
                     required
                   />
                 </div>
-                              
-                              
-              <div className="adm-form-group">
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
 
                 <div className="adm-form-group">
                   <label htmlFor="email">Email</label>
@@ -238,9 +202,14 @@ const AddBlog = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
+                    pattern="\d{10}"
+                    maxLength="10"
+                    placeholder="Enter 10-digit phone number"
                     required
                   />
                 </div>
+
+                
 
                 <button type="submit" className="adm-blog-submit-btn">
                   Update Profile

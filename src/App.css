@@ -227,9 +227,9 @@ body, .App {
   opacity: 1;
 }
 
-/*Navbar ends*/
+/Navbar ends/
 
-/*Loginpage starts*/
+/Loginpage starts/
 .login-wrapper {
    display: flex;
   height: 100vh;
@@ -500,9 +500,9 @@ input[type="text"] {
   }
 }
 
-/*Login page ends*/
+/Login page ends/
 
-/*homepage starts*/
+/homepage starts/
 /* Base wrapper */
 .homepage-wrapper {
   background-color: #f7f7f5;
@@ -637,7 +637,7 @@ input[type="text"] {
   }
 }
 
-/*homepage ends*/
+/homepage ends/
 
 .arbito-gallery {
   padding: 3rem 1.5rem;
@@ -754,7 +754,7 @@ input[type="text"] {
   }
 }
 
-/*Footer starts*/
+/Footer starts/
 .doodle-wrapper {
   position: relative;
   height: 0;
@@ -917,7 +917,7 @@ input[type="text"] {
 /* Footer ends */
 
 
-/*Banner 1 starts*/
+/Banner 1 starts/
 .banner1 {
   height: 35vh;
   display: flex;
@@ -1095,7 +1095,7 @@ input[type="text"] {
   position: absolute;
   width: 40px;
 
-  animation: fly-buzz 20s ease-in-out infinite; /* ⬅️ Slowed down with smoother motion */
+  animation: fly-buzz 20s ease-in-out infinite; /* ⬅ Slowed down with smoother motion */
 }
 
 @keyframes fly-buzz {
@@ -1179,10 +1179,10 @@ input[type="text"] {
   }
 }
 
-/*Banner 1 ends*/
+/Banner 1 ends/
 
 
-/*FAQ starts*/
+/FAQ starts/
 .faq-section {
   padding: 2rem;
   font-family: 'Kodchasan', sans-serif;
@@ -1231,7 +1231,7 @@ input[type="text"] {
     grid-template-columns: 1fr;
   }
 }
-/*FAQ ends*/
+/FAQ ends/
 /* /Join community starts/ */
 .join-wrapper {
   /* display: flex; */
@@ -1387,7 +1387,7 @@ input[type="text"] {
 
 
 /*Join community end
-/*Support us starts*/
+/Support us starts/
 .support-section {
   background-color: #f7f7f5;
   color: #151313;
@@ -1474,8 +1474,8 @@ input[type="text"] {
 }
 
 
-/*Support us ends*/
-/*tag line starts here*/
+/Support us ends/
+/tag line starts here/
 
 :root {
   --royal-gold: #DAA520;
@@ -1531,8 +1531,8 @@ input[type="text"] {
   font-weight: bold;
 }
 
-/*tag line ends*/
-/*About Arbito starts*/
+/tag line ends/
+/About Arbito starts/
 .arbito-banner {
   display: flex;
   justify-content: space-between;
@@ -1626,6 +1626,7 @@ input[type="text"] {
     gap: 1rem;
   }
 
+
   .heading {
     font-size: 1.8rem;
   }
@@ -1641,7 +1642,7 @@ input[type="text"] {
   }
 }
 
-/*About Arbito ends*/
+/About Arbito ends/
 
 /* Trusted by starts*/
 .trusted-logos {
@@ -1671,7 +1672,7 @@ input[type="text"] {
   }
 }
 
-/*Trusted by ends*/
+/Trusted by ends/
 
 /* ***************************************************************aboutmm */
 /* about page */
