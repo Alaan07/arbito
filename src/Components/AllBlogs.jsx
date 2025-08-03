@@ -1,86 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaFilter } from 'react-icons/fa';
 import '../Styles/Allblogs.css';
-
-const blogscard = [
-  {
-    Thumbnail: '/img/braindemo.png',
-    Title: 'The Brain of Ai bla bla bla',
-    category: ['IT', 'world', 'tech'],
-    description:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel consectetur placeat non mollitia aliquam...',
-  },
-  {
-    Thumbnail: '/img/braindemo.png',
-    Title: 'Rui Norrish Dsouza',
-    category: ['IT', 'tech'],
-    description:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel consectetur placeat non mollitia aliquam...',
-  },
-  {
-    Thumbnail: '/img/braindemo.png',
-    Title: 'The Brain of Ai bla bla bla',
-    category: ['IT', 'ComputerScience', 'world'],
-    description:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel consectetur placeat non mollitia aliquam...',
-  },
-  {
-    Thumbnail: '/img/braindemo.png',
-    Title: 'The Brain of Ai bla bla bla',
-    category: ['IT', 'ComputerScience'],
-    description:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel consectetur placeat non mollitia aliquam...',
-  },
-  {
-    Thumbnail: '/img/braindemo.png',
-    Title: 'The Brain of Ai bla bla bla',
-    category: ['IT', 'ComputerScience', 'tech'],
-    description:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel consectetur placeat non mollitia aliquam...',
-  },
-  {
-    Thumbnail: '/img/braindemo.png',
-    Title: 'The Brain of Ai bla bla bla',
-    category: ['IT', 'ComputerScience', 'tech'],
-    description:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel consectetur placeat non mollitia aliquam...',
-  },
-  {
-    Thumbnail: '/img/braindemo.png',
-    Title: 'The Brain of Ai bla bla bla',
-    category: ['IT', 'ComputerScience', 'tech'],
-    description:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel consectetur placeat non mollitia aliquam...',
-  },
-  {
-    Thumbnail: '/img/braindemo.png',
-    Title: 'The Brain of Ai bla bla bla',
-    category: ['IT', 'ComputerScience', 'tech'],
-    description:
-      'yhjjjjjjjbkuigkhggggyyyyyytbffffffffffffffffffffffffffffffffffffffffff6uyfffffffffffffffffmollialiquamgutjcjjjjjjjjjjjjjjjjjjhviyiyfffffhufyhvfyuvhjivhjugiiiiijkvdtsrxfhvjgvhhhhhhhhhhhhhhhhhhhhhhhhhhhhuhvgyfvhhvjjvhifyvhguuuuuuuuuuuuuuuuuuujhvghcfyhvghcfdtfygvcxsdrtuiyohlkkkkkkhjbhjgfhkkkkkkkkkkj...',
-  },
-];
+import axios from '../api/axios.js';
 
 function AllBlogs() {
+  const [blogscard, setblogscard] = useState([]);
   const [category, setCategory] = useState('latest');
   const [filterdis, setfilterdis] = useState(false);
+  const [selectedBlog, setSelectedBlog] = useState(null); // NEW STATE
 
-  const handleCategoryChange = (e) => {
-    setCategory(e.target.value);
+
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await axios.get("/api/allblogs");
+        setblogscard(res.data);
+      } catch (error) {
+        console.error("Failed to fetch blogs:", error);
+      }
+    };
+    fetchBlogs();
+  }, []);
+
+
+
+  useEffect(() => {
+  if (selectedBlog) {
+    document.body.classList.add("modal-open");
+  } else {
+    document.body.classList.remove("modal-open");
+  }
+
+  return () => {
+    document.body.classList.remove("modal-open");
   };
+}, [selectedBlog]);
 
-  const handleFilterToggle = () => {
-    setfilterdis((prev) => !prev);
-  };
 
-  const filteredCards =
-    category === 'latest'
-      ? blogscard
-      : blogscard.filter((card) => card.category.includes(category));
+
+
+  const handleCategoryChange = (e) => setCategory(e.target.value);
+  const handleFilterToggle = () => setfilterdis((prev) => !prev);
+  const filteredCards = category === 'latest'
+    ? blogscard
+    : blogscard.filter((card) => card.category.includes(category));
 
   return (
     <div className="wholeAllBlogcontainer">
-      <div className="mainbodyallblog">
+      <div className={`mainbodyallblog ${selectedBlog ? 'blurred' : ''}`}>
         <div className="categoryallblogdiv">
           <div className="cateleftallbog">
             <span className="categoryh1">Blogs - </span>
@@ -109,27 +77,46 @@ function AllBlogs() {
         <div className="allblogsCarddiv">
           <div className="allblogscardSection">
             {filteredCards.map((card, index) => (
-              <div className="allblogcard" key={index}>
-                <img src={card.Thumbnail} alt="Blog Thumbnail" className="blogcardimg" />
-                <h3>{card.Title}</h3>
+              <div className="allblogcard" key={index} onClick={() => setSelectedBlog(card)}>
+                <img src={`${card.thumbnail}`} alt="Blog Thumbnail" className="blogcardimg" />
+                <h3>{card.title}</h3>
                 <h4>
                   Category:{' '}
                   {card.category.map((cat, i) => (
-                    <span
-                      key={i}
-                      className="blogcard-category-span"
-                      onClick={() => setCategory(cat)}
-                    >
+                    <span key={i} className="blogcard-category-span" onClick={(e) => {
+                      e.stopPropagation(); // Prevent card open
+                      setCategory(cat);
+                    }}>
                       {cat}
                     </span>
                   ))}
                 </h4>
-                <p>{card.description}</p>
+                <p>{card.content}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Modal Popup */}
+      {selectedBlog && (
+        <div className="blogModal">
+          <button className="closeBtn" onClick={() => setSelectedBlog(null)}>✕</button>
+          <img
+            src={`${selectedBlog.thumbnail}`}
+            alt="Full"
+            className="modalImage"
+          />
+          <h2 className="blogmodelh2">{selectedBlog.title}</h2>
+          <div className="modalCategories">
+            {selectedBlog.category.map((cat, i) => (
+              <span key={i} className="modalCatSpan">{cat}</span>
+            ))}
+          </div>
+          <p className="modalIntro">{selectedBlog.intoduction}</p>
+          <p className="modalDesc">{selectedBlog.content}</p>
+        </div>
+      )}
     </div>
   );
 }

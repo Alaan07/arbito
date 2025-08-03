@@ -191,31 +191,6 @@ const AddBlog = () => {
                   />
                 </div>
 
-                <div className="adm-form-group password-group">
-                  <label htmlFor="password">Password</label>
-                  <div className="password-input-wrapper">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      placeholder="Enter password"
-                      required
-                    />
-                    <span
-                      className="password-toggle-icon"
-                      onClick={togglePasswordVisibility}
-                      style={{
-                        cursor: "pointer",
-                        marginLeft: "10px",
-                        userSelect: "none",
-                      }}
-                    >
-                      {showPassword ? "🙈" : "👁️"}
-                    </span>
-                  </div>
-                </div>
-
                 <div className="adm-form-group">
                   <label htmlFor="phone">Phone</label>
                   <input

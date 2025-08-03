@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import '../App.css';
 import arbitoImage from '../assets/home-updated.png';
+import BroaderAI from '../assets/BroaderAI.png';
+import Roarstar from '../assets/Roarstar.png';
 import Banner1 from './Banner1';
 import Banner2 from './Banner2';
 import FAQ from './FAQ';
@@ -43,16 +45,42 @@ const Homepage = () => {
           <p>
             Empowering students with real-world skills. Arbito Student Community connects learning with doing — through workshops, projects, and hands-on experiences. We believe in growing together, mentoring each other, and turning ideas into impact.
           </p>
+          <div style={{ height: '3.5rem' }} />
+          <h3 className="trusted-by">Trusted by</h3>
+
+    
+    <div className="trusted-logos">
+      <img src={BroaderAI} alt="Partner Logo 1" />
+      <img src={Roarstar} alt="Partner Logo 2" />
+    </div>
         </div>
       </div>
+                <div style={{ height: '4.5rem' }} />
+
       <Tagline/>
+      <div style={{ height: '4.5rem' }} />
+      <Banner1/>
+      <div style={{ height: '4.5rem' }} />
+
       <AboutArbitoBanner/>
-<Banner1/>
+            <div style={{ height: '4.5rem' }} />
+
+
+
 <Join/> 
+      <div style={{ height: '4.5rem' }} />
+
+
       
 <Banner2/>
+      <div style={{ height: '4.5rem' }} />
+
 <SupportUs/>
+      <div style={{ height: '4.5rem' }} />
+
 <FAQ/>
+      <div style={{ height: '4.5rem' }} />
+
     
     </>
   );

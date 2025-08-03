@@ -64,7 +64,7 @@ const Blog = () => {
 
       const confirmDelete = async () => {
         try {
-          await axios.delete(`/api/blogs/${deleteId}`);
+          await axios.delete(`/api/blogsdelete/${deleteId}`);
           const updatedData = blogData.filter((blog) => blog._id !== deleteId);
           setBlogData(updatedData);
           setShowConfirm(false);
@@ -72,13 +72,6 @@ const Blog = () => {
           console.error("Failed to delete blog:", error);
         }
       };
-
-  // const confirmDelete = () => {
-  //   const updatedData = [...blogData];
-  //   updatedData.splice(deleteIndex, 1);
-  //   setBlogData(updatedData);
-  //   setShowConfirm(false);
-  // };
 
   const cancelDelete = () => {
     setShowConfirm(false);
@@ -214,7 +207,7 @@ const Blog = () => {
                       <td>{blog.intoduction}</td>
                       <td>{Array.isArray(blog.category) ? blog.category.join(", ") : blog.category}</td>
                       <td>
-                        <Link to="/editblogs" className="adm-blog-edit-btn">
+                        <Link to={`/editblogs/${blog._id}`} className="adm-blog-edit-btn">
                           Edit
                         </Link>
                         <button

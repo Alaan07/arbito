@@ -8,11 +8,17 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
 import "../Styles/addformevents.css";
+import { useParams } from "react-router-dom";
+import axios from "../api/axios.js";
+
+
+
 const AddBlog = () => {
+  const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("mode") === "dark"
   );
@@ -43,6 +49,81 @@ const AddBlog = () => {
   });
 
   const toggleProfile = () => setShowProfile(!showProfile);
+
+
+  const { id } = useParams();
+
+
+  const [formData, setFormData] = useState({
+  title: '',
+  category: [],
+  intoduction: '',
+  content: '',
+  thumbnail: '',
+});
+
+const [oldThumbnailName, setOldThumbnailName] = useState("");
+
+
+useEffect(() => {
+  axios.get(`/api/geteditblog/${id}`)
+    .then(res => {
+      const blog = res.data.blog;
+      setFormData({
+        title: blog.title,
+        category: blog.category,
+        intoduction: blog.intoduction,
+        content: blog.content,
+        thumbnail: "",
+      });
+
+      if (blog.thumbnail) {
+        const fileName = blog.thumbnail.split("-").pop();
+        setOldThumbnailName(fileName);
+      }
+    })
+    .catch(err => console.error(err));
+}, [id]);
+
+
+
+
+
+
+
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const data = new FormData();
+  data.append("title", formData.title);
+  data.append("category", JSON.stringify(formData.category));
+  data.append("intoduction", formData.intoduction);
+  data.append("content", formData.content);
+  if (formData.thumbnail) {
+    data.append("thumbnail", formData.thumbnail);
+  }
+
+  try {
+    await axios.put(`/api/updateblog/${id}`, data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    alert("Blog updated!");
+    navigate('/blogs');
+
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to update blog");
+  }
+};
+
+
+
+
+
+
+
+
 
   return (
     <>
@@ -138,39 +219,50 @@ const AddBlog = () => {
             </div>
 
             <div className="adm-blog-add-form">
-              <form className="adm-blog-form">
+              <form className="adm-blog-form" onSubmit={handleSubmit}>
                 <div className="adm-form-group">
                   <label htmlFor="title">Title</label>
                   <input
                     type="text"
                     id="title"
                     name="title"
-                    placeholder="Enter blog title"
-                    defaultValue="React Basics"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     required
                   />
                 </div>
 
                 <div className="adm-form-group">
-                  <label htmlFor="category">Category</label>
-                  <select
-                    id="category"
-                    name="category"
-                    defaultValue="Front-end Development"
-                    required
-                  >
-                    <option value="" disabled>
-                      Select a category
-                    </option>
-                    <option value="Front-end Development">
-                      Front-end Development
-                    </option>
-                    <option value="Back-end Development">
-                      Back-end Development
-                    </option>
-                    <option value="Full Stack">Full Stack</option>
-                    <option value="Cloud">Cloud</option>
-                  </select>
+                  <label>Category</label>
+                  <div className="adm-radio-options">
+                    {[
+                      "IT",
+                      "Computer Applications",
+                      "Tech",
+                      "AI/ML",
+                      "Cloud Computing",
+                    ].map((cat) => (
+                      <label key={cat}>
+                        <input
+                          type="checkbox"
+                          name="category"
+                          value={cat}
+                          checked={formData.category.includes(cat)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const checked = e.target.checked;
+                            setFormData((prev) => ({
+                              ...prev,
+                              category: checked
+                                ? [...prev.category, value]
+                                : prev.category.filter((c) => c !== value),
+                            }));
+                          }}
+                        />
+                        {cat}
+                      </label>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="adm-form-group">
@@ -179,8 +271,10 @@ const AddBlog = () => {
                     type="text"
                     id="intro"
                     name="intro"
-                    placeholder="Short intro"
-                    defaultValue="Intro to React library"
+                    value={formData.intoduction}
+                    onChange={(e) =>
+                      setFormData({ ...formData, intoduction: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -190,22 +284,44 @@ const AddBlog = () => {
                   <textarea
                     id="description"
                     name="description"
-                    placeholder="Detailed description"
-                    rows="4"
-                    defaultValue="React is a JavaScript library for building user interfaces."
+                    value={formData.content}
+                    onChange={(e) =>
+                      setFormData({ ...formData, content: e.target.value })
+                    }
                     required
                   />
                 </div>
 
                 <div className="adm-form-group">
-                  <label htmlFor="image">Blog Image (JPG, max 20MB)</label>
-                  <input type="file" id="image" name="image" accept=".jpg" />
+                  <label htmlFor="image">
+                    Blog Image (JPG, max 20MB)
+                    {formData.thumbnail instanceof File
+                      ? ` / ${formData.thumbnail.name}`
+                      : oldThumbnailName && ` / ${oldThumbnailName}`}
+                  </label>
+
+                  <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept=".jpg"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file && file.size > 20 * 1024 * 1024) {
+                        alert("File size must be less than 20MB");
+                        return;
+                      }
+                      setFormData({ ...formData, thumbnail: file });
+                    }}
+                  />
                 </div>
+
 
                 <button type="submit" className="adm-blog-submit-btn">
                   Update Blog
                 </button>
               </form>
+
             </div>
           </div>
         </div>

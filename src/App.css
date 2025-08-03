@@ -5,21 +5,26 @@ body, .App {
   overflow-x: hidden;
   background-color: #f7f7f5;
   width: 100%;
-  margin-top: 0;
+  margin-top: 100px;
 }
 
 /* Navbar container */
 .navbar {
-  display: flex;
+ display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: black;
   padding: 1rem 2rem;
-  position: sticky;
+  position: fixed;
   top: 0;
   width: 100%;
   box-sizing: border-box;
   z-index: 1000;
+}
+.navbar {
+  height: auto;
+  max-height: 130px; 
+  overflow: hidden; 
 }
 
 /* Logo text */
@@ -38,6 +43,11 @@ body, .App {
   max-width: 100%;
 }
 
+/* Content wrapper */
+.body-wrapper {
+  display: block;
+  transition: margin-left 0.3s ease;
+}
 /* Hamburger icon toggle (only visible on mobile) */
 .hamburger {
   display: none;
@@ -75,39 +85,133 @@ body, .App {
   /* font-family: 'Kodchasn', sans-serif; */
 }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
+/* Tablet and Mobile Only */
+@media (max-width: 1024px) {
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0%);
+      opacity: 1;
+    }
+  }
+
+  .nav-links.mobile {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 70%;
+    height: 100vh;
+    background-color: black;
+    padding: 4rem 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: right;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 998;
+    animation: slideInRight 0.4s ease forwards;
+  }
+
   .hamburger {
     display: block;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #fccc42;
+    z-index: 999;
+    background-color: transparent;
   }
+  .close-btn {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #fccc42;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-bottom: 2rem;
+  transition: color 0.3s ease;
+}
 
-  .nav-links {
+.close-btn:hover {
+  color: #c732b0;
+}
+
+  .nav-links.desktop {
     display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    right: 2rem;
-    background-color: #fef9ff;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  .nav-links.open {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.8rem;
-  }
+  .nav-links.mobile {
+  z-index: 1001; /* Make this higher than the navbar */
 }
 
 .navbar {
-  min-width: 480px;
+  z-index: 1000; /* Lower than the mobile menu */
+}
+}
+
+@media (min-width: 1025px) {
+  .hamburger {
+    display: none;
+  }
+
+  .nav-links.desktop {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    align-items: center;
+    margin-right: 2rem;
+  }
+
+  .nav-links.desktop li a {
+    text-decoration: none;
+    color: #fccc42;
+    font-weight: 500;
+  }
+
+  .nav-links.mobile {
+    display: none;
+  }
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    padding: 1rem 2rem;
+    position: fixed; /* 💡 Use ONLY fixed here */
+    top: 0;
+    width: 100%;
+    box-sizing: border-box;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 1000;
+  }
+
+  .navbar.hide {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  .navbar.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+
+
+.navbar {
+  /* min-width: 480px; */
 }
 
 
 /* Scroll-hide behavior */
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
   z-index: 1000;
@@ -123,9 +227,9 @@ body, .App {
   opacity: 1;
 }
 
-/*Navbar ends*/
+/Navbar ends/
 
-/*Loginpage starts*/
+/Loginpage starts/
 .login-wrapper {
    display: flex;
   height: 100vh;
@@ -133,7 +237,7 @@ body, .App {
   overflow: hidden;
   font-family: 'Kodchasan', sans-serif;
     box-sizing: border-box;
-    min-width: 470px;
+    /* min-width: 470px; */
 }
 .arbito-hover {
   background: linear-gradient(to right, #f0199d, #6b705c);
@@ -351,9 +455,54 @@ input[type="text"] {
   right: 12px;        /* Slight tweak for balance */
 }
 
-/*Login page ends*/
+@media (max-width: 1024px) {
+  .image-container {
+    display: none;
+  }
 
-/*homepage starts*/
+  .login-wrapper {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    height: 100vh;
+  }
+
+  .login-container {
+    padding: 0.5rem;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+           /* Add this for horizontal centering */
+  }
+
+  input[type="text"],
+  .input-field,
+  .login-btn {
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    padding-right: 40px;
+  }
+
+  .password-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 1.5rem;
+  }
+
+  .eye-icon {
+    font-size: 1.5rem;
+    right: 12px;
+  }
+}
+
+/Login page ends/
+
+/homepage starts/
 /* Base wrapper */
 .homepage-wrapper {
   background-color: #f7f7f5;
@@ -456,7 +605,7 @@ input[type="text"] {
 }
 
 .homepage-banner img {
-  width: 100%;
+  width: auto;
   height: auto;
   border-radius: 12px;
   object-fit: cover;
@@ -466,7 +615,7 @@ input[type="text"] {
 /* Responsive styles */
 @media (max-width: 768px) {
   .homepage {
-    min-width: 460px;
+     /* min-width: 460px;  */
     flex-direction: column;
     padding: 1rem;
   }
@@ -488,7 +637,7 @@ input[type="text"] {
   }
 }
 
-/*homepage ends*/
+/homepage ends/
 
 .arbito-gallery {
   padding: 3rem 1.5rem;
@@ -605,7 +754,7 @@ input[type="text"] {
   }
 }
 
-/*Footer starts*/
+/Footer starts/
 .doodle-wrapper {
   position: relative;
   height: 0;
@@ -655,7 +804,7 @@ input[type="text"] {
   position: relative;
   z-index: 1;
   display: flex;
-  min-width:410px;
+  /* min-width:410px; */
 }
 
 .footer-section h3 {
@@ -768,7 +917,7 @@ input[type="text"] {
 /* Footer ends */
 
 
-/*Banner 1 starts*/
+/Banner 1 starts/
 .banner1 {
   height: 35vh;
   display: flex;
@@ -835,7 +984,7 @@ input[type="text"] {
     padding: 3rem 1.5rem;
     flex-direction: column;
     background: linear-gradient(to bottom, #be94f5, #e3d5ca);
-    min-width:430px;
+    /* min-width:430px; */
   }
 
   .banner-content {
@@ -946,7 +1095,7 @@ input[type="text"] {
   position: absolute;
   width: 40px;
 
-  animation: fly-buzz 20s ease-in-out infinite; /* ⬅️ Slowed down with smoother motion */
+  animation: fly-buzz 20s ease-in-out infinite; /* ⬅ Slowed down with smoother motion */
 }
 
 @keyframes fly-buzz {
@@ -1030,14 +1179,14 @@ input[type="text"] {
   }
 }
 
-/*Banner 1 ends*/
+/Banner 1 ends/
 
 
-/*FAQ starts*/
+/FAQ starts/
 .faq-section {
   padding: 2rem;
   font-family: 'Kodchasan', sans-serif;
-  min-width: 420px;
+  /* min-width: 420px; */
 
 }
 .faq-section h2:hover {
@@ -1082,16 +1231,17 @@ input[type="text"] {
     grid-template-columns: 1fr;
   }
 }
-/*FAQ ends*/
+/FAQ ends/
 /* /Join community starts/ */
 .join-wrapper {
   /* display: flex; */
   justify-content: center;
   align-items: center;
   padding: 2rem 0;
+  box-shadow: 0 0 15px rgba(21, 19, 19, 0.1);
   opacity: 0;
   transition: opacity 0.8s ease;
-  min-width: 450px;
+  /* min-width: 450px; */
   
 }
 
@@ -1237,14 +1387,13 @@ input[type="text"] {
 
 
 /*Join community end
-/*Support us starts*/
+/Support us starts/
 .support-section {
   background-color: #f7f7f5;
   color: #151313;
   padding: 3rem 1rem;
-  border-top: 1px solid #fccc42;
   text-align: center;
-  min-width: 430px;
+  /* min-width: 430px; */
 }
 
 .support-title {
@@ -1299,26 +1448,6 @@ input[type="text"] {
   outline: none;
 }
 
-/*.support-form button {
-  margin-top: 1.2rem;
-  padding: 0.7rem 1.8rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 30px;
-  background: linear-gradient(to right, #be94f5, #e3d5ca);
-  color: #3c2a21;
-  cursor: pointer;
-  transition: transform 0.3s ease, background 0.5s ease;
-}
-.support-form button:hover
-{
-  
-  transform: scale(1.05);
-  background: linear-gradient(to right, #f0199d, #d89c67);
-  color: white;
-
-}*/
 
 .support-form input,
 .support-form textarea,
@@ -1334,13 +1463,19 @@ input[type="text"] {
   .support-form input,
   .support-form textarea,
   .support-form button {
-    max-width: 100%; /* fills the container on tiny screens */
+    max-width: 100%; 
   }
+}
+.support-form textarea {
+  min-height: 160px;       
+  resize: vertical;
+  max-height: 280px;
+  overflow-y: auto;      
 }
 
 
-/*Support us ends*/
-/*tag line starts here*/
+/Support us ends/
+/tag line starts here/
 
 :root {
   --royal-gold: #DAA520;
@@ -1355,7 +1490,7 @@ input[type="text"] {
   padding: 1rem 0;
   overflow: hidden;
   white-space: nowrap;
-  min-width: 480px;
+  /* min-width: 480px; */
 }
 
 .tagline-text {
@@ -1364,7 +1499,6 @@ input[type="text"] {
   color: #ffffff;
   font-weight: bold;
   font-size: 1.2rem;
-  font-family: 'Poppins', sans-serif;
   animation: scroll-left 15s linear infinite;
 }
 
@@ -1397,8 +1531,8 @@ input[type="text"] {
   font-weight: bold;
 }
 
-/*tag line ends*/
-/*About Arbito starts*/
+/tag line ends/
+/About Arbito starts/
 .arbito-banner {
   display: flex;
   justify-content: space-between;
@@ -1406,12 +1540,12 @@ input[type="text"] {
   background-color: #f7f7f5;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 0 15px rgba(21, 19, 19, 0.1);
+  /* box-shadow: 0 0 15px rgba(21, 19, 19, 0.1); */
   animation: fadeIn 1.2s ease-in-out;
   max-width: 100%;
   gap: 2rem;
   flex-wrap: wrap;
-  min-width:420px
+  /* min-width:420px */
 }
 
 .student-image img {
@@ -1474,8 +1608,7 @@ input[type="text"] {
   }
 
   .student-image {
-    display: flex;
-    justify-content: center;
+    display: flex;content: center;
     margin-bottom: 1rem;
   }
 
@@ -1487,5 +1620,159 @@ input[type="text"] {
     text-align: center;
   }
 }
+@media (max-width: 480px) {
+  .arbito-banner {
+    padding: 1rem;
+    gap: 1rem;
+  }
 
-/*About Arbito ends*/
+  .heading {
+    font-size: 1.8rem;
+  }
+
+  .description {
+    font-size: 1.2rem;
+    padding: 0.75rem;
+  }
+
+  .student-image img {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+/About Arbito ends/
+
+/* Trusted by starts*/
+.trusted-logos {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap; 
+  align-items: center;
+  justify-content: center; 
+}
+
+.trusted-logos img {
+  height: 110px;
+  object-fit: contain;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 150px;
+    width: clamp(100px, 20vw, 150px);
+}
+
+.trusted-logos img:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow:0 0 20px #be94f580;
+}
+@media (min-width: 768px) {
+  .trusted-logos {
+    justify-content: center;
+  }
+}
+
+/Trusted by ends/
+
+/* ***************************************************************aboutmm */
+/* about page */
+.about-section {
+  padding: 60px 20px;
+  background-color: #f8f9fa;
+}
+
+.about-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.about-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #222;
+}
+
+.about-highlight {
+  color: #ff5f5f;
+}
+
+.about-subtitle {
+  color: #666;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.about-team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.about-card {
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 20px;
+  width: 300px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-5px);
+}
+
+.about-card-category {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  background-color: #f0f0f0;
+  padding: 6px 12px;
+  border-radius: 50px;
+  margin-bottom: 12px;
+}
+
+.about-card-img {
+  width: 70%;
+  height: 50%;
+  border-radius: 0%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.about-card-name {
+  font-weight: 600;
+  font-size: 18px;
+  color: #000;
+  margin-bottom: 5px;
+}
+
+.about-card-college {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: auto;
+}
+
+.about-card-btn {
+  margin-top: 20px;
+  background-color: #ff5f5f;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 8px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.about-card-btn:hover {
+  background-color: #e84141;
+}
+
+/* about page ends */
