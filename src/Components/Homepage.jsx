@@ -15,6 +15,17 @@ import AboutArbitoBanner from './AboutArbitoBanner';
 
 
 const Homepage = () => {
+
+
+  useEffect(() => {
+  const redirected = sessionStorage.getItem("homeRedirectOnce");
+  if (redirected) {
+    sessionStorage.removeItem("homeRedirectOnce");
+    window.location.reload();
+  }
+}, []);
+
+
   useEffect(() => {
     const revealElements = () => {
       const elements = document.querySelectorAll('.scroll-element');

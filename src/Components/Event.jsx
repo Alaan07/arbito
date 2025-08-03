@@ -76,6 +76,12 @@ const Event = () => {
 
   const toggleProfile = () => setShowProfile(!showProfile);
 
+    const handlelogoutToHome = () => {
+    sessionStorage.setItem("homeRedirectOnce", "true");
+    window.location.href = "/";
+  };
+
+
   return (
     <>
       <nav className={isSidebarClosed ? "close" : ""}>
@@ -115,12 +121,10 @@ const Event = () => {
           </ul>
 
           <ul className="adm-logout-mode">
-            <li>
-              <Link to="/">
-                <IoMdLogOut className="adm-logo" />
-                <span className="adm-link-name">Logout</span>
-              </Link>
-            </li>
+            <li onClick={handlelogoutToHome} style={{ cursor: "pointer" }}>
+                        <IoMdLogOut className="adm-logo" />
+                        <span className="adm-link-name">Logout</span>
+                      </li>
           </ul>
         </div>
       </nav>
