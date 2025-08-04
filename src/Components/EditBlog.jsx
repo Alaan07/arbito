@@ -41,12 +41,32 @@ const AddBlog = () => {
   const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
 
   const [showProfile, setShowProfile] = useState(false);
-  const [adminData, setAdminData] = useState({
-    name: "Admin User",
-    email: "admin@arbito.com",
-    phone: "+91 9876543210",
-    image: "/img/user-profile.jpg",
-  });
+  const [proformData, setproFormData] = useState({
+      _id: "",
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+    });
+
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+          try {
+              const res = await axios.get("/api/getuserpro");
+              setproFormData({
+                _id: res.data._id,
+                name: res.data.username || "",
+                email: res.data.email || res.data.emai || "",
+                phone: res.data.contact || "",
+                password: "",
+              }); 
+          } catch (err) {
+            console.error("Failed to fetch user data:", err);
+          }
+        };
+        fetchUserData();
+      }, []);
 
   const toggleProfile = () => setShowProfile(!showProfile);
 
@@ -87,11 +107,7 @@ useEffect(() => {
 
 
 
-
-
-
-
- const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   const data = new FormData();
@@ -99,6 +115,8 @@ useEffect(() => {
   data.append("category", JSON.stringify(formData.category));
   data.append("intoduction", formData.intoduction);
   data.append("content", formData.content);
+  data.append("uploadType", "blogs"); // ✅ this is required
+
   if (formData.thumbnail) {
     data.append("thumbnail", formData.thumbnail);
   }
@@ -110,7 +128,6 @@ useEffect(() => {
     alert("Blog updated!");
     navigate('/blogs');
 
-
   } catch (err) {
     console.error(err);
     alert("Failed to update blog");
@@ -118,15 +135,10 @@ useEffect(() => {
 };
 
 
-
-
-
-
   const handlelogoutToHome = () => {
     sessionStorage.setItem("homeRedirectOnce", "true");
     window.location.href = "/";
   };
-
 
 
   return (
@@ -169,9 +181,9 @@ useEffect(() => {
 
           <ul className="adm-logout-mode">
             <li onClick={handlelogoutToHome} style={{ cursor: "pointer" }}>
-                        <IoMdLogOut className="adm-logo" />
-                        <span className="adm-link-name">Logout</span>
-                      </li>
+                <IoMdLogOut className="adm-logo" />
+                <span className="adm-link-name">Logout</span>
+            </li>
           </ul>
         </div>
       </nav>
@@ -181,33 +193,32 @@ useEffect(() => {
           <IoMdMenu className="adm-sidebar-toggle" onClick={toggleSidebar} />
           <div className="adm-profile-container">
             <img
-              src={adminData.image}
+              src="/public/img/user-profile.jpg"
               alt="Admin"
               className="adm-profile-pic"
-              onClick={toggleProfile}
-            />
+              onClick={toggleProfile}/>
 
-            {showProfile && (
-              <div className="adm-profile-dropdown">
-                <div className="adm-profile-image">
-                  <img src={adminData.image} alt="Admin Large" />
-                </div>
-                <div className="adm-profile-info">
-                  <p>
-                    <strong>Name:</strong> {adminData.name}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {adminData.email}
-                  </p>
-                  <p>
-                    <strong>Phone:</strong> {adminData.phone}
-                  </p>
-                  <Link to="/editprofile" className="adm-edit-btn">
-                    Edit Profile
-                  </Link>
-                </div>
-              </div>
-            )}
+              {showProfile && (
+               <div className="adm-profile-dropdown">
+                 <div className="adm-profile-image">
+                   <img src="/public/img/user-profile.jpg" alt="Admin Large" />
+                 </div>
+                 <div className="adm-profile-info">
+                   <p>
+                     <strong>Name:</strong> {proformData.name}
+                   </p>
+                   <p>
+                     <strong>Email:</strong> {proformData.email}
+                   </p>
+                   <p>
+                     <strong>Phone:</strong> {proformData.phone}
+                   </p>
+                   <Link to="/editprofile" className="adm-edit-btn">
+                     Edit Profile
+                   </Link>
+                 </div>
+               </div>
+             )}
           </div>
         </div>
 

@@ -11,6 +11,7 @@ import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
+import axios from "../api/axios.js";
 
 const Achievement = () => {
   const [isDarkMode, setIsDarkMode] = useState(
@@ -35,44 +36,75 @@ const Achievement = () => {
   const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
 
   const [showConfirm, setShowConfirm] = useState(false);
-  const [deleteIndex, setDeleteIndex] = useState(null);
-  const [blogData, setBlogData] = useState([
-    {
-      title: "React Basics",
-      intro: "Intro to React library",
-      category: "Front-end Development",
-    },
-    {
-      title: "Node.js Basics",
-      intro: "Intro to Node library",
-      category: "Back-end Development",
-    },
-  ]);
 
-  const handleDeleteClick = (index) => {
-    setDeleteIndex(index);
+const [deleteIndex, setDeleteIndex] = useState(null);
+
+  const [achivementsData, setachivementsData] = useState([]);
+
+
+  const [deleteId, setDeleteId] = useState(null);
+
+
+  useEffect(() => {
+            const fetchAchivements = async () => {
+              try {
+                const res = await axios.get("/api/achivementsdashboard");
+                setachivementsData(res.data);
+              } catch (error) {
+                console.error("Failed to fetch Achivements:", error);
+              }
+            };
+  
+            fetchAchivements();
+          }, []);
+
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
     setShowConfirm(true);
   };
 
-  const confirmDelete = () => {
-    const updatedData = [...blogData];
-    updatedData.splice(deleteIndex, 1);
-    setBlogData(updatedData);
-    setShowConfirm(false);
-  };
-
+  const confirmDelete = async () => {
+        try {
+          await axios.delete(`/api/achivementsdelete/${deleteId}`);
+          const updatedData = achivementsData.filter((achievements) => achievements._id !== deleteId);
+          setachivementsData(updatedData);
+          setShowConfirm(false);
+        } catch (error) {
+          console.error("Failed to delete achuvements:", error);
+        }
+      };
   const cancelDelete = () => {
     setShowConfirm(false);
     setDeleteIndex(null);
   };
 
   const [showProfile, setShowProfile] = useState(false);
-  const [adminData, setAdminData] = useState({
-    name: "Admin User",
-    email: "admin@arbito.com",
-    phone: "+91 9876543210",
-    image: "/img/user-profile.jpg",
-  });
+  const [formData, setFormData] = useState({
+      _id: "",
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+    });
+
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+          try {
+              const res = await axios.get("/api/getuserpro");
+              setFormData({
+                _id: res.data._id,
+                name: res.data.username || "",
+                email: res.data.email || res.data.emai || "",
+                phone: res.data.contact || "",
+                password: "",
+              }); 
+          } catch (err) {
+            console.error("Failed to fetch user data:", err);
+          }
+        };
+        fetchUserData();
+      }, []);
 
   const toggleProfile = () => setShowProfile(!showProfile);
 
@@ -134,33 +166,33 @@ const Achievement = () => {
           <IoMdMenu className="adm-sidebar-toggle" onClick={toggleSidebar} />
           <div className="adm-profile-container">
             <img
-              src={adminData.image}
+              src="/public/img/user-profile.jpg"
               alt="Admin"
               className="adm-profile-pic"
               onClick={toggleProfile}
             />
 
-            {showProfile && (
-              <div className="adm-profile-dropdown">
-                <div className="adm-profile-image">
-                  <img src={adminData.image} alt="Admin Large" />
-                </div>
-                <div className="adm-profile-info">
-                  <p>
-                    <strong>Name:</strong> {adminData.name}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {adminData.email}
-                  </p>
-                  <p>
-                    <strong>Phone:</strong> {adminData.phone}
-                  </p>
-                  <Link to="/editprofile" className="adm-edit-btn">
-                    Edit Profile
-                  </Link>
-                </div>
-              </div>
-            )}
+              {showProfile && (
+               <div className="adm-profile-dropdown">
+                 <div className="adm-profile-image">
+                   <img src="/public/img/user-profile.jpg" alt="Admin Large" />
+                 </div>
+                 <div className="adm-profile-info">
+                   <p>
+                     <strong>Name:</strong> {formData.name}
+                   </p>
+                   <p>
+                     <strong>Email:</strong> {formData.email}
+                   </p>
+                   <p>
+                     <strong>Phone:</strong> {formData.phone}
+                   </p>
+                   <Link to="/editprofile" className="adm-edit-btn">
+                     Edit Profile
+                   </Link>
+                 </div>
+               </div>
+             )}
           </div>
         </div>
 
@@ -189,7 +221,7 @@ const Achievement = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {blogData.map((blog, index) => (
+                  {achivementsData.map((blog, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{blog.title}</td>

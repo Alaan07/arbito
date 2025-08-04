@@ -2,28 +2,33 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from "cookie-parser";
-import 'dotenv/config';
-import Blog from './userModels/BlogsModel.js'
+import Blog from './userModels/BlogsModel.js';
 import multer from 'multer';
 import fs from 'fs';
-import path from 'path';
 import User from './userModels/UserModel.js';
+import Achivement from './userModels/AchivementModel.js'
+import dotenv from 'dotenv';
+import path from 'path';
 
-
+dotenv.config({ path: path.resolve('server/.env') });
 
 mongoose.connect(process.env.MONGO_URL)
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.error('MongoDB error:', err));
-
-
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch((err) => console.error('❌ MongoDB error:', err));
 
 const app = express();
 const port = process.env.PORT || 3000;
 const Eusername = process.env.USER_NAME;
 const Epassword = process.env.PASSWORD;
 
+// 🔄 Dynamic storage destination based on uploadType
 const storage = multer.diskStorage({
-  destination: '../public/upload',
+  destination: (req, file, cb) => {
+    const uploadType = req.query.uploadType?.toLowerCase() || 'misc'; // ⬅️ safer
+    const uploadPath = path.join(process.cwd(), 'public', 'upload', uploadType);
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
+  },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + file.originalname;
     cb(null, uniqueSuffix);
@@ -32,24 +37,25 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
+// 📂 Serve static files from /public/upload
+app.use('/upload', express.static(path.join(process.cwd(), 'public', 'upload')));
 
+// 🔐 Login
 app.post("/api/login", (req, res) => {
-    const {username, password} = req.body;
-    if((username === Eusername) && (password === Epassword)){
-         res.status(200).json({ message: 'Hello from backend!', islogin: true});
-    }
-    else{
-        res.status(200).json({message:'Invalid username or password!', islogin: false});
-    }
-})
+  const { username, password } = req.body;
+  if (username === Eusername && password === Epassword) {
+    res.status(200).json({ message: 'Hello from backend!', islogin: true });
+  } else {
+    res.status(200).json({ message: 'Invalid username or password!', islogin: false });
+  }
+});
 
-
- app.get('/api/getuserpro', async (req, res) => {
+// 👤 Get user profile
+app.get('/api/getuserpro', async (req, res) => {
   try {
     const user = await User.findOne();
     res.status(200).json(user);
@@ -59,29 +65,17 @@ app.post("/api/login", (req, res) => {
   }
 });
 
-
+// ✏️ Update user profile
 app.put("/api/updateuserpro", async (req, res) => {
   const { _id, username, email, contact, password } = req.body;
-
-  if (!_id) {
-    return res.status(400).json({ message: "User ID is required" });
-  }
+  if (!_id) return res.status(400).json({ message: "User ID is required" });
 
   try {
-    const updatedUser = await User.findByIdAndUpdate(
-      _id,
-      {
-        username,
-        email,
-        contact,
-        password,
-      },
-      { new: true }
-    );
+    const updatedUser = await User.findByIdAndUpdate(_id, {
+      username, email, contact, password
+    }, { new: true });
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
 
     res.status(200).json(updatedUser);
   } catch (error) {
@@ -92,41 +86,68 @@ app.put("/api/updateuserpro", async (req, res) => {
 
 
 
+// 📝 Add achivements (with image)
+app.post("/api/addachivement", upload.single('achivementimg'), async (req, res) => {
+  try {
+    const { AchivementTitle, achivementdesc } = req.body;
 
+    const uploadType = req.query.uploadType?.toLowerCase() || 'misc'; // 💡 use this to set correct path
+    const imagePath = req.file ? `/upload/${uploadType}/${req.file.filename}` : '';
 
-app.post("/api/addblogs",upload.single('blogThumb'), async(req, res) => {
+    const newAchivement = new Achivement({
+      title: AchivementTitle,
+      content: achivementdesc,
+      thumbnail: imagePath,
+    });
 
-  try{
-    const { BlogTitle, blogintro, blogdesc, blogCategory } = req.body;
-    const imagePath = req.file ? req.file.path : '';
+    await newAchivement.save();
+    res.status(201).json({
+      message: 'Achivement saved successfully',
+      achivement: newAchivement,
+      achivementcreated: true,
+    });
 
-      console.log("Received Blog:", BlogTitle, blogintro, blogdesc, blogCategory);
-
-      const newBlog = new Blog({
-          title: BlogTitle,
-          content: blogdesc,
-          category: blogCategory.split(','),
-          intoduction: blogintro,
-          thumbnail: imagePath,
-        });
-
-        await newBlog.save();
-
-      res.status(201).json({
-          message: 'Blog saved successfully',
-          blog: newBlog,
-          blogcreated: true,
-        });
-
-  }catch(err){
-    console.error('Error saving blog:', error);
-    res.status(500).json({ error: 'Failed to save blog' });
+  } catch (error) {
+    console.error('Error saving achivement:', error);
+    res.status(500).json({ error: 'Failed to save achivement' });
   }
-  
 });
 
 
 
+// 📝 Add blog (with image)
+app.post("/api/addblogs", upload.single('blogThumb'), async (req, res) => {
+  try {
+    const { BlogTitle, blogintro, blogdesc, blogCategory, uploadType } = req.body;
+
+    const folder = uploadType?.toLowerCase() || 'misc';
+    const imagePath = req.file ? `/upload/${folder}/${req.file.filename}` : '';
+
+    const newBlog = new Blog({
+      title: BlogTitle,
+      content: blogdesc,
+      category: blogCategory.split(','),
+      intoduction: blogintro,
+      thumbnail: imagePath,
+    });
+
+    await newBlog.save();
+
+    res.status(201).json({
+      message: 'Blog saved successfully',
+      blog: newBlog,
+      blogcreated: true,
+    });
+  } catch (error) {
+    console.error('Error saving blog:', error);
+    res.status(500).json({ error: 'Failed to save blog' });
+  }
+});
+
+
+
+
+// 📚 Get all blogs
 app.get("/api/allblogs", async (req, res) => {
   try {
     const blogs = await Blog.find();
@@ -137,10 +158,7 @@ app.get("/api/allblogs", async (req, res) => {
   }
 });
 
-
-
-
-
+// 🔁 Duplicate endpoint? Consider removing one
 app.get("/api/blogs", async (req, res) => {
   try {
     const blogs = await Blog.find();
@@ -151,7 +169,7 @@ app.get("/api/blogs", async (req, res) => {
   }
 });
 
-
+// ✏️ Get blog by ID (for editing)
 app.get("/api/geteditblog/:id", async (req, res) => {
   const blog = await Blog.findById(req.params.id);
   if (!blog) return res.status(404).json({ message: "Not found" });
@@ -160,9 +178,11 @@ app.get("/api/geteditblog/:id", async (req, res) => {
 
 
 
+
+// ✏️ Update blog (with optional image)
 app.put("/api/updateblog/:id", upload.single("thumbnail"), async (req, res) => {
   try {
-    const { title, intoduction, content, category } = req.body;
+    const { title, intoduction, content, category, uploadType } = req.body;
     const existingBlog = await Blog.findById(req.params.id);
 
     const updatedData = {
@@ -173,26 +193,32 @@ app.put("/api/updateblog/:id", upload.single("thumbnail"), async (req, res) => {
     };
     if (req.file) {
       if (existingBlog.thumbnail) {
-        const oldImagePath = path.join(process.cwd(), existingBlog.thumbnail);
+        const relativePath = existingBlog.thumbnail.startsWith('/')
+          ? existingBlog.thumbnail.slice(1)
+          : existingBlog.thumbnail;
+
+        const oldImagePath = path.join(process.cwd(), "public", "upload", relativePath.replace(/^upload[\/\\]/, ""));
+
         if (fs.existsSync(oldImagePath)) {
           fs.unlinkSync(oldImagePath);
+          console.log("🗑️ Old image deleted:", oldImagePath);
+        } else {
+          console.warn("⚠️ Old image not found:", oldImagePath);
         }
       }
-      updatedData.thumbnail = `../public/upload/${req.file.filename}`;
+
+      const folder = uploadType?.toLowerCase() || 'misc';
+      updatedData.thumbnail = `/upload/${folder}/${req.file.filename}`;
     }
 
-    const updated = await Blog.findByIdAndUpdate(req.params.id, updatedData, {
-      new: true,
-    });
-
+    const updated = await Blog.findByIdAndUpdate(req.params.id, updatedData, { new: true });
     res.json({ message: "Updated successfully", blog: updated });
 
   } catch (err) {
-    console.error(err);
+    console.error("❌ Update error:", err);
     res.status(500).json({ message: "Update failed", error: err });
   }
 });
-
 
 
 
@@ -202,16 +228,25 @@ app.delete("/api/blogsdelete/:id", async (req, res) => {
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
     if (blog.thumbnail) {
-      const imagePath = path.join(process.cwd(), blog.thumbnail);
+      // blog.thumbnail is like "/upload/blogs/xyz.jpg"
+      const relativePath = blog.thumbnail.startsWith('/')
+        ? blog.thumbnail.slice(1) // remove leading slash
+        : blog.thumbnail;
+
+      const imagePath = path.join(process.cwd(), "public", "upload", relativePath.replace(/^upload[\/\\]/, ""));
+
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
+        console.log("🗑️ Image deleted:", imagePath);
+      } else {
+        console.warn("⚠️ Image not found:", imagePath);
       }
     }
 
     await Blog.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: "Blog and thumbnail deleted" });
   } catch (err) {
-    console.error("Delete error:", err);
+    console.error("❌ Delete error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -219,5 +254,5 @@ app.delete("/api/blogsdelete/:id", async (req, res) => {
 
 
 app.listen(port, () => {
-    console.log(`the Server is started at port http://localhost:${port}`);
-})
+  console.log(`🚀 Server is running at http://localhost:${port}`);
+});

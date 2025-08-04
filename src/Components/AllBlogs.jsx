@@ -79,6 +79,7 @@ function AllBlogs() {
             {filteredCards.map((card, index) => (
               <div className="allblogcard" key={index} onClick={() => setSelectedBlog(card)}>
                 <img src={`${card.thumbnail}`} alt="Blog Thumbnail" className="blogcardimg" />
+                {console.log(card.thumbnail)}
                 <h3>{card.title}</h3>
                 <h4>
                   Category:{' '}

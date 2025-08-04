@@ -43,12 +43,32 @@ const AddBlog = () => {
   const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
 
   const [showProfile, setShowProfile] = useState(false);
-  const [adminData, setAdminData] = useState({
-    name: "Admin User",
-    email: "admin@arbito.com",
-    phone: "+91 9876543210",
-    image: "/img/user-profile.jpg",
-  });
+  const [formData, setFormData] = useState({
+      _id: "",
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+    });
+
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+          try {
+              const res = await axios.get("/api/getuserpro");
+              setFormData({
+                _id: res.data._id,
+                name: res.data.username || "",
+                email: res.data.email || res.data.emai || "",
+                phone: res.data.contact || "",
+                password: "",
+              }); 
+          } catch (err) {
+            console.error("Failed to fetch user data:", err);
+          }
+        };
+        fetchUserData();
+      }, []);
 
 
   // *****************backend ********************add*************
@@ -78,21 +98,17 @@ const AddBlog = () => {
 
 
 
-
-
-
-
-
           const handleaddblogclick = async (e) => {
              e.preventDefault();
 
               const formData = new FormData();
+              formData.append("uploadType", "blogs");
               formData.append("BlogTitle", BlogTitle);
               formData.append("blogintro", blogintro);
               formData.append("blogdesc", blogdesc);
               formData.append("blogCategory", blogCategory);
               formData.append("blogThumb", blogThumb);
-
+              
               try {
                 const res = await axios.post('/api/addblogs', formData, {
                   headers: {
@@ -179,33 +195,33 @@ const AddBlog = () => {
           <IoMdMenu className="adm-sidebar-toggle" onClick={toggleSidebar} />
           <div className="adm-profile-container">
             <img
-              src={adminData.image}
+              src="/public/img/user-profile.jpg"
               alt="Admin"
               className="adm-profile-pic"
               onClick={toggleProfile}
             />
 
-            {showProfile && (
-              <div className="adm-profile-dropdown">
-                <div className="adm-profile-image">
-                  <img src={adminData.image} alt="Admin Large" />
-                </div>
-                <div className="adm-profile-info">
-                  <p>
-                    <strong>Name:</strong> {adminData.name}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {adminData.email}
-                  </p>
-                  <p>
-                    <strong>Phone:</strong> {adminData.phone}
-                  </p>
-                  <Link to="/editprofile" className="adm-edit-btn">
-                    Edit Profile
-                  </Link>
-                </div>
-              </div>
-            )}
+              {showProfile && (
+               <div className="adm-profile-dropdown">
+                 <div className="adm-profile-image">
+                   <img src="/public/img/user-profile.jpg" alt="Admin Large" />
+                 </div>
+                 <div className="adm-profile-info">
+                   <p>
+                     <strong>Name:</strong> {formData.name}
+                   </p>
+                   <p>
+                     <strong>Email:</strong> {formData.email}
+                   </p>
+                   <p>
+                     <strong>Phone:</strong> {formData.phone}
+                   </p>
+                   <Link to="/editprofile" className="adm-edit-btn">
+                     Edit Profile
+                   </Link>
+                 </div>
+               </div>
+             )}
           </div>
         </div>
 

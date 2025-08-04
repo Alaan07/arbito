@@ -79,7 +79,7 @@ const Navbar = () => {
           <ul className="nav-links desktop">
             <li><Link to="/">Home</Link></li>
             <li><Link to="/about">About</Link></li>
-            <li><a href="#events">Events</a></li>
+            <li><Link to="/eventpage">Event</Link></li>
             <li><Link to="/contact">Contact</Link></li>
             <li><Link to="/allblogs">Blogs</Link></li>
           </ul>
@@ -91,7 +91,7 @@ const Navbar = () => {
           <li className="close-btn" onClick={closeMenu}>×</li>
           <li><Link to="/" onClick={closeMenu}>Home</Link></li>
           <li><Link to="/about" onClick={closeMenu}>About</Link></li>
-          <li><a href="#events" onClick={closeMenu}>Events</a></li>
+          <li><Link to="/eventpage" onClick={closeMenu}>Event</Link></li>
           <li><Link to="/contact" onClick={closeMenu}>Contact</Link></li>
           <li><Link to="/allblogs" onClick={closeMenu}>Blogs</Link></li>
         </ul>

@@ -40,7 +40,7 @@ const AddBlog = () => {
             name: res.data.username || "",
             email: res.data.email || res.data.emai || "",
             phone: res.data.contact || "",
-            password: "", // leave empty or res.data.password only if secure
+            password: "",
           }); 
       } catch (err) {
         console.error("Failed to fetch user data:", err);
