@@ -37,31 +37,44 @@ const Event = () => {
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(null);
-  const [blogData, setBlogData] = useState([
-    {
-      title: "React Basics",
-      intro: "Intro to React library",
-      category: "Front-end Development",
-    },
-    {
-      title: "Node.js Basics",
-      intro: "Intro to Node library",
-      category: "Back-end Development",
-    },
-  ]);
 
-  const handleDeleteClick = (index) => {
-    setDeleteIndex(index);
+
+
+
+   const [eventData, seteventData] = useState([]);
+
+
+  const [deleteId, setDeleteId] = useState(null);
+
+
+  useEffect(() => {
+            const fetchAchivements = async () => {
+              try {
+                const res = await axios.get("/api/eventsdashboard");
+                seteventData(res.data);
+              } catch (error) {
+                console.error("Failed to fetch Achivements:", error);
+              }
+            };
+  
+            fetchAchivements();
+          }, []);
+
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
     setShowConfirm(true);
   };
 
-  const confirmDelete = () => {
-    const updatedData = [...blogData];
-    updatedData.splice(deleteIndex, 1);
-    setBlogData(updatedData);
-    setShowConfirm(false);
-  };
-
+  const confirmDelete = async () => {
+        try {
+          await axios.delete(`/api/eventsdelete/${deleteId}`);
+          const updatedData = eventData.filter((event) => event._id !== deleteId);
+          seteventData(updatedData);
+          setShowConfirm(false);
+        } catch (error) {
+          console.error("Failed to delete event:", error);
+        }
+      };
   const cancelDelete = () => {
     setShowConfirm(false);
     setDeleteIndex(null);
@@ -203,23 +216,25 @@ const Event = () => {
                   <tr>
                     <th>Sr No</th>
                     <th>Title</th>
-                    <th>Date</th>
+                    <th>Star-Date</th>
+                    <th>Star-Date</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {blogData.map((blog, index) => (
+                  {eventData.map((event, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      <td>{blog.title}</td>
-                      <td>{blog.intro}</td>
+                      <td>{event.title}</td>
+                      <td>{event.startdate}</td>
+                      <td>{event.enddate}</td>
                       <td>
-                        <Link to="/editevents" className="adm-blog-edit-btn">
+                        <Link to={`/editevents/${event._id}`} className="adm-blog-edit-btn">
                           Edit
                         </Link>
                         <button
                           className="adm-blog-delete-btn"
-                          onClick={() => handleDeleteClick(index)}
+                          onClick={() => handleDeleteClick(event._id)}
                         >
                           Delete
                         </button>

@@ -34,7 +34,7 @@ function Layout() {
     "/addevent",
     "/addachievement",
     "/editblogs/:id",
-    "/editevents",
+    "/editevents/:id",
     "/editachievement/:id",
     "/editprofile"
 
@@ -57,7 +57,7 @@ function Layout() {
         <Route path="/addevent" element={<AddEvents />} />
         <Route path="/addachievement" element={<AddAchievement />} />
         <Route path="/editblogs/:id" element={<EditBlogs />} />
-        <Route path="/editevents" element={<EditEvent />} />
+        <Route path="/editevents/:id" element={<EditEvent />} />
         <Route path="/editachievement/:id" element={<EditAchievement />} />
         <Route path="/editprofile" element={<EditProfile />} />
          <Route path="/about" element={<About />} />

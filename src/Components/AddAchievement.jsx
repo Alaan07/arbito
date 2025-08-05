@@ -78,19 +78,16 @@ const AddBlog = () => {
 
       const handleaddachivementclick = async (e) => {
              e.preventDefault();
-
               const formData = new FormData();
                       formData.append("AchivementTitle", achivementTitle);
                       formData.append("achivementdesc", achivementdesc);
                       formData.append("achivementimg", achivementimg);
-
               try {
                 const res = await axios.post('/api/addachivement?uploadType=achivements', formData, {
                                 headers: {
                                   'Content-Type': 'multipart/form-data',
                                 }
                               });
-
                 console.log("Success:", res.data);
                 if(res.data.achivementcreated){
                   alert("achivement created")
@@ -100,9 +97,6 @@ const AddBlog = () => {
                 console.error("Error uploading achivements:", err);
               }
             };
-
-
-
 
         // ******************addachivements backend end*******************
 

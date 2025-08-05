@@ -7,6 +7,7 @@ import multer from 'multer';
 import fs from 'fs';
 import User from './userModels/UserModel.js';
 import Achivement from './userModels/AchivementModel.js'
+import Event from './userModels/EventModel.js'
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -76,6 +77,40 @@ app.post("/api/login", (req, res) => {
 
 
 
+
+// 📝 Add events (with image)
+app.post("/api/addevents", upload.single('eventThumb'), async (req, res) => {
+  try {
+    const { EventTitle, eventdesc, startdate, enddate, location, speaker } = req.body;
+
+    const uploadType = req.query.uploadType?.toLowerCase() || 'misc'; // 💡 use this to set correct path
+    const imagePath = req.file ? `/upload/${uploadType}/${req.file.filename}` : '';
+
+    const newEvent = new Event({
+      title: EventTitle,
+      content: eventdesc,
+      startdate: startdate,
+      enddate: enddate,
+      location: location,
+      Speaker: speaker,
+      thumbnail: imagePath,
+    });
+
+    await newEvent.save();
+    res.status(201).json({
+      message: 'Event saved successfully',
+      event: newEvent,
+      eventcreated: true,
+    });
+
+  } catch (error) {
+    console.error('Error saving event:', error);
+    res.status(500).json({ error: 'Failed to save event' });
+  }
+});
+
+
+
 // 📝 Add achivements (with image)
 app.post("/api/addachivement", upload.single('achivementimg'), async (req, res) => {
   try {
@@ -136,8 +171,6 @@ app.post("/api/addblogs", upload.single('blogThumb'), async (req, res) => {
 
 
 
-
-
 // ************************GETS**********************************************************
 
 
@@ -188,6 +221,16 @@ app.get("/api/achivementsdashboard", async (req, res) => {
   }
 });
 
+app.get("/api/eventsdashboard", async (req, res) => {
+  try {
+    const events = await Event.find();
+    res.status(200).json(events);
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 
 
 // ✏️ Get blog by ID (for editing)
@@ -204,6 +247,11 @@ app.get("/api/geteditachivement/:id", async (req, res) => {
   res.json({ achivements });
 });
 
+app.get("/api/geteditevents/:id", async (req, res) => {
+  const events = await Event.findById(req.params.id);
+  if (!events) return res.status(404).json({ message: "Not found" });
+  res.json({ events });
+});
 
 
 
@@ -234,6 +282,59 @@ app.put("/api/updateuserpro", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
+
+
+// ✏️ Update events (with optional image)
+app.put("/api/updateevents/:id", upload.single("thumbnail"), async (req, res) => {
+  try {
+    const { title, content, startdate, enddate, location, speaker, uploadType } = req.body;
+    const existingEvents = await Event.findById(req.params.id);
+
+    const updatedData = {
+      title,
+      content,
+      startdate,
+      enddate,
+      location,
+      speaker,
+    };
+    if (req.file) {
+      if (existingEvents.thumbnail) {
+        const relativePath = existingEvents.thumbnail.startsWith('/')
+          ? existingEvents.thumbnail.slice(1)
+          : existingEvents.thumbnail;
+
+        const oldImagePath = path.join(process.cwd(), "public", "upload", relativePath.replace(/^upload[\/\\]/, ""));
+
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+          console.log("🗑️ Old image deleted:", oldImagePath);
+        } else {
+          console.warn("⚠️ Old image not found:", oldImagePath);
+        }
+      }
+
+      const folder = uploadType?.toLowerCase() || 'misc';
+      updatedData.thumbnail = `/upload/${folder}/${req.file.filename}`;
+    }
+
+    const updated = await Event.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+    res.json({ message: "Updated successfully", event: updated });
+
+  } catch (err) {
+    console.error("❌ Update error:", err);
+    res.status(500).json({ message: "Update failed", error: err });
+  }
+});
+
+
+
+
+
+
+
 
 
 
@@ -333,6 +434,48 @@ app.put("/api/updateblog/:id", upload.single("thumbnail"), async (req, res) => {
 
 
 // ********************************************DELETE***********************************
+
+
+
+
+app.delete("/api/eventsdelete/:deleteId", async (req, res) => {
+  const { deleteId } = req.params;
+
+  // ✅ Check if ID is valid
+  if (!mongoose.Types.ObjectId.isValid(deleteId)) {
+    return res.status(400).json({ message: "Invalid event ID" });
+  }
+
+  try {
+    const events = await Event.findById(deleteId);
+    if (!events) return res.status(404).json({ message: "events not found" });
+
+    if (events.thumbnail) {
+      const relativePath = events.thumbnail.startsWith('/')
+        ? events.thumbnail.slice(1)
+        : events.thumbnail;
+
+      const imagePath = path.join(process.cwd(), "public", "upload", relativePath.replace(/^upload[\/\\]/, ""));
+
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+        console.log("🗑️ Image deleted:", imagePath);
+      } else {
+        console.warn("⚠️ Image not found:", imagePath);
+      }
+    }
+
+    await Event.findByIdAndDelete(deleteId);
+    res.status(200).json({ message: "events and thumbnail deleted" });
+  } catch (err) {
+    console.error("❌ Delete error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+
 
 
 app.delete("/api/achivementsdelete/:deleteId", async (req, res) => {

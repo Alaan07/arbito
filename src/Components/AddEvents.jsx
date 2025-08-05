@@ -8,13 +8,16 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
 import "../Styles/addformevents.css";
 import axios from '../api/axios.js'
 
 const AddBlog = () => {
+
+  const navigate = useNavigate();
+
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("mode") === "dark"
   );
@@ -71,6 +74,67 @@ const AddBlog = () => {
     sessionStorage.setItem("homeRedirectOnce", "true");
     window.location.href = "/";
   };
+
+
+
+  // *************************************backend*********************************
+
+      const [EventTitle, setEventTitle] = useState("");
+      const [eventdesc, seteventdesc] = useState("");
+      const [startdate, setstartdate] = useState("");
+      const [enddate, setenddate] = useState("");
+      const [location, setlocation] = useState("");
+      const [speaker, setspeaker] = useState("");
+      const [eventThumb, seteventThumb] = useState("");
+
+
+
+
+      const formatDate = (inputDate) => {
+      const date = new Date(inputDate);
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${year}-${month}-${day}`;
+    };
+
+                const handleaddblogclick = async (e) => {
+                   e.preventDefault();
+      
+                    const formData = new FormData();
+                    formData.append("EventTitle", EventTitle);
+                    formData.append("eventdesc", eventdesc);
+                    formData.append("startdate", formatDate(startdate));
+                    formData.append("enddate", formatDate(enddate));
+                    formData.append("location", location);
+                    formData.append("speaker", speaker);
+                    formData.append("eventThumb", eventThumb);
+                    
+                    try {
+                const res = await axios.post('/api/addevents?uploadType=event', formData, {
+                                headers: {
+                                  'Content-Type': 'multipart/form-data',
+                                }
+                              });
+      
+                      console.log("Success:", res.data);
+                      if(res.data.eventcreated){
+                        alert("eventcreated")
+                      }
+                      navigate('/events')
+                    } catch (err) {
+                      console.error("Error uploading event:", err);
+                    }
+                  };
+      
+      
+      
+      
+
+
+
+
+
 
 
   return (
@@ -165,7 +229,7 @@ const AddBlog = () => {
             </div>
 
             <div className="adm-blog-add-form">
-              <form className="adm-blog-form">
+              <form className="adm-blog-form" onSubmit={handleaddblogclick}>
                 <div className="adm-form-group">
                   <label htmlFor="eventTitle">Title</label>
                   <input
@@ -173,6 +237,7 @@ const AddBlog = () => {
                     id="eventTitle"
                     name="title"
                     placeholder="Enter event title"
+                    onChange={(e)=>setEventTitle(e.target.value)}
                     required
                   />
                 </div>
@@ -184,6 +249,7 @@ const AddBlog = () => {
                     name="description"
                     placeholder="Enter event description"
                     rows="4"
+                    onChange={(e)=>seteventdesc(e.target.value)}
                     required
                   />
                 </div>
@@ -195,13 +261,14 @@ const AddBlog = () => {
                       type="date"
                       id="startDate"
                       name="startDate"
+                      onChange={(e)=>setstartdate(e.target.value)}
                       required
                     />
                   </div>
 
                   <div className="adm-form-group">
                     <label htmlFor="endDate">End Date</label>
-                    <input type="date" id="endDate" name="endDate" required />
+                    <input type="date" id="endDate" name="endDate" onChange={(e)=>setenddate(e.target.value)} required />
                   </div>
                 </div>
 
@@ -212,6 +279,7 @@ const AddBlog = () => {
                     id="location"
                     name="location"
                     placeholder="Enter event location"
+                    onChange={(e)=>setlocation(e.target.value)}
                     required
                   />
                 </div>
@@ -220,23 +288,28 @@ const AddBlog = () => {
                   <label htmlFor="Speakers:">Speakers:</label>
                   <input
                     type="text"
-                    id="Speakers:"
-                    name="Speakers:"
-                    placeholder="Enter event Speakers:"
+                    id="Speakers"
+                    name="Speakers"
+                    placeholder="Enter event speakers, comma-separated"
+                    onChange={(e)=>setspeaker(e.target.value)}
                     required
-                  />
+                    />
                 </div>   
 
 
+
                 <div className="adm-form-group">
-                  <label htmlFor="eventImage">
-                    Event Image (JPG, Max: 20MB)
-                  </label>
-                  <input
-                    type="file"
-                    id="eventImage"
-                    name="image"
-                    accept=".jpg"
+                  <label htmlFor="image">Image (JPG, max 20MB)</label>
+                  <input type="file" id="image" accept=".jpg"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file && file.size <= 20 * 1024 * 1024) {
+                        seteventThumb(file);
+                      } else {
+                        alert("File size must be less than 20MB");
+                        e.target.value = "";
+                      }
+                    }}
                     required
                   />
                 </div>

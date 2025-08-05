@@ -8,13 +8,15 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate,useParams } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
 import "../Styles/addformblogs.css";
 import axios from '../api/axios.js'
 
 const AddBlog = () => {
+
+  const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("mode") === "dark"
   );
@@ -37,7 +39,7 @@ const AddBlog = () => {
   const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
 
   const [showProfile, setShowProfile] = useState(false);
-  const [formData, setFormData] = useState({
+  const [proformData, setproFormData] = useState({
       _id: "",
       name: "",
       email: "",
@@ -50,7 +52,7 @@ const AddBlog = () => {
         const fetchUserData = async () => {
           try {
               const res = await axios.get("/api/getuserpro");
-              setFormData({
+              setproFormData({
                 _id: res.data._id,
                 name: res.data.username || "",
                 email: res.data.email || res.data.emai || "",
@@ -71,6 +73,83 @@ const AddBlog = () => {
     sessionStorage.setItem("homeRedirectOnce", "true");
     window.location.href = "/";
   };
+
+
+  const { id } = useParams();
+
+    const [formData, setFormData] = useState({
+      title: '',
+      content: '',
+      startdate: '',
+      enddate: '',
+      location: '',
+      speaker: '',
+      thumbnail: '',
+    });
+
+
+  const [oldThumbnailName, setOldThumbnailName] = useState("");
+
+  useEffect(() => {
+  axios.get(`/api/geteditevents/${id}`)
+    .then(res => {
+      const event = res.data?.events;
+      
+      if (!event) {
+        console.warn("Event not found or invalid response");
+        return;
+      }
+
+      setFormData({
+        title: event.title || "",
+        content: event.content || "",
+        startdate: event.startdate || "",
+        enddate: event.enddate || "",
+        location: event.location || "",
+        speaker: event.Speaker || "",
+        thumbnail: "",
+      });
+
+      if (event.thumbnail) {
+        const fileName = event.thumbnail.split("-").pop();
+        setOldThumbnailName(fileName);
+      }
+    })
+    .catch(err => console.error(err));
+}, [id]);
+
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const data = new FormData();
+  data.append("uploadType", "event"); 
+  data.append("title", formData.title);
+  data.append("content", formData.content);
+  data.append("startdate", formData.startdate);
+  data.append("enddate", formData.enddate);
+  data.append("location", formData.location);
+  data.append("speaker", formData.speaker);
+
+  if (formData.thumbnail) {
+    data.append("thumbnail", formData.thumbnail);
+  }
+
+  try {
+    await axios.put(`/api/updateevents/${id}`, data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    alert("event updated!");
+    navigate('/events');
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to update events");
+  }
+};
+
+
 
 
   return (
@@ -138,13 +217,13 @@ const AddBlog = () => {
                  </div>
                  <div className="adm-profile-info">
                    <p>
-                     <strong>Name:</strong> {formData.name}
+                     <strong>Name:</strong> {proformData.name}
                    </p>
                    <p>
-                     <strong>Email:</strong> {formData.email}
+                     <strong>Email:</strong> {proformData.email}
                    </p>
                    <p>
-                     <strong>Phone:</strong> {formData.phone}
+                     <strong>Phone:</strong> {proformData.phone}
                    </p>
                    <Link to="/editprofile" className="adm-edit-btn">
                      Edit Profile
@@ -165,15 +244,15 @@ const AddBlog = () => {
             </div>
 
             <div className="adm-blog-add-form">
-              <form className="adm-blog-form">
+              <form className="adm-blog-form" onSubmit={handleSubmit}>
                 <div className="adm-form-group">
                   <label htmlFor="title">Title</label>
                   <input
                     type="text"
                     id="title"
                     name="title"
-                    placeholder="Enter event title"
-                    defaultValue="Annual Tech Fest"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     required
                   />
                 </div>
@@ -183,9 +262,9 @@ const AddBlog = () => {
                   <textarea
                     id="description"
                     name="description"
-                    placeholder="Enter full event description"
                     rows="4"
-                    defaultValue="A grand tech fest bringing students from across the region."
+                    value={formData.content}
+                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                     required
                   ></textarea>
                 </div>
@@ -196,7 +275,8 @@ const AddBlog = () => {
                     type="date"
                     id="startDate"
                     name="startDate"
-                    defaultValue="2025-08-10"
+                    value={formData.startdate}
+                    onChange={(e) => setFormData({ ...formData, startdate: e.target.value })}
                     required
                   />
                 </div>
@@ -207,7 +287,20 @@ const AddBlog = () => {
                     type="date"
                     id="endDate"
                     name="endDate"
-                    defaultValue="2025-08-12"
+                    value={formData.enddate}
+                    onChange={(e) => setFormData({ ...formData, enddate: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="adm-form-group">
+                  <label htmlFor="location">Speaker</label>
+                  <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    value={formData.speaker}
+                    onChange={(e) => setFormData({ ...formData, speaker: e.target.value })}
                     required
                   />
                 </div>
@@ -218,15 +311,34 @@ const AddBlog = () => {
                     type="text"
                     id="location"
                     name="location"
-                    placeholder="Enter event location"
-                    defaultValue="St. Xavier's Auditorium"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     required
                   />
                 </div>
 
                 <div className="adm-form-group">
-                  <label htmlFor="image">Event Poster (JPG, max 20MB)</label>
-                  <input type="file" id="image" name="image" accept=".jpg" />
+                  <label htmlFor="image">
+                    Event Image (JPG, max 20MB)
+                    {formData.thumbnail instanceof File
+                      ? ` / ${formData.thumbnail.name}`
+                      : oldThumbnailName && ` / ${oldThumbnailName}`}
+                  </label>
+
+                  <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept=".jpg"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file && file.size > 20 * 1024 * 1024) {
+                        alert("File size must be less than 20MB");
+                        return;
+                      }
+                      setFormData({ ...formData, thumbnail: file });
+                    }}
+                  />
                 </div>
 
                 <button type="submit" className="adm-blog-submit-btn">
