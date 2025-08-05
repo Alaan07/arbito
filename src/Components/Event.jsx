@@ -203,8 +203,7 @@ const Event = () => {
                   <tr>
                     <th>Sr No</th>
                     <th>Title</th>
-                    <th>Intro</th>
-                    <th>Category</th>
+                    <th>Date</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -214,7 +213,6 @@ const Event = () => {
                       <td>{index + 1}</td>
                       <td>{blog.title}</td>
                       <td>{blog.intro}</td>
-                      <td>{blog.category}</td>
                       <td>
                         <Link to="/editevents" className="adm-blog-edit-btn">
                           Edit

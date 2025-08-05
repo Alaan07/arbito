@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../Styles/Event.css";
+import axios from "../api/axios.js";
 
 const EventHero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -29,17 +30,17 @@ const EventHero = () => {
   const achievements = [
     {
       title: "Code Clash Champion",
-      description: "Won first place in a national-level coding competition with 300+ participants.",
+      description: "Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at a tech fest Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at a tech fest",
       image: "/img/Bg.jpg"
     },
     {
       title: "Poster Presentation Winner",
-      description: "Recognized for creative poster design on AI and Ethics at a tech fest.",
+      description: "Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at a tech fest Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at a tech fest Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at a tech fest Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at a tech fest Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at a tech fest Won first",
       image: "/img/Eventbg.jpg"
     },
     {
       title: "Hackathon Finalist",
-      description: "Reached finals in a prestigious 24-hour hackathon challenge.",
+      description: "Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at a tech fest Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at a tech fest Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at a tech fest Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at a tech fest Won first place in a national-level coding competition with 300+ participants.Recognized for creative poster design on AI and Ethics at at",
       image: "/img/braindemo.png"
     }
   ];

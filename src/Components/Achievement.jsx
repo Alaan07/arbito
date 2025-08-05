@@ -70,7 +70,7 @@ const [deleteIndex, setDeleteIndex] = useState(null);
           setachivementsData(updatedData);
           setShowConfirm(false);
         } catch (error) {
-          console.error("Failed to delete achuvements:", error);
+          console.error("Failed to delete achivements:", error);
         }
       };
   const cancelDelete = () => {
@@ -215,28 +215,26 @@ const [deleteIndex, setDeleteIndex] = useState(null);
                   <tr>
                     <th>Sr No</th>
                     <th>Title</th>
-                    <th>Intro</th>
-                    <th>Category</th>
+                    {/* <th>Description</th> */}
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {achivementsData.map((blog, index) => (
+                  {achivementsData.map((achivements, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      <td>{blog.title}</td>
-                      <td>{blog.intro}</td>
-                      <td>{blog.category}</td>
+                      <td>{achivements.title}</td>
+                      {/* <td>{achivements.content}</td> */}
                       <td>
                         <Link
-                          to="/editachievement"
+                          to={`/editachievement/${achivements._id}`}
                           className="adm-blog-edit-btn"
                         >
                           Edit
                         </Link>
                         <button
                           className="adm-blog-delete-btn"
-                          onClick={() => handleDeleteClick(index)}
+                          onClick={() => handleDeleteClick(achivements._id)}
                         >
                           Delete
                         </button>

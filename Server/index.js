@@ -21,21 +21,32 @@ const port = process.env.PORT || 3000;
 const Eusername = process.env.USER_NAME;
 const Epassword = process.env.PASSWORD;
 
+
 // 🔄 Dynamic storage destination based on uploadType
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadType = req.query.uploadType?.toLowerCase() || 'misc'; // ⬅️ safer
+    const uploadType =
+      req.query.uploadType?.toLowerCase() || req.body.uploadType?.toLowerCase() || 'misc';
+
     const uploadPath = path.join(process.cwd(), 'public', 'upload', uploadType);
     fs.mkdirSync(uploadPath, { recursive: true });
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + file.originalname;
-    cb(null, uniqueSuffix);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
   },
 });
 
 const upload = multer({ storage });
+
+
+
+
+
+
+
 
 app.use(cors());
 app.use(express.json());
@@ -44,6 +55,15 @@ app.use(cookieParser());
 // 📂 Serve static files from /public/upload
 app.use('/upload', express.static(path.join(process.cwd(), 'public', 'upload')));
 
+
+
+
+
+
+// ****************************************************POST************************************
+
+
+
 // 🔐 Login
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
@@ -51,36 +71,6 @@ app.post("/api/login", (req, res) => {
     res.status(200).json({ message: 'Hello from backend!', islogin: true });
   } else {
     res.status(200).json({ message: 'Invalid username or password!', islogin: false });
-  }
-});
-
-// 👤 Get user profile
-app.get('/api/getuserpro', async (req, res) => {
-  try {
-    const user = await User.findOne();
-    res.status(200).json(user);
-  } catch (error) {
-    console.error('Error fetching user:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-});
-
-// ✏️ Update user profile
-app.put("/api/updateuserpro", async (req, res) => {
-  const { _id, username, email, contact, password } = req.body;
-  if (!_id) return res.status(400).json({ message: "User ID is required" });
-
-  try {
-    const updatedUser = await User.findByIdAndUpdate(_id, {
-      username, email, contact, password
-    }, { new: true });
-
-    if (!updatedUser) return res.status(404).json({ message: "User not found" });
-
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    console.error("Error updating user:", error);
-    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -147,6 +137,24 @@ app.post("/api/addblogs", upload.single('blogThumb'), async (req, res) => {
 
 
 
+
+// ************************GETS**********************************************************
+
+
+
+// 👤 Get user profile
+app.get('/api/getuserpro', async (req, res) => {
+  try {
+    const user = await User.findOne();
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+
 // 📚 Get all blogs
 app.get("/api/allblogs", async (req, res) => {
   try {
@@ -169,12 +177,109 @@ app.get("/api/blogs", async (req, res) => {
   }
 });
 
+
+app.get("/api/achivementsdashboard", async (req, res) => {
+  try {
+    const achivements = await Achivement.find();
+    res.status(200).json(achivements);
+  } catch (error) {
+    console.error("Error fetching achivements:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
+
 // ✏️ Get blog by ID (for editing)
 app.get("/api/geteditblog/:id", async (req, res) => {
   const blog = await Blog.findById(req.params.id);
   if (!blog) return res.status(404).json({ message: "Not found" });
   res.json({ blog });
 });
+
+
+app.get("/api/geteditachivement/:id", async (req, res) => {
+  const achivements = await Achivement.findById(req.params.id);
+  if (!achivements) return res.status(404).json({ message: "Not found" });
+  res.json({ achivements });
+});
+
+
+
+
+
+
+
+// *******************************************update*************************************
+
+
+
+
+
+// ✏️ Update user profile
+app.put("/api/updateuserpro", async (req, res) => {
+  const { _id, username, email, contact, password } = req.body;
+  if (!_id) return res.status(400).json({ message: "User ID is required" });
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(_id, {
+      username, email, contact, password
+    }, { new: true });
+
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
+
+
+
+// ✏️ Update achivement (with optional image)
+app.put("/api/updateachivements/:id", upload.single("thumbnail"), async (req, res) => {
+  try {
+    const { title, content, uploadType } = req.body;
+    const existingAchivement = await Achivement.findById(req.params.id);
+
+    const updatedData = {
+      title,
+      content,
+    };
+    if (req.file) {
+      if (existingAchivement.thumbnail) {
+        const relativePath = existingAchivement.thumbnail.startsWith('/')
+          ? existingAchivement.thumbnail.slice(1)
+          : existingAchivement.thumbnail;
+
+        const oldImagePath = path.join(process.cwd(), "public", "upload", relativePath.replace(/^upload[\/\\]/, ""));
+
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+          console.log("🗑️ Old image deleted:", oldImagePath);
+        } else {
+          console.warn("⚠️ Old image not found:", oldImagePath);
+        }
+      }
+
+      const folder = uploadType?.toLowerCase() || 'misc';
+      updatedData.thumbnail = `/upload/${folder}/${req.file.filename}`;
+    }
+
+    const updated = await Achivement.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+    res.json({ message: "Updated successfully", achivement: updated });
+
+  } catch (err) {
+    console.error("❌ Update error:", err);
+    res.status(500).json({ message: "Update failed", error: err });
+  }
+});
+
+
+
 
 
 
@@ -219,6 +324,53 @@ app.put("/api/updateblog/:id", upload.single("thumbnail"), async (req, res) => {
     res.status(500).json({ message: "Update failed", error: err });
   }
 });
+
+
+
+
+
+
+
+
+// ********************************************DELETE***********************************
+
+
+app.delete("/api/achivementsdelete/:deleteId", async (req, res) => {
+  const { deleteId } = req.params;
+
+  // ✅ Check if ID is valid
+  if (!mongoose.Types.ObjectId.isValid(deleteId)) {
+    return res.status(400).json({ message: "Invalid achievement ID" });
+  }
+
+  try {
+    const achivements = await Achivement.findById(deleteId);
+    if (!achivements) return res.status(404).json({ message: "Achievement not found" });
+
+    if (achivements.thumbnail) {
+      const relativePath = achivements.thumbnail.startsWith('/')
+        ? achivements.thumbnail.slice(1)
+        : achivements.thumbnail;
+
+      const imagePath = path.join(process.cwd(), "public", "upload", relativePath.replace(/^upload[\/\\]/, ""));
+
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+        console.log("🗑️ Image deleted:", imagePath);
+      } else {
+        console.warn("⚠️ Image not found:", imagePath);
+      }
+    }
+
+    await Achivement.findByIdAndDelete(deleteId);
+    res.status(200).json({ message: "Achievement and thumbnail deleted" });
+  } catch (err) {
+    console.error("❌ Delete error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 
 
 

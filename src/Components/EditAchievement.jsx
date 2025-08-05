@@ -8,13 +8,17 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate,useParams } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
 import "../Styles/addformevents.css";
 import axios from '../api/axios.js'
 
 const AddBlog = () => {
+
+
+  const navigate = useNavigate();
+
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("mode") === "dark"
   );
@@ -37,7 +41,75 @@ const AddBlog = () => {
   const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
 
   const [showProfile, setShowProfile] = useState(false);
- const [formData, setFormData] = useState({
+
+
+  const { id } = useParams();
+  const [formData, setFormData] = useState({
+      title: '',
+      content: '',
+      thumbnail: '',
+    });
+
+
+  const [oldThumbnailName, setOldThumbnailName] = useState("");
+
+  useEffect(() => {
+  axios.get(`/api/geteditachivement/${id}`)
+    .then(res => {
+      const achivement = res.data?.achivements;
+      
+      if (!achivement) {
+        console.warn("Achievement not found or invalid response");
+        return;
+      }
+
+      setFormData({
+        title: achivement.title || "",
+        content: achivement.content || "",
+        thumbnail: "",
+      });
+
+      if (achivement.thumbnail) {
+        const fileName = achivement.thumbnail.split("-").pop();
+        setOldThumbnailName(fileName);
+      }
+    })
+    .catch(err => console.error(err));
+}, [id]);
+
+
+
+
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const data = new FormData();
+  data.append("uploadType", "achivements"); 
+  data.append("title", formData.title);
+  data.append("content", formData.content);
+
+  if (formData.thumbnail) {
+    data.append("thumbnail", formData.thumbnail);
+  }
+
+  try {
+    await axios.put(`/api/updateachivements/${id}`, data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    alert("achivement updated!");
+    navigate('/achievements');
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to update achivements");
+  }
+};
+
+
+
+ const [proformData, setproFormData] = useState({
       _id: "",
       name: "",
       email: "",
@@ -46,11 +118,13 @@ const AddBlog = () => {
     });
 
 
+    
+
     useEffect(() => {
         const fetchUserData = async () => {
           try {
               const res = await axios.get("/api/getuserpro");
-              setFormData({
+              setproFormData({
                 _id: res.data._id,
                 name: res.data.username || "",
                 email: res.data.email || res.data.emai || "",
@@ -138,13 +212,13 @@ const AddBlog = () => {
                  </div>
                  <div className="adm-profile-info">
                    <p>
-                     <strong>Name:</strong> {formData.name}
+                     <strong>Name:</strong> {proformData.name}
                    </p>
                    <p>
-                     <strong>Email:</strong> {formData.email}
+                     <strong>Email:</strong> {proformData.email}
                    </p>
                    <p>
-                     <strong>Phone:</strong> {formData.phone}
+                     <strong>Phone:</strong> {proformData.phone}
                    </p>
                    <Link to="/editprofile" className="adm-edit-btn">
                      Edit Profile
@@ -165,15 +239,15 @@ const AddBlog = () => {
             </div>
 
             <div className="adm-blog-add-form">
-              <form className="adm-blog-form">
+              <form className="adm-blog-form" onSubmit={handleSubmit}>
                 <div className="adm-form-group">
                   <label htmlFor="title">Title</label>
                   <input
                     type="text"
                     id="title"
                     name="title"
-                    placeholder="Enter achievement title"
-                    defaultValue="Winner - State Level Hackathon"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     required
                   />
                 </div>
@@ -183,14 +257,16 @@ const AddBlog = () => {
                   <textarea
                     id="description"
                     name="description"
-                    placeholder="Enter achievement description"
                     rows="4"
-                    defaultValue="Secured 1st place in the state-level hackathon organized by XYZ University."
+                    value={formData.content}
+                    onChange={(e) =>
+                      setFormData({ ...formData, content: e.target.value })
+                    }
                     required
                   ></textarea>
                 </div>
 
-                <div className="adm-form-group">
+                {/* <div className="adm-form-group">
                   <label htmlFor="date">Date</label>
                   <input
                     type="date"
@@ -199,13 +275,30 @@ const AddBlog = () => {
                     defaultValue="2025-07-15"
                     required
                   />
-                </div>
+                </div> */}
 
                 <div className="adm-form-group">
                   <label htmlFor="image">
-                    Certificate Image (JPG, max 20MB)
+                    Achivement Image (JPG, max 20MB)
+                    {formData.thumbnail instanceof File
+                      ? ` / ${formData.thumbnail.name}`
+                      : oldThumbnailName && ` / ${oldThumbnailName}`}
                   </label>
-                  <input type="file" id="image" name="image" accept=".jpg" />
+
+                  <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept=".jpg"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file && file.size > 20 * 1024 * 1024) {
+                        alert("File size must be less than 20MB");
+                        return;
+                      }
+                      setFormData({ ...formData, thumbnail: file });
+                    }}
+                  />
                 </div>
 
                 <button type="submit" className="adm-blog-submit-btn">

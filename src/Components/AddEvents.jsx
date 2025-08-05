@@ -216,6 +216,18 @@ const AddBlog = () => {
                   />
                 </div>
 
+               <div className="adm-form-group">
+                  <label htmlFor="Speakers:">Speakers:</label>
+                  <input
+                    type="text"
+                    id="Speakers:"
+                    name="Speakers:"
+                    placeholder="Enter event Speakers:"
+                    required
+                  />
+                </div>   
+
+
                 <div className="adm-form-group">
                   <label htmlFor="eventImage">
                     Event Image (JPG, Max: 20MB)
