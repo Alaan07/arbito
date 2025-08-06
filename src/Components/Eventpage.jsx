@@ -109,8 +109,9 @@ const EventHero = () => {
           location="St. Xavier's College Auditorium"
           time="11:00 AM - 1:00 PM"
           speakers="Dr. Rao, Mr. Gulati"
-          description="Hands-on sessions and talks by experts on AI and Cloud Technologies."
+          description="Hands-on sessions and talks by experts on AI and Cloud Technologies.Hands-on sessions and talks by experts on AI and Cloud Technologies.Hands-on sessions and talks by experts on AI and Cloud Technologies."
         />
+        
         {/* Duplicate or map more EventCards here */}
       </div>
 

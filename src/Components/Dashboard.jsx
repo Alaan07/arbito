@@ -108,6 +108,31 @@ const Dashboard = () => {
 
 
 
+  const [totalBlogs, setTotalBlogs] = useState(0);
+const [totalEvents, setTotalEvents] = useState(0);
+
+useEffect(() => {
+  const fetchCounts = async () => {
+    try {
+      const [blogsRes, eventsRes] = await Promise.all([
+        axios.get("/api/countBlogs"),
+        axios.get("/api/countEvents")
+      ]);
+
+      setTotalBlogs(blogsRes.data.count || 0);
+      setTotalEvents(eventsRes.data.count || 0);
+
+    } catch (error) {
+      console.error("Error fetching counts:", error);
+    }
+  };
+
+  fetchCounts();
+}, []);
+
+
+
+
   const toggleProfile = () => setShowProfile(!showProfile);
 
   return (
@@ -209,14 +234,14 @@ const Dashboard = () => {
               </div>
               <div className="adm-box adm-box2">
                 <span className="adm-text">Total Blogs</span>
-                <span className="number">20,120</span>
+                <span className="number">{totalBlogs}</span>
               </div>
               <div className="adm-box adm-box3">
-                <i className="uil uil-share"></i>
                 <span className="adm-text">Total Events</span>
-                <span className="number">10,120</span>
+                <span className="number">{totalEvents}</span>
               </div>
             </div>
+
           </div>
         </div>
       </section>

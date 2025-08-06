@@ -103,7 +103,7 @@ app.post("/api/login", async (req, res) => {
 // 📝 Add events (with image)
 app.post("/api/addevents", upload.single('eventThumb'), async (req, res) => {
   try {
-    const { EventTitle, eventdesc, startdate, enddate, location, speaker } = req.body;
+    const { EventTitle, eventdesc, startdate, enddate,time, location, speaker } = req.body;
     const uploadType = req.query.uploadType?.toLowerCase() || 'misc'; // 💡 use this to set correct path
     const imagePath = req.file ? `/upload/${uploadType}/${req.file.filename}` : '';
 
@@ -112,6 +112,7 @@ app.post("/api/addevents", upload.single('eventThumb'), async (req, res) => {
       content: eventdesc,
       startdate: startdate,
       enddate: enddate,
+      time: time,
       location: location,
       Speaker: speaker,
       thumbnail: imagePath,
@@ -275,6 +276,29 @@ app.get("/api/geteditevents/:id", async (req, res) => {
 
 
 
+// Count Blogs
+app.get("/api/countBlogs", async (req, res) => {
+  try {
+    const count = await Blog.countDocuments();
+    res.json({ count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ count: 0 });
+  }
+});
+
+// Count Events
+app.get("/api/countEvents", async (req, res) => {
+  try {
+    const count = await Event.countDocuments();
+    res.json({ count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ count: 0 });
+  }
+});
+
+
 
 
 // *******************************************update*************************************
@@ -400,10 +424,6 @@ app.put("/api/updateachivements/:id", upload.single("thumbnail"), async (req, re
 
 
 
-
-
-
-
 // ✏️ Update blog (with optional image)
 app.put("/api/updateblog/:id", upload.single("thumbnail"), async (req, res) => {
   try {
@@ -447,13 +467,7 @@ app.put("/api/updateblog/:id", upload.single("thumbnail"), async (req, res) => {
 
 
 
-
-
-
-
-
 // ********************************************DELETE***********************************
-
 
 
 
@@ -491,9 +505,6 @@ app.delete("/api/eventsdelete/:deleteId", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-
-
 
 
 

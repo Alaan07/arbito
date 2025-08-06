@@ -57,7 +57,7 @@ const Homepage = () => {
             Empowering students with real-world skills. Arbito Student Community connects learning with doing — through workshops, projects, and hands-on experiences. We believe in growing together, mentoring each other, and turning ideas into impact.
           </p>
           <div style={{ height: '3.5rem' }} />
-          <h3 className="trusted-by">Trusted by</h3>
+          <h3 className="trusted-by">Supported by</h3>
 
     
     <div className="trusted-logos">

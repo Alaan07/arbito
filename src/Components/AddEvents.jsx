@@ -99,6 +99,22 @@ const AddBlog = () => {
 
 
 
+ const handleTimeChange = (e) => {
+  const time24 = e.target.value; // "14:30"
+  let [hours, minutes] = time24.split(":").map(Number);
+
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = (hours % 12) || 12; // Convert 0 → 12
+
+  const time12 = `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+
+  console.log(time12); // "2:30 PM"
+
+  settime(time12); // ✅ Store in 12-hour format
+};
+
+
+
   // *************************************backend*********************************
 
 
@@ -107,6 +123,7 @@ const AddBlog = () => {
       const [eventdesc, seteventdesc] = useState("");
       const [startdate, setstartdate] = useState("");
       const [enddate, setenddate] = useState("");
+      const [time, settime] = useState("");
       const [location, setlocation] = useState("");
       const [speaker, setspeaker] = useState("");
       const [eventThumb, seteventThumb] = useState("");
@@ -128,6 +145,7 @@ const AddBlog = () => {
                     formData.append("eventdesc", eventdesc);
                     formData.append("startdate", formatDate(startdate));
                     formData.append("enddate", formatDate(enddate));
+                    formData.append("time", time);
                     formData.append("location", location);
                     formData.append("speaker", speaker);
                     formData.append("eventThumb", eventThumb);
@@ -283,6 +301,18 @@ const AddBlog = () => {
                     <label htmlFor="endDate">End Date</label>
                     <input type="date" id="endDate" name="endDate" onChange={(e)=>setenddate(e.target.value)} required />
                   </div>
+                </div>
+
+                <div className="adm-form-group">
+                  <label htmlFor="location">Time</label>
+                  <input
+                    type="time"
+                    id="location"
+                    name="location"
+                    placeholder="Enter event location"
+                    onChange={handleTimeChange }
+                    required
+                  />
                 </div>
 
                 <div className="adm-form-group">
