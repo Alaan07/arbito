@@ -25,25 +25,22 @@ const LoginPage = () => {
     }
     else{
     try {
-      const userdata = await axios.post('/api/login', {username: updatedusername , password: password});
-      if(userdata.data.islogin){
-        alert("login Succesfull");
-
-         sessionStorage.setItem("redirectedOnce", "true");
-         window.location.href = "/dashbord";
-      }
-      else{
-        alert("failed please try again")
-      }
-      setPassword('');
-      setUsername('');
-       } catch (error) {
-               console.error(error);
-       }
-      }
+  const userdata = await axios.post('/api/login', { username: updatedusername, password });
+  if (userdata.data.islogin) {
+    alert("Login Successful");
+    sessionStorage.setItem("redirectedOnce", "true");
+    window.location.href = "/dashbord";
+  }
+} catch (error) {
+  if (error.response && error.response.status === 401) {
+    alert(error.response.data.message || "Invalid username or password");
+  } else {
+    alert("Server error, please try again later");
+  }
+  setUsername('');
+  setPassword('');
+} }
 };
-
-
 
 
 
@@ -54,7 +51,7 @@ const LoginPage = () => {
       </div>
 
       <div className="login-container">
-        <h1>Sign in to <span class="arbito-hover">ARBITO</span></h1>
+        <h1>Sign in to <span className="arbito-hover">ARBITO</span></h1>
 
         <p>Welcome back! Please sign in to continue</p>
 

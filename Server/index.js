@@ -66,14 +66,36 @@ app.use('/upload', express.static(path.join(process.cwd(), 'public', 'upload')))
 
 
 // 🔐 Login
-app.post("/api/login", (req, res) => {
-  const { username, password } = req.body;
-  if (username === Eusername && password === Epassword) {
-    res.status(200).json({ message: 'Hello from backend!', islogin: true });
-  } else {
-    res.status(200).json({ message: 'Invalid username or password!', islogin: false });
+app.post("/api/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // Check if user exists
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(401).json({
+        message: 'Invalid username or password!',
+        islogin: false
+      });
+    }
+
+    if (password !== user.password) {
+  return res.status(401).json({ message: 'Invalid username or password!', islogin: false });
+}
+
+    // ✅ Login success
+
+     user.islogin = true;
+     await user.save();
+    res.status(200).json({
+      message: `Welcome ${user.username}!`, islogin: true});
+
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Server error', islogin: false });
   }
 });
+
 
 
 
@@ -82,7 +104,6 @@ app.post("/api/login", (req, res) => {
 app.post("/api/addevents", upload.single('eventThumb'), async (req, res) => {
   try {
     const { EventTitle, eventdesc, startdate, enddate, location, speaker } = req.body;
-
     const uploadType = req.query.uploadType?.toLowerCase() || 'misc'; // 💡 use this to set correct path
     const imagePath = req.file ? `/upload/${uploadType}/${req.file.filename}` : '';
 
@@ -108,8 +129,6 @@ app.post("/api/addevents", upload.single('eventThumb'), async (req, res) => {
     res.status(500).json({ error: 'Failed to save event' });
   }
 });
-
-
 
 // 📝 Add achivements (with image)
 app.post("/api/addachivement", upload.single('achivementimg'), async (req, res) => {
@@ -542,6 +561,24 @@ app.delete("/api/blogsdelete/:id", async (req, res) => {
     res.status(200).json({ message: "Blog and thumbnail deleted" });
   } catch (err) {
     console.error("❌ Delete error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+// ************************logout***************************************
+app.get("/api/logout", async (req, res) => {
+  try {
+    const user = await User.findOne();
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.islogin = false;
+    await user.save();
+
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Logout error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });

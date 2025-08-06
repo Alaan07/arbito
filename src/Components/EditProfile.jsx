@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useRef, useEffect, useState } from "react";
 import {
   FaHome,
   FaBlog,
@@ -31,23 +31,54 @@ const AddBlog = () => {
 });
 
   // Fetch user data on mount
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-          const res = await axios.get("/api/getuserpro");
-          setFormData({
-            _id: res.data._id,
-            name: res.data.username || "",
-            email: res.data.email || res.data.emai || "",
-            phone: res.data.contact || "",
-            password: "",
-          }); 
-      } catch (err) {
-        console.error("Failed to fetch user data:", err);
+ 
+   const ranOnce = useRef(false);
+ 
+ 
+   useEffect(() => {
+       const fetchUserData = async () => {
+         try {
+             const res = await axios.get("/api/getuserpro");
+             setFormData({
+               _id: res.data._id,
+               name: res.data.username || "",
+               email: res.data.email || res.data.emai || "",
+               phone: res.data.contact || "",
+               password: "",
+             }); 
+             if (ranOnce.current) return;
+               ranOnce.current = true;
+ 
+               if (!res.data.islogin) {
+                 alert("unauthorized access.");
+                 window.location.href = "/login";
+               }
+         } catch (err) {
+           console.error("Failed to fetch user data:", err);
+         }
+       };
+       fetchUserData();
+     }, []);
+ 
+     const handlelogoutToHome = async() => {
+      try{
+       const res = await axios.get("/api/logout");
+       if (res.status === 200) {
+         alert("Logout successful");
+       } else {
+         alert("Logout failed, please try again");
+       }
+      }catch(err){
+       console.error("Logout error:", err);
+       alert("An error occurred while logging out. Please try again.");
       }
-    };
-    fetchUserData();
-  }, []);
+     sessionStorage.setItem("homeRedirectOnce", "true");
+     window.location.href = "/";
+   };
+ 
+ 
+ 
+ 
 
   // Apply dark mode on toggle
   useEffect(() => {
@@ -94,14 +125,6 @@ const AddBlog = () => {
     alert("Error updating profile.");
   }
 };
-
-
-
-  const handlelogoutToHome = () => {
-    sessionStorage.setItem("homeRedirectOnce", "true");
-    window.location.href = "/";
-  };
-
 
   return (
     <>

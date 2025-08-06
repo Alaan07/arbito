@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useRef, useEffect, useState } from "react";
 import {
   FaHome,
   FaBlog,
@@ -43,10 +43,7 @@ const Dashboard = () => {
   }
   }, []);
 
-  const handlelogoutToHome = () => {
-    sessionStorage.setItem("homeRedirectOnce", "true");
-    window.location.href = "/";
-  };
+  
 
 
 
@@ -62,6 +59,11 @@ const Dashboard = () => {
   });
 
 
+
+
+  const ranOnce = useRef(false);
+
+
   useEffect(() => {
       const fetchUserData = async () => {
         try {
@@ -73,12 +75,35 @@ const Dashboard = () => {
               phone: res.data.contact || "",
               password: "",
             }); 
+            if (ranOnce.current) return;
+              ranOnce.current = true;
+
+              if (!res.data.islogin) {
+                alert("unauthorized access.");
+                window.location.href = "/login";
+              }
         } catch (err) {
           console.error("Failed to fetch user data:", err);
         }
       };
       fetchUserData();
     }, []);
+
+    const handlelogoutToHome = async() => {
+     try{
+      const res = await axios.get("/api/logout");
+      if (res.status === 200) {
+        alert("Logout successful");
+      } else {
+        alert("Logout failed, please try again");
+      }
+     }catch(err){
+      console.error("Logout error:", err);
+      alert("An error occurred while logging out. Please try again.");
+     }
+    sessionStorage.setItem("homeRedirectOnce", "true");
+    window.location.href = "/";
+  };
 
 
 

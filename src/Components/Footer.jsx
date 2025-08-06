@@ -32,7 +32,7 @@ const Footer = () => {
               <h3>Company</h3>
               <Link to="/about">About</Link>
               <Link to="/allblogs">Blog</Link>
-              <Link to="#">Event</Link>
+              <Link to="/eventpage">Event</Link>
             </div>
             <div className="footer-section">
               <h3>Support</h3>

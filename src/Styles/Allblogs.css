@@ -131,10 +131,28 @@ body.modal-open {
 
 .allblogscardSection{
 display: grid;
-grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+/* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
+grid-template-columns: repeat(3, 1fr);
 gap: 50px;
 padding: 10px;
 }
+
+@media (max-width: 827px) {
+    .allblogscardSection {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+}
+
+@media (max-width: 680px) {
+    .allblogscardSection {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 30px;
+    }
+}
+
+
+
 .allblogcard{
     border: 2px solid var(--orange);
     border-radius: 20px;
@@ -155,8 +173,9 @@ padding: 10px;
 .blogcardimg{
     object-fit: contain;
     width: 100%;
-    border-radius: 10px;
+    height: 200px;
 }
+
 .blogcard-category-span {
   display: inline-block;
   margin: 0.1rem;
@@ -237,10 +256,30 @@ padding: 10px;
 }
 
 .modalImage {
-  width: 60%;
+  width: 70%;
   display: block;
   margin: 0 auto 20px auto;
   border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .blogModal {
+    width: 90%;
+    padding: 20px;
+  }
+  .modalImage {
+    width: 70%;
+  }
+}
+
+@media (max-width: 500px) {
+  .blogModal {
+    width: 90%;
+    padding: 20px;
+  }
+  .modalImage {
+    width: 100%;
+  }
 }
 
 .modalCategories {

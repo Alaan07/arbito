@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import AllBlogs from "./Components/AllBlogs.jsx";
 import ContactPage from "./Components/ContactPage";
 import Navbar from "./Components/Navbar";
@@ -21,11 +21,11 @@ import Eventpage from "./Components/Eventpage";
 import Footer from './Components/Footer';
 import About from './Components/About';
 
-
-import { BrowserRouter as Router } from "react-router-dom";
-
 function Layout() {
-  const hideNavbarPaths = [
+  const location = useLocation();
+
+  // Pages where navbar should be hidden
+  const hideNavbar = [
     "/dashbord",
     "/blogs",
     "/achievements",
@@ -33,16 +33,16 @@ function Layout() {
     "/addblog",
     "/addevent",
     "/addachievement",
-    "/editblogs/:id",
-    "/editevents/:id",
-    "/editachievement/:id",
     "/editprofile"
+  ].some(path => location.pathname === path) ||
+     location.pathname.startsWith("/editblogs/") ||
+     location.pathname.startsWith("/editevents/") ||
+     location.pathname.startsWith("/editachievement/");
 
-  ];
-  const hideNavbar = hideNavbarPaths.includes(location.pathname);  
   return (
     <>
       {!hideNavbar && <Navbar />}
+
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/dashbord" element={<Dashboard />} />
@@ -60,11 +60,10 @@ function Layout() {
         <Route path="/editevents/:id" element={<EditEvent />} />
         <Route path="/editachievement/:id" element={<EditAchievement />} />
         <Route path="/editprofile" element={<EditProfile />} />
-         <Route path="/about" element={<About />} />
         <Route path="/eventpage" element={<Eventpage />} />
       </Routes>
-      <Footer />
-      
+
+      {!hideNavbar && <Footer />}
     </>
   );
 }
@@ -78,4 +77,3 @@ function App() {
 }
 
 export default App;
-

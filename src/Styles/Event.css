@@ -413,3 +413,121 @@
     padding: 0.5rem;
   }
 }
+
+.achievement-section {
+ display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem auto;
+  padding: 2rem;
+  max-width: 1000px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}  
+
+.achievement-section img {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.achievement-content {
+  max-width: 500px;
+  padding: 1rem;
+}
+
+.achievement-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.achievement-content p {
+  font-size: 1rem;
+  color: #444;
+}
+
+/* First Achievement - Big Full Width */
+.big-achievement {
+  flex-direction: column;
+  text-align: center;
+  background-color: #eef7ff; /* Subtle blue background */
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+.reverse-achievement {
+  flex-direction: row-reverse;
+  background-color: #fff6ed; /* Light orange background */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.achievement-image,
+.achievement-image-large {
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-content,
+.achievement-content-large {
+  background-color: transparent; /* content background stays clean */
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .achievement-section,
+  .reverse-achievement {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.achievement-image-large {
+  max-width: 100%;
+  width: 100%;
+  border-radius: 16px;
+  margin-bottom: 1rem;
+}
+
+.achievement-content-large {
+  padding: 0 1rem;
+}
+
+.achievement-content-large h3 {
+  font-size: 2rem;
+}
+
+.achievement-content-large p {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .achievement-section,
+  .reverse-achievement {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .achievement-content,
+  .achievement-content-large {
+    padding: 0.5rem;
+  }
+
+  .achievement-content h3,
+  .achievement-content-large h3 {
+    font-size: 1.3rem;
+  }
+
+  .achievement-content p,
+  .achievement-content-large p {
+    font-size: 0.95rem;
+  }
+}
