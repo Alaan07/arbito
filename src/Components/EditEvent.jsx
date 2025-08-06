@@ -98,31 +98,39 @@ const AddBlog = () => {
 
 
   const toggleProfile = () => setShowProfile(!showProfile);
-
+  const [timeInput, setTimeInput] = useState("");
+  const [oldThumbnailName, setOldThumbnailName] = useState("");
 
   const { id } = useParams();
 
     const [formData, setFormData] = useState({
-      title: '',
-      content: '',
-      startdate: '',
-      enddate: '',
-      location: '',
-      speaker: '',
-      thumbnail: '',
-    });
+  title: "",
+  content: "",
+  startdate: "",
+  enddate: "",
+  time: "",
+  location: "",
+  speaker: "",
+  thumbnail: "",
+});
 
-
-  const [oldThumbnailName, setOldThumbnailName] = useState("");
-
-  useEffect(() => {
+useEffect(() => {
   axios.get(`/api/geteditevents/${id}`)
     .then(res => {
       const event = res.data?.events;
-      
-      if (!event) {
-        console.warn("Event not found or invalid response");
-        return;
+      if (!event) return;
+
+      // convert to 24hr
+      let time24 = "";
+      if (event.time) {
+        const match = event.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+        if (match) {
+          let [_, hours, minutes, ampm] = match;
+          hours = parseInt(hours);
+          if (ampm.toLowerCase() === "pm" && hours !== 12) hours += 12;
+          if (ampm.toLowerCase() === "am" && hours === 12) hours = 0;
+          time24 = `${String(hours).padStart(2, "0")}:${minutes}`;
+        }
       }
 
       setFormData({
@@ -130,18 +138,16 @@ const AddBlog = () => {
         content: event.content || "",
         startdate: event.startdate || "",
         enddate: event.enddate || "",
+        time: event.time || "",  // keep original 12hr
         location: event.location || "",
         speaker: event.Speaker || "",
         thumbnail: "",
       });
-
-      if (event.thumbnail) {
-        const fileName = event.thumbnail.split("-").pop();
-        setOldThumbnailName(fileName);
-      }
+      setTimeInput(time24 || "");
     })
     .catch(err => console.error(err));
 }, [id]);
+
 
 
 
@@ -154,6 +160,7 @@ const handleSubmit = async (e) => {
   data.append("content", formData.content);
   data.append("startdate", formData.startdate);
   data.append("enddate", formData.enddate);
+  data.append("time", formData.time);
   data.append("location", formData.location);
   data.append("speaker", formData.speaker);
 
@@ -316,6 +323,30 @@ const handleSubmit = async (e) => {
                     onChange={(e) => setFormData({ ...formData, enddate: e.target.value })}
                     required
                   />
+                </div>
+
+                <div className="adm-form-group">
+                  <label htmlFor="endDate">Time</label>
+                 <input
+                      type="time"
+                      value={timeInput}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setTimeInput(value);
+
+                        if (value) {
+                          let [hours, minutes] = value.split(":").map(Number);
+                          let ampm = hours >= 12 ? "PM" : "AM";
+                          hours = hours % 12 || 12;
+                          const time12hr = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")} ${ampm}`;
+                          setFormData({ ...formData, time: time12hr });
+                        } else {
+                          setFormData({ ...formData, time: "" });
+                        }
+                      }}
+                    />
+
+
                 </div>
 
                 <div className="adm-form-group">

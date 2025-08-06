@@ -332,7 +332,7 @@ app.put("/api/updateuserpro", async (req, res) => {
 // ✏️ Update events (with optional image)
 app.put("/api/updateevents/:id", upload.single("thumbnail"), async (req, res) => {
   try {
-    const { title, content, startdate, enddate, location, speaker, uploadType } = req.body;
+    const { title, content, startdate, enddate, time, location, speaker, uploadType } = req.body;
     const existingEvents = await Event.findById(req.params.id);
 
     const updatedData = {
@@ -340,6 +340,7 @@ app.put("/api/updateevents/:id", upload.single("thumbnail"), async (req, res) =>
       content,
       startdate,
       enddate,
+      time,
       location,
       speaker,
     };
