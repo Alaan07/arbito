@@ -1,10 +1,38 @@
 import React, { useEffect, useState } from "react";
+import axios from "../api/axios.js";
 import "../Styles/Event.css";
 
 const EventHero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedEvent, setSelectedEvent] = useState(null); // ⬅️ For modal
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [events, setEvents] = useState([]);
+  const [achievements, setAchievements] = useState([]);
+
+  // Fetch events and achievements
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const eventRes = await axios.get("/api/eventspage");
+        const achievementRes = await axios.get("/api/achivementspage");
+        setEvents(eventRes.data);
+        setAchievements(achievementRes.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Rotate achievements for highlight
+  useEffect(() => {
+    if (achievements.length === 0) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % achievements.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [achievements]);
 
   const EventCard = ({
     title,
@@ -48,38 +76,9 @@ const EventHero = () => {
     </div>
   );
 
-  const achievements = [
-    {
-      title: "Code Clash Champion",
-      description:
-        "Won first place in a national-level coding competition with 300+ participants.",
-      image: "/img/Bg.jpg",
-    },
-    {
-      title: "Poster Presentation Winner",
-      description:
-        "Recognized for creative poster design on AI and Ethics at a tech fest.",
-      image: "/img/Eventbg.jpg",
-    },
-    {
-      title: "Hackathon Finalist",
-      description:
-        "Reached finals in a prestigious 24-hour hackathon challenge.",
-      image: "/img/braindemo.png",
-    },
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % achievements.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [achievements.length]);
-
-  const { title, description, image } = achievements[currentIndex];
-
   return (
     <div>
+      {/* Hero Banner */}
       <section className="hero-section-events">
         <div className="hero-content-events">
           <h1 className="hero-title-events">
@@ -90,72 +89,89 @@ const EventHero = () => {
             and community growth.🌍
           </h1>
           <p className="hero-description-events">
-            Join the largest global student community online and Explore
+            Join the largest global student community online and explore
             opportunities beyond the classroom.
           </p>
-          <a href="https://forms.gle/fKL8ULVgL6CTQ8Cb7" className="cta-button-events" target="_blank" rel="noopener noreferrer">
-            Study Together now
+          <a
+            href="https://forms.gle/fKL8ULVgL6CTQ8Cb7"
+            className="cta-button-events"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Study Together Now
           </a>
         </div>
       </section>
 
+      {/* Events Section */}
       <div className="section-heading">Upcoming Events</div>
       <div className="event-card section">
-        <EventCard
-          title="AI & Cloud Workshop"
-          image="/img/event-img.jpg"
-          startDate="August 5, 2025"
-          endDate="August 6, 2025"
-          location="St. Xavier's College Auditorium"
-          time="11:00 AM - 1:00 PM"
-          speakers="Dr. Rao, Mr. Gulati"
-          description="Hands-on sessions and talks by experts on AI and Cloud Technologies.Hands-on sessions and talks by experts on AI and Cloud Technologies.Hands-on sessions and talks by experts on AI and Cloud Technologies."
-        />
-        
-        {/* Duplicate or map more EventCards here */}
+        {events.map((event, index) => (
+          <EventCard
+            key={index}
+            title={event.title}
+            image={event.thumbnail}
+            startDate={event.startdate}
+            endDate={event.enddate}
+            location={event.location}
+            time={event.time}
+            speakers={event.Speaker}
+            description={event.content}
+          />
+        ))}
       </div>
 
-      <div className="section-heading">Recent Achievements</div>
-      {/* First Achievement - Big and Centered */}
-      <div className="achievement-section big-achievement">
-        <img
-          src={achievements[0].image}
-          alt={achievements[0].title}
-          className="achievement-image-large"
-        />
-        <div className="achievement-content-large">
-          <h3>{achievements[0].title}</h3>
-          <p>{achievements[0].description}</p>
-        </div>
-      </div>
+      {/* Achievements Section */}
+      {achievements.length > 0 && (
+        <>
+          <div className="section-heading">Recent Achievements</div>
 
-      {/* Second Achievement - Image Right, Text Left */}
-      <div className="achievement-section reverse-achievement">
-        <div className="achievement-content">
-          <h3>{achievements[1].title}</h3>
-          <p>{achievements[1].description}</p>
-        </div>
-        <img
-          src={achievements[1].image}
-          alt={achievements[1].title}
-          className="achievement-image"
-        />
-      </div>
+          {/* Highlighted Achievement (rotating) */}
+          <div className="achievement-section big-achievement">
+            <img
+              src={achievements[currentIndex].thumbnail}
+              alt={achievements[currentIndex].title}
+              className="achievement-image-large"
+            />
+            <div className="achievement-content-large">
+              <h3>{achievements[currentIndex].title}</h3>
+              <p>{achievements[currentIndex].content}</p>
+            </div>
+          </div>
 
-      {/* Third Achievement - Normal Layout */}
-      <div className="achievement-section">
-        <img
-          src={achievements[2].image}
-          alt={achievements[2].title}
-          className="achievement-image"
-        />
-        <div className="achievement-content">
-          <h3>{achievements[2].title}</h3>
-          <p>{achievements[2].description}</p>
-        </div>
-      </div>
+          {/* Achievement 1 - Reverse */}
+          {achievements[1] && (
+            <div className="achievement-section reverse-achievement">
+              <div className="achievement-content">
+                <h3>{achievements[1].title}</h3>
+                <p>{achievements[1].content}</p>
+              </div>
+              <img
+                src={achievements[1].thumbnail}
+                alt={achievements[1].title}
+                className="achievement-image"
+              />
+            </div>
+          )}
 
-      {/* Modal Popup */}
+          {/* Achievement 2 - Normal */}
+          {achievements[2] && (
+            <div className="achievement-section">
+              <img
+                src={achievements[2].thumbnail}
+                alt={achievements[2].title}
+                className="achievement-image"
+              />
+              <div className="achievement-content">
+                <h3>{achievements[2].title}</h3>
+                <p>{achievements[2].content}</p>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Modal */}
       {showModal && selectedEvent && (
         <div
           className="event-modal-overlay"

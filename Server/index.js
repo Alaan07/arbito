@@ -300,6 +300,25 @@ app.get("/api/countEvents", async (req, res) => {
 
 
 
+app.get('/api/eventspage', async (req, res) => {
+  try {
+    const events = await Event.find().sort({ createdAt: -1 });
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch events' });
+  }
+});
+
+app.get('/api/achivementspage', async (req, res) => {
+  try {
+    const achivements = await Achivement.find().sort({ createdAt: -1 });
+    res.json(achivements);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch achievements' });
+  }
+});
+
+
 
 // *******************************************update*************************************
 

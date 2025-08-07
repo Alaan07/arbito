@@ -66,7 +66,7 @@ function AllBlogs() {
               <option value="IT">IT</option>
               <option value="CS">Computer Aplication</option>
               <option value="Tech">tech</option>
-              <option value="Ai/Ml">AL/ML</option>
+              <option value="Ai/Ml">AI/ML</option>
               <option value="cloud Computing">Cloud Computing</option>
             </select>
             <span className="icofilterblog" onClick={handleFilterToggle}>

@@ -3,6 +3,8 @@ import '../App.css';
 import arbitoImage from '../assets/home-updated.png';
 import BroaderAI from '../assets/BroaderAI.png';
 import Roarstar from '../assets/Roarstar.png';
+import CynuxEra from '../assets/cynux_era round and white.png';   
+import Insights from '../assets/Insights.jpeg';               
 import Banner1 from './Banner1';
 import Banner2 from './Banner2';
 import FAQ from './FAQ';
@@ -61,8 +63,10 @@ const Homepage = () => {
 
     
     <div className="trusted-logos">
+      <img src={CynuxEra} alt="Partner Logo 3" />    
       <img src={BroaderAI} alt="Partner Logo 1" />
       <img src={Roarstar} alt="Partner Logo 2" />
+      <img src={Insights} alt="Partner Logo 4" />
     </div>
         </div>
       </div>
