@@ -12,31 +12,24 @@ const Banner2 = () => {
         bannerRef.current.classList.add('animate');
       }
     });
-
     if (bannerRef.current) {
       observer.observe(bannerRef.current);
     }
-
     return () => {
       if (bannerRef.current) {
         observer.unobserve(bannerRef.current);
       }
     };
   }, []);
-
   return (
     <section className="banner1" ref={bannerRef}>
       <div className="banner-content">
         <div className="text-box">
-          {/* 🌺 Left-side Hibiscus only */}
           <img src={hibiscusImage} alt="Hibiscus" className="hibiscus hibiscus-left" />
           <h1 className="quote">From Preparation to Perfection</h1>
           <p className="subquote">Unlock your future with quality education.</p>
         </div>
-
         <img src={studentImage} alt="Student" className="banner-img" />
-
-        {/* 🐝 Buzzing bees floating freely */}
         <div className="buzz-container">
           {[...Array(5)].map((_, i) => (
             <img

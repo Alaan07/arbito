@@ -4,8 +4,6 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
-  FaArrowAltCircleRight,
-  FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
@@ -100,25 +98,15 @@ const AddBlog = () => {
 
 
  const handleTimeChange = (e) => {
-  const time24 = e.target.value; // "14:30"
+  const time24 = e.target.value; 
   let [hours, minutes] = time24.split(":").map(Number);
-
   const ampm = hours >= 12 ? "PM" : "AM";
-  hours = (hours % 12) || 12; // Convert 0 → 12
-
+  hours = (hours % 12) || 12;
   const time12 = `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
-
-  console.log(time12); // "2:30 PM"
-
-  settime(time12); // ✅ Store in 12-hour format
+  console.log(time12);
+  settime(time12);
 };
-
-
-
   // *************************************backend*********************************
-
-
-
       const [EventTitle, setEventTitle] = useState("");
       const [eventdesc, seteventdesc] = useState("");
       const [startdate, setstartdate] = useState("");
@@ -127,8 +115,6 @@ const AddBlog = () => {
       const [location, setlocation] = useState("");
       const [speaker, setspeaker] = useState("");
       const [eventThumb, seteventThumb] = useState("");
-
-
       const formatDate = (inputDate) => {
       const date = new Date(inputDate);
       const day = String(date.getDate()).padStart(2, "0");
@@ -136,10 +122,8 @@ const AddBlog = () => {
       const year = date.getFullYear();
       return `${year}-${month}-${day}`;
     };
-
                 const handleaddblogclick = async (e) => {
                    e.preventDefault();
-      
                     const formData = new FormData();
                     formData.append("EventTitle", EventTitle);
                     formData.append("eventdesc", eventdesc);
@@ -149,14 +133,12 @@ const AddBlog = () => {
                     formData.append("location", location);
                     formData.append("speaker", speaker);
                     formData.append("eventThumb", eventThumb);
-                    
                     try {
                 const res = await axios.post('/api/addevents?uploadType=event', formData, {
                                 headers: {
                                   'Content-Type': 'multipart/form-data',
                                 }
                               });
-      
                       console.log("Success:", res.data);
                       if(res.data.eventcreated){
                         alert("eventcreated")
@@ -166,8 +148,6 @@ const AddBlog = () => {
                       console.error("Error uploading event:", err);
                     }
                   };
-
-
   return (
     <>
       <nav className={isSidebarClosed ? "close" : ""}>
@@ -177,7 +157,6 @@ const AddBlog = () => {
           </div>
           <span className="adm-logo_name">Arbito</span>
         </div>
-
         <div className="adm-menu-items">
           <ul className="adm-nav-links">
             <li>
@@ -205,7 +184,6 @@ const AddBlog = () => {
               </Link>
             </li>
           </ul>
-
           <ul className="adm-logout-mode">
             <li onClick={handlelogoutToHome} style={{ cursor: "pointer" }}>
                         <IoMdLogOut className="adm-logo" />
@@ -214,7 +192,6 @@ const AddBlog = () => {
           </ul>
         </div>
       </nav>
-
       <section className="adm-dashboard">
         <div className="adm-top">
           <IoMdMenu className="adm-sidebar-toggle" onClick={toggleSidebar} />
@@ -225,7 +202,6 @@ const AddBlog = () => {
               className="adm-profile-pic"
               onClick={toggleProfile}
             />
-
              {showProfile && (
                <div className="adm-profile-dropdown">
                  <div className="adm-profile-image">
@@ -249,7 +225,6 @@ const AddBlog = () => {
              )}
           </div>
         </div>
-
         <div className="adm-dash-content">
           <div className="overview">
             <div className="adm-title">
@@ -258,7 +233,6 @@ const AddBlog = () => {
                 <span className="adm-text">Event</span>
               </div>
             </div>
-
             <div className="adm-blog-add-form">
               <form className="adm-blog-form" onSubmit={handleaddblogclick}>
                 <div className="adm-form-group">
@@ -272,7 +246,6 @@ const AddBlog = () => {
                     required
                   />
                 </div>
-
                 <div className="adm-form-group">
                   <label htmlFor="eventDescription">Description</label>
                   <textarea
@@ -284,7 +257,6 @@ const AddBlog = () => {
                     required
                   />
                 </div>
-
                 <div className="adm-form-row">
                   <div className="adm-form-group">
                     <label htmlFor="startDate">Start Date</label>
@@ -338,8 +310,6 @@ const AddBlog = () => {
                     required
                     />
                 </div>   
-
-
 
                 <div className="adm-form-group">
                   <label htmlFor="image">Image (JPG, max 20MB)</label>

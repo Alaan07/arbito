@@ -4,8 +4,6 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
-  FaArrowAltCircleRight,
-  FaPlus,
 } from "react-icons/fa";
 
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
@@ -294,6 +292,10 @@ const AddBlog = () => {
                     <label>
                       <input type="checkbox" name="category" value="AI/ML" onChange={handleCategoryChange}/>
                       AI/ML
+                    </label>
+                    <label>
+                      <input type="checkbox" name="category" value="Cyber Security" onChange={handleCategoryChange}/>
+                      Cyber Security
                     </label>
                     <label>
                       <input type="checkbox" name="category" value="Cloud Computing" onChange={handleCategoryChange}/>

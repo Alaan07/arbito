@@ -4,8 +4,6 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
-  FaArrowAltCircleRight,
-  FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link, useNavigate} from "react-router-dom";

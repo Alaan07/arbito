@@ -2,7 +2,6 @@ import React, { useState} from 'react';
 import '../App.css';
 import LoginIcon from '../assets/LoginIcon.png'; 
 import axios from '../api/axios.js'
-import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const LoginPage = () => {
@@ -11,15 +10,10 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const navigate = useNavigate();
-
-
-
   const handleLogin = async(e) => {
     e.preventDefault();
 
     const updatedusername = username.trim().replace(/\s+/g, '').toLowerCase()
-
     if((username === "")|| (password === "")){
       alert("all fields must be filled")
     }
@@ -41,8 +35,6 @@ const LoginPage = () => {
   setPassword('');
 } }
 };
-
-
 
   return (
     <div className="login-wrapper">

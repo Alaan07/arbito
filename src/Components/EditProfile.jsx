@@ -4,7 +4,6 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
-  FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link } from "react-router-dom";
@@ -33,8 +32,6 @@ const AddBlog = () => {
   // Fetch user data on mount
  
    const ranOnce = useRef(false);
- 
- 
    useEffect(() => {
        const fetchUserData = async () => {
          try {

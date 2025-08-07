@@ -13,11 +13,7 @@ import SupportUs from './SupportUs';
 import Tagline from './tagline';
 import AboutArbitoBanner from './AboutArbitoBanner';
 
-
-
-
 const Homepage = () => {
-
 
   useEffect(() => {
   const redirected = sessionStorage.getItem("homeRedirectOnce");
@@ -26,7 +22,6 @@ const Homepage = () => {
     window.location.reload();
   }
 }, []);
-
 
   useEffect(() => {
     const revealElements = () => {
@@ -45,8 +40,6 @@ const Homepage = () => {
 
   return (
     <>
-     
-      
       <div className="homepage">
         <div className="homepage-image">
           <img src={arbitoImage} alt="Arbito Illustration" />
@@ -60,8 +53,6 @@ const Homepage = () => {
           </p>
           <div style={{ height: '3.5rem' }} />
           <h3 className="trusted-by">Supported by</h3>
-
-    
     <div className="trusted-logos">
       <img src={CynuxEra} alt="Partner Logo 3" />    
       <img src={BroaderAI} alt="Partner Logo 1" />
@@ -71,7 +62,6 @@ const Homepage = () => {
         </div>
       </div>
                 <div style={{ height: '4.5rem' }} />
-
       <Tagline/>
       <div style={{ height: '4.5rem' }} />
       <Banner1/>
@@ -79,14 +69,8 @@ const Homepage = () => {
 
       <AboutArbitoBanner/>
             <div style={{ height: '4.5rem' }} />
-
-
-
 <Join/> 
       <div style={{ height: '4.5rem' }} />
-
-
-      
 <Banner2/>
       <div style={{ height: '4.5rem' }} />
 
@@ -95,8 +79,6 @@ const Homepage = () => {
 
 <FAQ/>
       <div style={{ height: '4.5rem' }} />
-
-    
     </>
   );
 };

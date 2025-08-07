@@ -4,7 +4,6 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
-  FaArrowAltCircleRight,
   FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
@@ -20,8 +19,6 @@ const Blog = () => {
   const [isSidebarClosed, setIsSidebarClosed] = useState(
     localStorage.getItem("status") === "close"
   );
-
-
    const [formData, setFormData] = useState({
     _id: "",
     name: "",
@@ -29,8 +26,6 @@ const Blog = () => {
     phone: "",
     password: "",
   });
-
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -48,29 +43,21 @@ const Blog = () => {
     };
     fetchUserData();
   }, []);
-  
-
   useEffect(() => {
     document.body.classList.toggle("dark", isDarkMode);
     localStorage.setItem("mode", isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
-
   useEffect(() => {
     const nav = document.querySelector("nav");
     nav.classList.toggle("close", isSidebarClosed);
     localStorage.setItem("status", isSidebarClosed ? "close" : "open");
   }, [isSidebarClosed]);
-
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
   const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
-
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(null);
-
-
   const [blogData, setBlogData] = useState([]);
   const [deleteId, setDeleteId] = useState(null);
-
         useEffect(() => {
           const fetchBlogs = async () => {
             try {
@@ -83,14 +70,10 @@ const Blog = () => {
 
           fetchBlogs();
         }, []);
-
-  
-        
       const handleDeleteClick = (id) => {
         setDeleteId(id);
         setShowConfirm(true);
       };
-
       const confirmDelete = async () => {
         try {
           await axios.delete(`/api/blogsdelete/${deleteId}`);
@@ -101,22 +84,17 @@ const Blog = () => {
           console.error("Failed to delete blog:", error);
         }
       };
-
   const cancelDelete = () => {
     setShowConfirm(false);
     setDeleteIndex(null);
   };
-
   // **************************************************************************
   const [showProfile, setShowProfile] = useState(false);
   const toggleProfile = () => setShowProfile(!showProfile);
-
-
     const handlelogoutToHome = () => {
     sessionStorage.setItem("homeRedirectOnce", "true");
     window.location.href = "/";
   };
-
 
   return (
     <>

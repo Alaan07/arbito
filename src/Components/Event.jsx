@@ -4,7 +4,6 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
-  FaArrowAltCircleRight,
   FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
@@ -137,8 +136,6 @@ const Event = () => {
 
 
   const toggleProfile = () => setShowProfile(!showProfile);
-
-
   return (
     <>
       <nav className={isSidebarClosed ? "close" : ""}>

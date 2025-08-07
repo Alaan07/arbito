@@ -7,9 +7,7 @@ function AllBlogs() {
   const [blogscard, setblogscard] = useState([]);
   const [category, setCategory] = useState('latest');
   const [filterdis, setfilterdis] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState(null); // NEW STATE
-
-
+  const [selectedBlog, setSelectedBlog] = useState(null);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -23,8 +21,6 @@ function AllBlogs() {
     fetchBlogs();
   }, []);
 
-
-
   useEffect(() => {
   if (selectedBlog) {
     document.body.classList.add("modal-open");
@@ -36,9 +32,6 @@ function AllBlogs() {
     document.body.classList.remove("modal-open");
   };
 }, [selectedBlog]);
-
-
-
 
   const handleCategoryChange = (e) => setCategory(e.target.value);
   const handleFilterToggle = () => setfilterdis((prev) => !prev);
@@ -67,6 +60,7 @@ function AllBlogs() {
               <option value="CS">Computer Aplication</option>
               <option value="Tech">tech</option>
               <option value="Ai/Ml">AI/ML</option>
+              <option value="Cyber Security">Cyber Security</option>
               <option value="cloud Computing">Cloud Computing</option>
             </select>
             <span className="icofilterblog" onClick={handleFilterToggle}>

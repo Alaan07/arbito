@@ -28,15 +28,12 @@ const Banner1 = () => {
     <section className="banner1" ref={bannerRef}>
       <div className="banner-content">
         <div className="text-box">
-          {/* 🌺 Left-side Hibiscus only */}
           <img src={hibiscusImage} alt="Hibiscus" className="hibiscus hibiscus-left" />
           <h1 className="quote">Your journey to Knowledge</h1>
           <p className="subquote">Let ideas bloom with every stride.</p>
         </div>
 
         <img src={studentImage} alt="Student" className="banner-img" />
-
-        {/* 🐝 Buzzing bees floating freely */}
         <div className="buzz-container">
           {[...Array(5)].map((_, i) => (
             <img

@@ -4,8 +4,6 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
-  FaArrowAltCircleRight,
-  FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,8 +12,6 @@ import "../Styles/Tablecontent.css";
 import "../Styles/addformevents.css";
 import { useParams } from "react-router-dom";
 import axios from "../api/axios.js";
-
-
 
 const AddBlog = () => {
   const navigate = useNavigate();
@@ -48,17 +44,14 @@ const AddBlog = () => {
       phone: "",
       password: "",
     });
-
-
  
   const ranOnce = useRef(false);
-
 
   useEffect(() => {
       const fetchUserData = async () => {
         try {
             const res = await axios.get("/api/getuserpro");
-            setFormData({
+            setproFormData({
               _id: res.data._id,
               name: res.data.username || "",
               email: res.data.email || res.data.emai || "",
@@ -95,14 +88,9 @@ const AddBlog = () => {
     window.location.href = "/";
   };
 
-
-
-
   const toggleProfile = () => setShowProfile(!showProfile);
 
-
   const { id } = useParams();
-
 
   const [formData, setFormData] = useState({
   title: '',
@@ -114,18 +102,18 @@ const AddBlog = () => {
 
 const [oldThumbnailName, setOldThumbnailName] = useState("");
 
-
 useEffect(() => {
   axios.get(`/api/geteditblog/${id}`)
     .then(res => {
       const blog = res.data.blog;
       setFormData({
-        title: blog.title,
-        category: blog.category,
-        intoduction: blog.intoduction,
-        content: blog.content,
-        thumbnail: "",
-      });
+              title: blog.title || "",
+              category: blog.category || [],
+              intoduction: blog.intoduction || "",
+              content: blog.content || "",
+              thumbnail: "",
+            });
+
 
       if (blog.thumbnail) {
         const fileName = blog.thumbnail.split("-").pop();
@@ -135,11 +123,8 @@ useEffect(() => {
     .catch(err => console.error(err));
 }, [id]);
 
-
-
 const handleSubmit = async (e) => {
   e.preventDefault();
-
   const data = new FormData();
   data.append("title", formData.title);
   data.append("category", JSON.stringify(formData.category));
@@ -163,7 +148,6 @@ const handleSubmit = async (e) => {
     alert("Failed to update blog");
   }
 };
-
 
   return (
     <>
@@ -277,6 +261,7 @@ const handleSubmit = async (e) => {
                       "Computer Applications",
                       "Tech",
                       "AI/ML",
+                      "Cyber Security",
                       "Cloud Computing",
                     ].map((cat) => (
                       <label key={cat}>

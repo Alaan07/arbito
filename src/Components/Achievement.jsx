@@ -4,7 +4,6 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
-  FaArrowAltCircleRight,
   FaPlus,
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
@@ -242,7 +241,6 @@ const [deleteIndex, setDeleteIndex] = useState(null);
                   <tr>
                     <th>Sr No</th>
                     <th>Title</th>
-                    {/* <th>Description</th> */}
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -251,7 +249,7 @@ const [deleteIndex, setDeleteIndex] = useState(null);
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{achivements.title}</td>
-                      {/* <td>{achivements.content}</td> */}
+                     
                       <td>
                         <Link
                           to={`/editachievement/${achivements._id}`}

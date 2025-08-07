@@ -9,16 +9,12 @@ function JoinButton({ children }) {
     const y = e.clientY - rect.top;
     const w = rect.width;
     const h = rect.height;
-
     const fromLeft = x;
     const fromRight = w - x;
     const fromTop = y;
     const fromBottom = h - y;
-
     const min = Math.min(fromLeft, fromRight, fromTop, fromBottom);
-
     btn.classList.remove("hover-left", "hover-right", "hover-top", "hover-bottom");
-
     if (min === fromLeft) btn.classList.add("hover-left");
     else if (min === fromRight) btn.classList.add("hover-right");
     else if (min === fromTop) btn.classList.add("hover-top");

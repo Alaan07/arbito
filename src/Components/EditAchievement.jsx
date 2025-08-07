@@ -15,22 +15,17 @@ import "../Styles/addformevents.css";
 import axios from '../api/axios.js'
 
 const AddBlog = () => {
-
-
   const navigate = useNavigate();
-
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("mode") === "dark"
   );
   const [isSidebarClosed, setIsSidebarClosed] = useState(
     localStorage.getItem("status") === "close"
   );
-
   useEffect(() => {
     document.body.classList.toggle("dark", isDarkMode);
     localStorage.setItem("mode", isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
-
   useEffect(() => {
     const nav = document.querySelector("nav");
     nav.classList.toggle("close", isSidebarClosed);
@@ -77,11 +72,6 @@ const AddBlog = () => {
     .catch(err => console.error(err));
 }, [id]);
 
-
-
-
-
-
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -107,8 +97,6 @@ const handleSubmit = async (e) => {
   }
 };
 
-
-
  const [proformData, setproFormData] = useState({
       _id: "",
       name: "",
@@ -116,14 +104,9 @@ const handleSubmit = async (e) => {
       phone: "",
       password: "",
     });
-
-
-    
-
  
    const ranOnce = useRef(false);
- 
- 
+
    useEffect(() => {
        const fetchUserData = async () => {
          try {
@@ -164,13 +147,8 @@ const handleSubmit = async (e) => {
      sessionStorage.setItem("homeRedirectOnce", "true");
      window.location.href = "/";
    };
- 
- 
- 
- 
 
   const toggleProfile = () => setShowProfile(!showProfile);
-
 
   return (
     <>
@@ -290,17 +268,6 @@ const handleSubmit = async (e) => {
                     required
                   ></textarea>
                 </div>
-
-                {/* <div className="adm-form-group">
-                  <label htmlFor="date">Date</label>
-                  <input
-                    type="date"
-                    id="date"
-                    name="date"
-                    defaultValue="2025-07-15"
-                    required
-                  />
-                </div> */}
 
                 <div className="adm-form-group">
                   <label htmlFor="image">
