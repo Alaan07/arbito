@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaFilter } from 'react-icons/fa';
 import '../Styles/Allblogs.css';
 import axios from '../api/axios.js';
+import SEO from './SEO';
 
 function AllBlogs() {
   const [blogscard, setblogscard] = useState([]);
@@ -41,6 +42,13 @@ function AllBlogs() {
 
   return (
     <div className="wholeAllBlogcontainer">
+
+      <SEO
+        title="Arbito Blog - Insights, Stories & Student Projects"
+        description="Read blogs from students, mentors, and the Arbito team on technology, careers, and community projects."
+        url="https://yourdomain.com/blogs"
+      />
+
       <div className={`mainbodyallblog ${selectedBlog ? 'blurred' : ''}`}>
         <div className="categoryallblogdiv">
           <div className="cateleftallbog">
@@ -59,7 +67,7 @@ function AllBlogs() {
               <option value="IT">IT</option>
               <option value="CS">Computer Aplication</option>
               <option value="Tech">tech</option>
-              <option value="Ai/Ml">AI/ML</option>
+              <option value="AI/ML">AI/ML</option>
               <option value="Cyber Security">Cyber Security</option>
               <option value="cloud Computing">Cloud Computing</option>
             </select>

@@ -12,6 +12,7 @@ import "../Styles/Tablecontent.css";
 import "../Styles/addformevents.css";
 import "../Styles/profile.css";
 import axios from "../api/axios.js";
+import SEO from "./SEO";
 
 const Dashboard = () => {
   const [isDarkMode, setIsDarkMode] = useState(
@@ -136,6 +137,16 @@ useEffect(() => {
 
   return (
     <>
+
+      <SEO
+        title="Your Dashboard - Arbito Admin Panel"
+        description="Manage blogs, events, and achievements through the Arbito admin dashboard."
+        url="https://yourdomain.com/dashboard"
+      />
+
+
+
+
       <nav className={isSidebarClosed ? "close" : ""}>
         <div className="adm-logo-name">
           <div className="adm-logo-image">

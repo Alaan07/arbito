@@ -3,10 +3,21 @@ import '../App.css';
 import student1 from '../assets/student1.png';
 import student2 from '../assets/student2.png';
 import student3 from '../assets/student3.png';
+import SEO from './SEO';
 
 const ContactPage = () => {
   return (
     <div className="arbito-gallery">
+
+    <SEO
+        title="Contact Arbito - Get in Touch"
+        description="Have questions or suggestions? Reach out to the Arbito team for collaboration, support, or inquiries."
+        url="https://yourdomain.com/contact"
+      />
+
+
+
+
       <h1 className="gallery-title">Contact Us</h1>
       <p className="gallery-subtext">Click an avatar or the label below to connect 👋</p>
 

@@ -13,6 +13,7 @@ import coremember9 from '../assets/core_members_images/core_member_9.jpeg';
 import coremember10 from '../assets/core_members_images/core_member_10.jpeg';
 import coremember11 from '../assets/core_members_images/core_member_11.jpeg';
 import coremember12 from '../assets/core_members_images/core_member_12.jpeg';
+import SEO from './SEO';
 const members = [
   {
     name: 'Divya M',
@@ -103,6 +104,16 @@ const members = [
 const About = () => {
   return (
     <>
+
+    <SEO
+        title="About Arbito - Our Vision and Mission"
+        description="Learn more about Arbito's mission to empower students through collaboration, mentorship, and real-world experience."
+        url="https://yourdomain.com/about"
+      />
+
+
+
+
       <AboutArbitoBanner />
       <section className="about-section">
         <div className="about-header">

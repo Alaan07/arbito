@@ -12,6 +12,7 @@ import Join from './Join';
 import SupportUs from './SupportUs';
 import Tagline from './tagline';
 import AboutArbitoBanner from './AboutArbitoBanner';
+import SEO from './SEO';
 
 const Homepage = () => {
 
@@ -40,6 +41,13 @@ const Homepage = () => {
 
   return (
     <>
+
+    <SEO
+        title="Welcome to Arbito - Research Community Platform"
+        description="Join Arbito to connect, learn, and grow with real-world workshops, mentorship, and collaboration."
+        url="https://yourdomain.com/"
+      />
+      
       <div className="homepage">
         <div className="homepage-image">
           <img src={arbitoImage} alt="Arbito Illustration" />

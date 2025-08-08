@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../api/axios.js";
 import "../Styles/Event.css";
+import SEO from "./SEO";
 
 const EventHero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -78,6 +79,11 @@ const EventHero = () => {
 
   return (
     <div>
+    <SEO
+        title="Events at Arbito - Workshops, Webinars, and More"
+        description="Explore upcoming events, workshops, and webinars hosted by Arbito to boost your skills and network."
+        url="https://yourdomain.com/events"
+      />
       {/* Hero Banner */}
       <section className="hero-section-events">
         <div className="hero-content-events">
