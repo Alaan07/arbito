@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css';
-import arbitoLogo from '../assets/arbito_new_logo.png';
+import arbitoLogo from '../assets/arbito_new_logo.webp';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,8 +1,8 @@
 import React from 'react';
 import '../App.css';
-import student1 from '../assets/student1.png';
-import student2 from '../assets/student2.png';
-import student3 from '../assets/student3.png';
+import student1 from '../assets/student1.webp';
+import student2 from '../assets/student2.webp';
+import student3 from '../assets/student3.webp';
 import SEO from './SEO';
 
 const ContactPage = () => {

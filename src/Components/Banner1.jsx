@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import '../App.css';
-import studentImage from '../assets/student-image.png';
-import beeImage from '../assets/honeybee.png';
-import hibiscusImage from '../assets/hibiscus.png'; 
+import studentImage from '../assets/student-image.webp';
+import beeImage from '../assets/honeybee.webp';
+import hibiscusImage from '../assets/hibiscus.webp'; 
 const Banner1 = () => {
   const bannerRef = useRef(null);
 

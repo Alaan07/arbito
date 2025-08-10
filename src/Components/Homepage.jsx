@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import '../App.css';
-import arbitoImage from '../assets/home-updated.png';
-import BroaderAI from '../assets/BroaderAI.png';
-import Roarstar from '../assets/Roarstar.png';
-import CynuxEra from '../assets/cynux_era round and white.png';   
-import Insights from '../assets/Insights.jpeg';               
+import arbitoImage from '../assets/home-updated.webp';
+import BroaderAI from '../assets/BroaderAI.webp';
+import Roarstar from '../assets/Roarstar.webp';
+import CynuxEra from '../assets/cynux_era round and white.webp';   
+import Insights from '../assets/Insights.webp';               
 import Banner1 from './Banner1';
 import Banner2 from './Banner2';
 import FAQ from './FAQ';

@@ -1,6 +1,6 @@
 import React, { useState} from 'react';
 import '../App.css';
-import LoginIcon from '../assets/LoginIcon.png'; 
+import LoginIcon from '../assets/LoginIcon.webp'; 
 import axios from '../api/axios.js'
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 

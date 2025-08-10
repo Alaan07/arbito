@@ -209,7 +209,6 @@ body, .App {
 }
 
 
-/* Scroll-hide behavior */
 .navbar {
   position: fixed;
   top: 0;
@@ -1660,10 +1659,7 @@ input[type="text"] {
     width: clamp(100px, 20vw, 150px);
 }
 
-.trusted-logos img:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow:0 0 20px #be94f580;
-}
+
 @media (min-width: 768px) {
   .trusted-logos {
     justify-content: center;

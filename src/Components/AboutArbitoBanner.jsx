@@ -1,5 +1,5 @@
 import '../App.css';
-import studentGroup from '../assets/student-group.png'; // Ensure your image is named accordingly
+import studentGroup from '../assets/student-group.webp'; 
 
 const AboutArbitoBanner = () => {
   return (
