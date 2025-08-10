@@ -1,10 +1,9 @@
 import '../App.css';
-import doodleImg from '../assets/StudentDoodle.png';
-import arbitoLogo from '../assets/arbito_new_logo.png';
-import { Link, useNavigate } from 'react-router-dom';
+import doodleImg from '../assets/StudentDoodle.webp';
+import arbitoLogo from '../assets/arbito_new_logo.webp';
+import { Link} from 'react-router-dom';
 
 const Footer = () => {
-  const navigate = useNavigate();
 
   const handleBackToHome = () => {
     sessionStorage.setItem("homeRedirectOnce", "true");

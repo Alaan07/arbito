@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Roll1 from '../assets/Roll1.png';
-import Roll2 from '../assets/Roll2.png';
+import Roll1 from '../assets/Roll1.webp';
+import Roll2 from '../assets/Roll2.webp';
 import '../App.css';
 import JoinButton from './JoinButton';
 
