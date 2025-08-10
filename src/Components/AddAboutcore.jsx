@@ -86,50 +86,38 @@ const AddBlog = () => {
 
   // *****************backend ********************add*************
 
-  const [BlogTitle, setBlogTitle] = useState("");
-  const [blogCategory, setBlogCategory] = useState([]);
-  const [blogintro, setblogintro] = useState("");
-  const [blogdesc, setblogdesc] = useState("");
-  const [blogThumb, setblogThumb] = useState("");
-
-  const handleCategoryChange = (e) => {
-    const value = e.target.value;
-    const checked = e.target.checked;
-
-    setBlogCategory((prev) => {
-      if (checked) {
-        return prev.includes(value) ? prev : [...prev, value];
-      } else {
-        return prev.filter((cat) => cat !== value);
-      }
-    });
-  };
-
-  const handleaddblogclick = async (e) => {
+    const [name, setname] = useState("");
+    const [role, setrole] = useState("");
+    const [university, setuniversity] = useState("");
+    const [discription, setdiscription] = useState("");
+    const [linkedin, setlinkedin] = useState("");
+    const [thum, setthum] = useState("");
+  
+  const handleaddmembercoreclick = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("uploadType", "blogs");
-    formData.append("BlogTitle", BlogTitle);
-    formData.append("blogintro", blogintro);
-    formData.append("blogdesc", blogdesc);
-    formData.append("blogCategory", blogCategory);
-    formData.append("blogThumb", blogThumb);
+    formData.append("name", name);
+    formData.append("role", role);
+    formData.append("university", university);
+    formData.append("discription", discription);
+    formData.append("linkedin", linkedin);
+    formData.append("thum", thum);
 
     try {
-      const res = await axios.post("/api/addblogs", formData, {
+      const res = await axios.post("/api/addcoremember?uploadType=members", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       console.log("Success:", res.data);
-      if (res.data.blogcreated) {
-        alert("blogcreated");
+      if (res.data.coremembercreated) {
+        alert("coremembercreated");
       }
-      navigate("/blogs");
+      navigate("/aboutdashboard");
     } catch (err) {
-      console.error("Error uploading blog:", err);
+      console.error("Error updated coremember:", err);
     }
   };
 
@@ -238,7 +226,7 @@ const AddBlog = () => {
             <div className="adm-blog-add-form">
               <form
                 className="adm-blog-form"
-                onSubmit={handleaddblogclick}
+                onSubmit={handleaddmembercoreclick}
                 encType="multipart/form-data"
               >
                 <div className="adm-form-group">
@@ -246,8 +234,32 @@ const AddBlog = () => {
                   <input
                     type="text"
                     id="title"
-                    placeholder="Enter blog Name"
-                    onChange={(e) => setBlogTitle(e.target.value)}
+                    placeholder="Enter Name"
+                    onChange={(e) => setname(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="adm-form-group">
+                  <label htmlFor="title">Role</label>
+                  <select id="role" onChange={(e) => setrole(e.target.value)}
+                  required>
+
+                    <option value={""}>Select Role</option>
+                    <option value={"Founder"}>Founder</option>
+                    <option value={"President"}>President</option>
+                    <option value={"Vice Precident"}>Vice Precident</option>
+
+                  </select>
+                </div>
+
+                <div className="adm-form-group">
+                  <label htmlFor="title">University</label>
+                  <input
+                    type="text"
+                    id="title"
+                    placeholder="Enter University"
+                    onChange={(e) => setuniversity(e.target.value)}
                     required
                   />
                 </div>
@@ -259,7 +271,7 @@ const AddBlog = () => {
                     rows="5"
                     placeholder="Enter your Description"
                     required
-                    onChange={(e) => setblogdesc(e.target.value)}
+                    onChange={(e) => setdiscription(e.target.value)}
                   />
                 </div>
 
@@ -270,7 +282,7 @@ const AddBlog = () => {
                     id="intro"
                     placeholder="Enter you linkedin link"
                     required
-                    onChange={(e) => setblogintro(e.target.value)}
+                    onChange={(e) => setlinkedin(e.target.value)}
                   />
                 </div>
 
@@ -279,11 +291,11 @@ const AddBlog = () => {
                   <input
                     type="file"
                     id="image"
-                    accept=".jpg"
+                    accept=".jpg, .jpeg, .png"
                     onChange={(e) => {
                       const file = e.target.files[0];
                       if (file && file.size <= 20 * 1024 * 1024) {
-                        setblogThumb(file);
+                        setthum(file);
                       } else {
                         alert("File size must be less than 20MB");
                         e.target.value = "";

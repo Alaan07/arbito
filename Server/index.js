@@ -10,6 +10,7 @@ import Achivement from './userModels/AchivementModel.js'
 import Event from './userModels/EventModel.js'
 import dotenv from 'dotenv';
 import path from 'path';
+import Member from './userModels/MembersModel.js';
 
 dotenv.config({ path: path.resolve('server/.env') });
 
@@ -95,6 +96,75 @@ app.post("/api/login", async (req, res) => {
     res.status(500).json({ message: 'Server error', islogin: false });
   }
 });
+
+
+
+
+
+
+// 📝 Add core members (with image)
+app.post("/api/addcoremember", upload.single('thum'), async (req, res) => {
+  try {
+    const { name, role, university, discription, linkedin } = req.body;
+
+    const uploadType = req.query.uploadType?.toLowerCase() || 'misc'; // 💡 use this to set correct path
+    const imagePath = req.file ? `/upload/${uploadType}/${req.file.filename}` : '';
+
+    const newcoreMember = new Member({
+      name: name,
+      role: role,
+      university: university,
+      discription: discription,
+      linkedin: linkedin,
+      thumbnail: imagePath
+    });
+
+    await newcoreMember.save();
+    res.status(201).json({
+      message: 'Member saved successfully',
+      coremember: newcoreMember,
+      coremembercreated: true,
+    });
+
+  } catch (error) {
+    console.error('Error saving member:', error);
+    res.status(500).json({ error: 'Failed to save core member' });
+  }
+});
+
+
+
+
+
+// 📝 Add members (with image)
+app.post("/api/addmember", upload.single('thum'), async (req, res) => {
+  try {
+    const { name, role, university, linkedin} = req.body;
+
+    const uploadType = req.query.uploadType?.toLowerCase() || 'misc'; // 💡 use this to set correct path
+    const imagePath = req.file ? `/upload/${uploadType}/${req.file.filename}` : '';
+
+    const newMember = new Member({
+      name: name,
+      role: role,
+      university: university,
+      linkedin: linkedin,
+      thumbnail: imagePath
+    });
+
+    await newMember.save();
+    res.status(201).json({
+      message: 'Member saved successfully',
+      member: newMember,
+      membercreated: true,
+    });
+
+  } catch (error) {
+    console.error('Error saving member:', error);
+    res.status(500).json({ error: 'Failed to save member' });
+  }
+});
+
 
 
 
@@ -208,6 +278,19 @@ app.get('/api/getuserpro', async (req, res) => {
 
 
 
+// 📚 Get all members
+app.get("/api/getdashbordmembers", async (req, res) => {
+  try {
+    const members = await Member.find().sort({ createdAt: -1 });
+    res.json(members);
+  } catch (error) {
+    console.error("Error fetching dashboard members:", error);
+    res.status(500).json({ message: "Failed to fetch members" });
+  }
+});
+
+
+
 // 📚 Get all blogs
 app.get("/api/allblogs", async (req, res) => {
   try {
@@ -273,6 +356,12 @@ app.get("/api/geteditevents/:id", async (req, res) => {
   res.json({ events });
 });
 
+
+app.get("/api/geteditmember/:id", async (req, res) => {
+  const members = await Member.findById(req.params.id);
+  if (!members) return res.status(404).json({ message: "Not found" });
+  res.json({ members });
+});
 
 
 
@@ -344,6 +433,109 @@ app.put("/api/updateuserpro", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
+
+
+
+// ✏️ Update core members (with optional image)
+app.put("/api/updatecoremembers/:id", upload.single("thumbnail"), async (req, res) => {
+  try {
+    const { name, role, linkedin, discription, university, uploadType } = req.body;
+    const existingEvents = await Member.findById(req.params.id);
+
+    const updatedData = {
+      name,
+      role,
+      linkedin,
+      university,
+      discription,
+    };
+    if (req.file) {
+      if (existingEvents.thumbnail) {
+        const relativePath = existingEvents.thumbnail.startsWith('/')
+          ? existingEvents.thumbnail.slice(1)
+          : existingEvents.thumbnail;
+
+        const oldImagePath = path.join(process.cwd(), "public", "upload", relativePath.replace(/^upload[\/\\]/, ""));
+
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+          console.log("🗑️ Old image deleted:", oldImagePath);
+        } else {
+          console.warn("⚠️ Old image not found:", oldImagePath);
+        }
+      }
+
+      const folder = uploadType?.toLowerCase() || 'misc';
+      updatedData.thumbnail = `/upload/${folder}/${req.file.filename}`;
+    }
+
+    const updated = await Member.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+    res.json({ message: "Updated successfully", member: updated });
+
+  } catch (err) {
+    console.error("❌ Update error:", err);
+    res.status(500).json({ message: "Update failed", error: err });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ✏️ Update members (with optional image)
+app.put("/api/updatemembers/:id", upload.single("thumbnail"), async (req, res) => {
+  try {
+    const { name, role, linkedin, university, uploadType } = req.body;
+    const existingEvents = await Member.findById(req.params.id);
+
+    const updatedData = {
+      name,
+      role,
+      linkedin,
+      university,
+    };
+    if (req.file) {
+      if (existingEvents.thumbnail) {
+        const relativePath = existingEvents.thumbnail.startsWith('/')
+          ? existingEvents.thumbnail.slice(1)
+          : existingEvents.thumbnail;
+
+        const oldImagePath = path.join(process.cwd(), "public", "upload", relativePath.replace(/^upload[\/\\]/, ""));
+
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+          console.log("🗑️ Old image deleted:", oldImagePath);
+        } else {
+          console.warn("⚠️ Old image not found:", oldImagePath);
+        }
+      }
+
+      const folder = uploadType?.toLowerCase() || 'misc';
+      updatedData.thumbnail = `/upload/${folder}/${req.file.filename}`;
+    }
+
+    const updated = await Member.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+    res.json({ message: "Updated successfully", member: updated });
+
+  } catch (err) {
+    console.error("❌ Update error:", err);
+    res.status(500).json({ message: "Update failed", error: err });
+  }
+});
+
+
+
+
 
 
 
@@ -488,6 +680,50 @@ app.put("/api/updateblog/:id", upload.single("thumbnail"), async (req, res) => {
 
 
 // ********************************************DELETE***********************************
+
+// 🗑️ Delete member
+app.delete("/api/dashmembers/:id", async (req, res) => {
+  const { id } = req.params;
+
+  // ✅ Check if ID is valid
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid member ID" });
+  }
+
+  try {
+    const members = await Member.findById(id);
+    if (!members) return res.status(404).json({ message: "member not found" });
+
+    if (members.thumbnail) {
+      const relativePath = members.thumbnail.startsWith('/')
+        ? members.thumbnail.slice(1)
+        : members.thumbnail;
+
+      const imagePath = path.join(process.cwd(), "public", "upload", relativePath.replace(/^upload[\/\\]/, ""));
+
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+        console.log("🗑️ Image deleted:", imagePath);
+      } else {
+        console.warn("⚠️ Image not found:", imagePath);
+      }
+    }
+
+    await Member.findByIdAndDelete(id);
+    res.status(200).json({ message: "members and thumbnail deleted" });
+  } catch (err) {
+    console.error("❌ Delete error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+
+
+
+
+
 
 
 

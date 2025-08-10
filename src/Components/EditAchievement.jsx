@@ -108,7 +108,7 @@ const AddBlog = () => {
     const fetchUserData = async () => {
       try {
         const res = await axios.get("/api/getuserpro");
-        setFormData({
+        setproFormData({
           _id: res.data._id,
           name: res.data.username || "",
           email: res.data.email || res.data.emai || "",

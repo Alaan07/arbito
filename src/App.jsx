@@ -76,8 +76,8 @@ function Layout() {
          <Route path="/aboutdashboard" element={<Aboutdashboard />} />
         <Route path="/addaboutcore" element={<AddAboutcore />} />
         <Route path="/addaboutcommunity" element={<AddAboutcommunity />} />
-        <Route path="/editcore" element={<Editcore />} />
-        <Route path="/editcommunity" element={<Ediitcommunity />} />
+        <Route path="/editcore/:id" element={<Editcore />} />
+        <Route path="/editcommunity/:id" element={<Ediitcommunity />} />
       </Routes>
 
       {!hideNavbar && <Footer />}

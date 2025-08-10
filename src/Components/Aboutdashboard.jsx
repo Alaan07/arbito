@@ -73,20 +73,44 @@ const Blog = () => {
     window.location.href = "/";
   };
 
+  // Fetch and split members by role
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resFounders = await axios.get("/api/founders");
-        const resMembers = await axios.get("/api/members");
-        setFounders(resFounders.data);
-        setMembers(resMembers.data);
+        const resMembers = await axios.get("/api/getdashbordmembers");
+
+        if (Array.isArray(resMembers.data)) {
+          const foundersList = resMembers.data.filter(
+            (member) => member.role?.toLowerCase() !== "core-member"
+          );
+          const coreMembersList = resMembers.data.filter(
+            (member) => member.role?.toLowerCase() === "core-member"
+          );
+
+          setFounders(foundersList);
+          setMembers(coreMembersList);
+        } else {
+          console.error("Unexpected members data format:", resMembers.data);
+          setFounders([]);
+          setMembers([]);
+        }
       } catch (error) {
         console.error("Failed to fetch data:", error);
         setFounders([
-          { _id: "1", name: "Default Founder", Description: "gLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing", role: "Lead", email: "founder@example.com" },
+          {
+            _id: "1",
+            name: "Default Founder",
+            role: "Lead",
+            university: "Jain",
+          },
         ]);
         setMembers([
-          { _id: "2", name: "Default Member", position: "Volunteer", email: "member@example.com" },
+          {
+            _id: "2",
+            name: "Default Member",
+            role: "core-member",
+            university: "Jain",
+          },
         ]);
       }
     };
@@ -95,7 +119,7 @@ const Blog = () => {
 
   const handleDeleteFounder = async (id) => {
     try {
-      await axios.delete(`/api/founders/${id}`);
+      await axios.delete(`/api/dashmembers/${id}`);
       setFounders((prev) => prev.filter((f) => f._id !== id));
     } catch (err) {
       console.error("Error deleting founder:", err);
@@ -104,7 +128,7 @@ const Blog = () => {
 
   const handleDeleteMember = async (id) => {
     try {
-      await axios.delete(`/api/members/${id}`);
+      await axios.delete(`/api/dashmembers/${id}`);
       setMembers((prev) => prev.filter((m) => m._id !== id));
     } catch (err) {
       console.error("Error deleting member:", err);
@@ -145,11 +169,36 @@ const Blog = () => {
 
         <div className="adm-menu-items">
           <ul className="adm-nav-links">
-            <li><Link to="/dashbord"><FaHome className="adm-logo" /><span className="adm-link-name">Dashboard</span></Link></li>
-            <li><Link to="/blogs"><FaBlog className="adm-logo" /><span className="adm-link-name">Blogs</span></Link></li>
-            <li><Link to="/achievements"><FaTrophy className="adm-logo" /><span className="adm-link-name">Achievements</span></Link></li>
-            <li><Link to="/events"><FaCalendar className="adm-logo" /><span className="adm-link-name">Events</span></Link></li>
-            <li><Link to="/aboutdashboard"><FaUser className="adm-logo" /><span className="adm-link-name">About</span></Link></li>
+            <li>
+              <Link to="/dashbord">
+                <FaHome className="adm-logo" />
+                <span className="adm-link-name">Dashboard</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/blogs">
+                <FaBlog className="adm-logo" />
+                <span className="adm-link-name">Blogs</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/achievements">
+                <FaTrophy className="adm-logo" />
+                <span className="adm-link-name">Achievements</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/events">
+                <FaCalendar className="adm-logo" />
+                <span className="adm-link-name">Events</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/aboutdashboard">
+                <FaUser className="adm-logo" />
+                <span className="adm-link-name">About</span>
+              </Link>
+            </li>
           </ul>
 
           <ul className="adm-logout-mode">
@@ -177,10 +226,18 @@ const Blog = () => {
                   <img src="/public/img/user-profile.jpg" alt="Admin Large" />
                 </div>
                 <div className="adm-profile-info">
-                  <p><strong>Name:</strong> {formData.name}</p>
-                  <p><strong>Email:</strong> {formData.email}</p>
-                  <p><strong>Phone:</strong> {formData.phone}</p>
-                  <Link to="/editprofile" className="adm-edit-btn">Edit Profile</Link>
+                  <p>
+                    <strong>Name:</strong> {formData.name}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {formData.email}
+                  </p>
+                  <p>
+                    <strong>Phone:</strong> {formData.phone}
+                  </p>
+                  <Link to="/editprofile" className="adm-edit-btn">
+                    Edit Profile
+                  </Link>
                 </div>
               </div>
             )}
@@ -189,7 +246,6 @@ const Blog = () => {
 
         <div className="adm-dash-content">
           <div className="overview">
-
             {/* Founders */}
             <div className="adm-title">
               <div className="adm-title-left">
@@ -206,8 +262,7 @@ const Blog = () => {
                   <tr>
                     <th>Name</th>
                     <th>Role</th>
-                    <th>Description</th>
-                    <th>Email</th>
+                    <th>University</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -217,11 +272,11 @@ const Blog = () => {
                       <tr key={f._id}>
                         <td>{f.name}</td>
                         <td>{f.role}</td>
-                        <td>{f.Description.split(" ").slice(0, 10).join(" ")}
-                          {f.Description.split(" ").length > 10 && "..."}</td>
-                        <td>{f.email}</td>
+                        <td>{f.university}</td>
                         <td>
-                          <Link to='/editcore' className="adm-blog-edit-btn">Edit</Link>
+                          <Link to={`/editcore/${f._id}`} className="adm-blog-edit-btn">
+                            Edit
+                          </Link>
                           <button
                             className="adm-blog-delete-btn"
                             onClick={() => requestDelete("founder", f._id)}
@@ -255,8 +310,8 @@ const Blog = () => {
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Position</th>
-                    <th>Email</th>
+                    <th>Role</th>
+                    <th>University</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -265,10 +320,15 @@ const Blog = () => {
                     members.map((m) => (
                       <tr key={m._id}>
                         <td>{m.name}</td>
-                        <td>{m.position}</td>
-                        <td>{m.email}</td>
+                        <td>{m.role}</td>
+                        <td>{m.university}</td>
                         <td>
-                          <Link to='/editcommunity' className="adm-blog-edit-btn">Edit</Link>
+                          <Link
+                            to={`/editcommunity/${m._id}`}
+                            className="adm-blog-edit-btn"
+                          >
+                            Edit
+                          </Link>
                           <button
                             className="adm-blog-delete-btn"
                             onClick={() => requestDelete("member", m._id)}
@@ -293,13 +353,16 @@ const Blog = () => {
                 <div className="adm-modal">
                   <p>Are you sure you want to delete this content?</p>
                   <div className="adm-modal-buttons">
-                    <button onClick={confirmDelete} className="adm-yes-btn">Yes</button>
-                    <button onClick={cancelDelete} className="adm-no-btn">No</button>
+                    <button onClick={confirmDelete} className="adm-yes-btn">
+                      Yes
+                    </button>
+                    <button onClick={cancelDelete} className="adm-no-btn">
+                      No
+                    </button>
                   </div>
                 </div>
               </div>
             )}
-
           </div>
         </div>
       </section>

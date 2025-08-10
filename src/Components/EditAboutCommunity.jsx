@@ -2,13 +2,14 @@ import React, { useRef, useEffect, useState } from "react";
 import { FaHome, FaBlog, FaTrophy, FaCalendar, FaUser} from "react-icons/fa";
 
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
 import "../Styles/addformevents.css";
 import axios from "../api/axios.js";
 
 const AddBlog = () => {
+
   const navigate = useNavigate();
 
   const [isDarkMode, setIsDarkMode] = useState(
@@ -33,7 +34,7 @@ const AddBlog = () => {
   const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
 
   const [showProfile, setShowProfile] = useState(false);
-  const [formData, setFormData] = useState({
+  const [proformData, setproFormData] = useState({
     _id: "",
     name: "",
     email: "",
@@ -47,7 +48,7 @@ const AddBlog = () => {
     const fetchUserData = async () => {
       try {
         const res = await axios.get("/api/getuserpro");
-        setFormData({
+        setproFormData({
           _id: res.data._id,
           name: res.data.username || "",
           email: res.data.email || res.data.emai || "",
@@ -84,52 +85,71 @@ const AddBlog = () => {
     window.location.href = "/";
   };
 
-  // *****************backend ********************add*************
 
-  const [BlogTitle, setBlogTitle] = useState("");
-  const [blogCategory, setBlogCategory] = useState([]);
-  const [blogintro, setblogintro] = useState("");
-  const [blogdesc, setblogdesc] = useState("");
-  const [blogThumb, setblogThumb] = useState("");
 
-  const handleCategoryChange = (e) => {
-    const value = e.target.value;
-    const checked = e.target.checked;
 
-    setBlogCategory((prev) => {
-      if (checked) {
-        return prev.includes(value) ? prev : [...prev, value];
-      } else {
-        return prev.filter((cat) => cat !== value);
-      }
+  const { id } = useParams();
+  const [formData, setFormData] = useState({
+      name: "",
+      linkedin: "",
+      role: "",
+      university: "",
+      thumbnail: "",
     });
-  };
+  
+    const [oldThumbnailName, setOldThumbnailName] = useState("");
 
-  const handleaddblogclick = async (e) => {
+
+
+    useEffect(() => {
+      axios
+        .get(`/api/geteditmember/${id}`)
+        .then((res) => {
+          const member = res.data?.members;
+  
+          if (!member) {
+            console.warn("member not found or invalid response");
+            return;
+          }
+          setFormData({
+            name: member.name || "",
+            role: member.role || "",
+            linkedin: member.linkedin || "",
+            university: member.university || "",
+            thumbnail: "",
+          });
+  
+          if (member.thumbnail) {
+            const fileName = member.thumbnail.split("-").pop();
+            setOldThumbnailName(fileName);
+          }
+        })
+        .catch((err) => console.error(err));
+    }, [id]);
+
+ const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("uploadType", "blogs");
-    formData.append("BlogTitle", BlogTitle);
-    formData.append("blogintro", blogintro);
-    formData.append("blogdesc", blogdesc);
-    formData.append("blogCategory", blogCategory);
-    formData.append("blogThumb", blogThumb);
+    const data = new FormData();
+    data.append("uploadType", "members");
+    data.append("name", formData.name);
+    data.append("role", formData.role);
+    data.append("linkedin", formData.linkedin);
+    data.append("university", formData.university);
+
+    if (formData.thumbnail) {
+      data.append("thumbnail", formData.thumbnail);
+    }
 
     try {
-      const res = await axios.post("/api/addblogs", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      await axios.put(`/api/updatemembers/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
-      console.log("Success:", res.data);
-      if (res.data.blogcreated) {
-        alert("blogcreated");
-      }
-      navigate("/blogs");
+      alert("member updated!");
+      navigate("/aboutdashboard");
     } catch (err) {
-      console.error("Error uploading blog:", err);
+      console.error(err);
+      alert("Failed to update achivements");
     }
   };
 
@@ -208,13 +228,13 @@ const AddBlog = () => {
                 </div>
                 <div className="adm-profile-info">
                   <p>
-                    <strong>Name:</strong> {formData.name}
+                    <strong>Name:</strong> {proformData.name}
                   </p>
                   <p>
-                    <strong>Email:</strong> {formData.email}
+                    <strong>Email:</strong> {proformData.email}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {formData.phone}
+                    <strong>Phone:</strong> {proformData.phone}
                   </p>
                   <Link to="/editprofile" className="adm-edit-btn">
                     Edit Profile
@@ -238,7 +258,7 @@ const AddBlog = () => {
             <div className="adm-blog-add-form">
               <form
                 className="adm-blog-form"
-                onSubmit={handleaddblogclick}
+                onSubmit={handleSubmit}
                 encType="multipart/form-data"
               >
                 <div className="adm-form-group">
@@ -246,9 +266,10 @@ const AddBlog = () => {
                   <input
                     type="text"
                     id="title"
-                    value={'qwer'}
-                    placeholder="Enter blog Name"
-                    onChange={(e) => setBlogTitle(e.target.value)}
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -258,29 +279,61 @@ const AddBlog = () => {
                   <input
                     type="text"
                     id="intro"
-                    value={'qwer'}
-                    placeholder="Enter you linkedin link"
                     required
-                    onChange={(e) => setblogintro(e.target.value)}
+                    value={formData.linkedin}
+                    onChange={(e) =>
+                      setFormData({ ...formData, linkedin: e.target.value })
+                    }
                   />
                 </div>
 
                 <div className="adm-form-group">
-                  <label htmlFor="image">Image (JPG, max 20MB)</label>
+                  <label htmlFor="title">Role</label>
+                  <input
+                    type="text"
+                    id="title"
+                    value={formData.role}
+                    onChange={(e) =>
+                      setFormData({ ...formData, role: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="adm-form-group">
+                  <label htmlFor="title">University</label>
+                  <input
+                    type="text"
+                    id="title"
+                   value={formData.university}
+                    onChange={(e) =>
+                      setFormData({ ...formData, university: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="adm-form-group">
+                  <label htmlFor="image">
+                    Member Image (JPG, max 20MB)
+                    {formData.thumbnail instanceof File
+                      ? ` / ${formData.thumbnail.name}`
+                      : oldThumbnailName && ` / ${oldThumbnailName}`}
+                  </label>
+
                   <input
                     type="file"
                     id="image"
-                    accept=".jpg"
+                    name="image"
+                    accept=".jpg, .jpeg, .png"
                     onChange={(e) => {
                       const file = e.target.files[0];
-                      if (file && file.size <= 20 * 1024 * 1024) {
-                        setblogThumb(file);
-                      } else {
+                      if (file && file.size > 20 * 1024 * 1024) {
                         alert("File size must be less than 20MB");
-                        e.target.value = "";
+                        return;
                       }
+                      setFormData({ ...formData, thumbnail: file });
                     }}
-                    required
                   />
                 </div>
 
