@@ -1,10 +1,5 @@
-import React, {useRef, useEffect, useState } from "react";
-import {
-  FaHome,
-  FaBlog,
-  FaTrophy,
-  FaCalendar,
-} from "react-icons/fa";
+import React, { useRef, useEffect, useState } from "react";
+import { FaHome, FaBlog, FaTrophy, FaCalendar, FaUser } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import "../Styles/dashboard.css";
@@ -38,52 +33,52 @@ const AddBlog = () => {
 
   const [showProfile, setShowProfile] = useState(false);
   const [proformData, setproFormData] = useState({
-      _id: "",
-      name: "",
-      email: "",
-      phone: "",
-      password: "",
-    });
- 
+    _id: "",
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
+
   const ranOnce = useRef(false);
 
   useEffect(() => {
-      const fetchUserData = async () => {
-        try {
-            const res = await axios.get("/api/getuserpro");
-            setproFormData({
-              _id: res.data._id,
-              name: res.data.username || "",
-              email: res.data.email || res.data.emai || "",
-              phone: res.data.contact || "",
-              password: "",
-            }); 
-            if (ranOnce.current) return;
-              ranOnce.current = true;
+    const fetchUserData = async () => {
+      try {
+        const res = await axios.get("/api/getuserpro");
+        setproFormData({
+          _id: res.data._id,
+          name: res.data.username || "",
+          email: res.data.email || res.data.emai || "",
+          phone: res.data.contact || "",
+          password: "",
+        });
+        if (ranOnce.current) return;
+        ranOnce.current = true;
 
-              if (!res.data.islogin) {
-                alert("unauthorized access.");
-                window.location.href = "/login";
-              }
-        } catch (err) {
-          console.error("Failed to fetch user data:", err);
+        if (!res.data.islogin) {
+          alert("unauthorized access.");
+          window.location.href = "/login";
         }
-      };
-      fetchUserData();
-    }, []);
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+      }
+    };
+    fetchUserData();
+  }, []);
 
-    const handlelogoutToHome = async() => {
-     try{
+  const handlelogoutToHome = async () => {
+    try {
       const res = await axios.get("/api/logout");
       if (res.status === 200) {
         alert("Logout successful");
       } else {
         alert("Logout failed, please try again");
       }
-     }catch(err){
+    } catch (err) {
       console.error("Logout error:", err);
       alert("An error occurred while logging out. Please try again.");
-     }
+    }
     sessionStorage.setItem("homeRedirectOnce", "true");
     window.location.href = "/";
   };
@@ -93,61 +88,60 @@ const AddBlog = () => {
   const { id } = useParams();
 
   const [formData, setFormData] = useState({
-  title: '',
-  category: [],
-  intoduction: '',
-  content: '',
-  thumbnail: '',
-});
+    title: "",
+    category: [],
+    intoduction: "",
+    content: "",
+    thumbnail: "",
+  });
 
-const [oldThumbnailName, setOldThumbnailName] = useState("");
+  const [oldThumbnailName, setOldThumbnailName] = useState("");
 
-useEffect(() => {
-  axios.get(`/api/geteditblog/${id}`)
-    .then(res => {
-      const blog = res.data.blog;
-      setFormData({
-              title: blog.title || "",
-              category: blog.category || [],
-              intoduction: blog.intoduction || "",
-              content: blog.content || "",
-              thumbnail: "",
-            });
+  useEffect(() => {
+    axios
+      .get(`/api/geteditblog/${id}`)
+      .then((res) => {
+        const blog = res.data.blog;
+        setFormData({
+          title: blog.title || "",
+          category: blog.category || [],
+          intoduction: blog.intoduction || "",
+          content: blog.content || "",
+          thumbnail: "",
+        });
 
+        if (blog.thumbnail) {
+          const fileName = blog.thumbnail.split("-").pop();
+          setOldThumbnailName(fileName);
+        }
+      })
+      .catch((err) => console.error(err));
+  }, [id]);
 
-      if (blog.thumbnail) {
-        const fileName = blog.thumbnail.split("-").pop();
-        setOldThumbnailName(fileName);
-      }
-    })
-    .catch(err => console.error(err));
-}, [id]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("category", JSON.stringify(formData.category));
+    data.append("intoduction", formData.intoduction);
+    data.append("content", formData.content);
+    data.append("uploadType", "blogs"); // ✅ this is required
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const data = new FormData();
-  data.append("title", formData.title);
-  data.append("category", JSON.stringify(formData.category));
-  data.append("intoduction", formData.intoduction);
-  data.append("content", formData.content);
-  data.append("uploadType", "blogs"); // ✅ this is required
+    if (formData.thumbnail) {
+      data.append("thumbnail", formData.thumbnail);
+    }
 
-  if (formData.thumbnail) {
-    data.append("thumbnail", formData.thumbnail);
-  }
-
-  try {
-    await axios.put(`/api/updateblog/${id}`, data, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    alert("Blog updated!");
-    navigate('/blogs');
-
-  } catch (err) {
-    console.error(err);
-    alert("Failed to update blog");
-  }
-};
+    try {
+      await axios.put(`/api/updateblog/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      alert("Blog updated!");
+      navigate("/blogs");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update blog");
+    }
+  };
 
   return (
     <>
@@ -185,12 +179,18 @@ const handleSubmit = async (e) => {
                 <span className="adm-link-name">Events</span>
               </Link>
             </li>
+            <li>
+              <Link to="/aboutdashboard">
+                <FaUser className="adm-logo" />
+                <span className="adm-link-name">About</span>
+              </Link>
+            </li>
           </ul>
 
           <ul className="adm-logout-mode">
             <li onClick={handlelogoutToHome} style={{ cursor: "pointer" }}>
-                <IoMdLogOut className="adm-logo" />
-                <span className="adm-link-name">Logout</span>
+              <IoMdLogOut className="adm-logo" />
+              <span className="adm-link-name">Logout</span>
             </li>
           </ul>
         </div>
@@ -204,29 +204,30 @@ const handleSubmit = async (e) => {
               src="/public/img/user-profile.jpg"
               alt="Admin"
               className="adm-profile-pic"
-              onClick={toggleProfile}/>
+              onClick={toggleProfile}
+            />
 
-              {showProfile && (
-               <div className="adm-profile-dropdown">
-                 <div className="adm-profile-image">
-                   <img src="/public/img/user-profile.jpg" alt="Admin Large" />
-                 </div>
-                 <div className="adm-profile-info">
-                   <p>
-                     <strong>Name:</strong> {proformData.name}
-                   </p>
-                   <p>
-                     <strong>Email:</strong> {proformData.email}
-                   </p>
-                   <p>
-                     <strong>Phone:</strong> {proformData.phone}
-                   </p>
-                   <Link to="/editprofile" className="adm-edit-btn">
-                     Edit Profile
-                   </Link>
-                 </div>
-               </div>
-             )}
+            {showProfile && (
+              <div className="adm-profile-dropdown">
+                <div className="adm-profile-image">
+                  <img src="/public/img/user-profile.jpg" alt="Admin Large" />
+                </div>
+                <div className="adm-profile-info">
+                  <p>
+                    <strong>Name:</strong> {proformData.name}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {proformData.email}
+                  </p>
+                  <p>
+                    <strong>Phone:</strong> {proformData.phone}
+                  </p>
+                  <Link to="/editprofile" className="adm-edit-btn">
+                    Edit Profile
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -248,7 +249,9 @@ const handleSubmit = async (e) => {
                     id="title"
                     name="title"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -338,12 +341,10 @@ const handleSubmit = async (e) => {
                   />
                 </div>
 
-
                 <button type="submit" className="adm-blog-submit-btn">
                   Update Blog
                 </button>
               </form>
-
             </div>
           </div>
         </div>

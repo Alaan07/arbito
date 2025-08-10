@@ -1,10 +1,5 @@
-import React, {useRef, useEffect, useState } from "react";
-import {
-  FaHome,
-  FaBlog,
-  FaTrophy,
-  FaCalendar,
-} from "react-icons/fa";
+import React, { useRef, useEffect, useState } from "react";
+import { FaHome, FaBlog, FaTrophy, FaCalendar, FaUser } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link } from "react-router-dom";
 import "../App.css";
@@ -22,60 +17,56 @@ const AddBlog = () => {
 
   // State to hold form data
   const [formData, setFormData] = useState({
-  _id: "",
-  name: "",
-  email: "",
-  phone: "",
-  password: "",
-});
+    _id: "",
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
 
   // Fetch user data on mount
- 
-   const ranOnce = useRef(false);
-   useEffect(() => {
-       const fetchUserData = async () => {
-         try {
-             const res = await axios.get("/api/getuserpro");
-             setFormData({
-               _id: res.data._id,
-               name: res.data.username || "",
-               email: res.data.email || res.data.emai || "",
-               phone: res.data.contact || "",
-               password: "",
-             }); 
-             if (ranOnce.current) return;
-               ranOnce.current = true;
- 
-               if (!res.data.islogin) {
-                 alert("unauthorized access.");
-                 window.location.href = "/login";
-               }
-         } catch (err) {
-           console.error("Failed to fetch user data:", err);
-         }
-       };
-       fetchUserData();
-     }, []);
- 
-     const handlelogoutToHome = async() => {
-      try{
-       const res = await axios.get("/api/logout");
-       if (res.status === 200) {
-         alert("Logout successful");
-       } else {
-         alert("Logout failed, please try again");
-       }
-      }catch(err){
-       console.error("Logout error:", err);
-       alert("An error occurred while logging out. Please try again.");
+
+  const ranOnce = useRef(false);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await axios.get("/api/getuserpro");
+        setFormData({
+          _id: res.data._id,
+          name: res.data.username || "",
+          email: res.data.email || res.data.emai || "",
+          phone: res.data.contact || "",
+          password: "",
+        });
+        if (ranOnce.current) return;
+        ranOnce.current = true;
+
+        if (!res.data.islogin) {
+          alert("unauthorized access.");
+          window.location.href = "/login";
+        }
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
       }
-     sessionStorage.setItem("homeRedirectOnce", "true");
-     window.location.href = "/";
-   };
- 
- 
- 
- 
+    };
+    fetchUserData();
+  }, []);
+
+  const handlelogoutToHome = async () => {
+    try {
+      const res = await axios.get("/api/logout");
+      if (res.status === 200) {
+        alert("Logout successful");
+      } else {
+        alert("Logout failed, please try again");
+      }
+    } catch (err) {
+      console.error("Logout error:", err);
+      alert("An error occurred while logging out. Please try again.");
+    }
+    sessionStorage.setItem("homeRedirectOnce", "true");
+    window.location.href = "/";
+  };
 
   // Apply dark mode on toggle
   useEffect(() => {
@@ -97,31 +88,31 @@ const AddBlog = () => {
 
   // Input change handler
   const handleChange = (e) => {
-            const { name, value } = e.target;
-            setFormData((prev) => ({
-              ...prev,
-              [name]: value,
-            }));
-          };
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   // Submit handler
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await axios.put("/api/updateuserpro", {
-      _id: formData._id,
-      username: formData.name,
-      email: formData.email,
-      contact: formData.phone,
-      password: formData.password,
-    });
-    alert("Profile updated successfully!");
-    console.log("Updated:", res.data);
-  } catch (err) {
-    console.error("Update failed:", err);
-    alert("Error updating profile.");
-  }
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.put("/api/updateuserpro", {
+        _id: formData._id,
+        username: formData.name,
+        email: formData.email,
+        contact: formData.phone,
+        password: formData.password,
+      });
+      alert("Profile updated successfully!");
+      console.log("Updated:", res.data);
+    } catch (err) {
+      console.error("Update failed:", err);
+      alert("Error updating profile.");
+    }
+  };
 
   return (
     <>
@@ -159,13 +150,19 @@ const AddBlog = () => {
                 <span className="adm-link-name">Events</span>
               </Link>
             </li>
+            <li>
+              <Link to="/aboutdashboard">
+                <FaUser className="adm-logo" />
+                <span className="adm-link-name">About</span>
+              </Link>
+            </li>
           </ul>
 
           <ul className="adm-logout-mode">
-           <li onClick={handlelogoutToHome} style={{ cursor: "pointer" }}>
-                       <IoMdLogOut className="adm-logo" />
-                       <span className="adm-link-name">Logout</span>
-                     </li>
+            <li onClick={handlelogoutToHome} style={{ cursor: "pointer" }}>
+              <IoMdLogOut className="adm-logo" />
+              <span className="adm-link-name">Logout</span>
+            </li>
           </ul>
         </div>
       </nav>
@@ -226,19 +223,17 @@ const AddBlog = () => {
                     required
                   />
                 </div>
-                              
-                              
-              <div className="adm-form-group">
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
 
+                <div className="adm-form-group">
+                  <label htmlFor="password">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
 
                 <div className="adm-form-group">
                   <label htmlFor="email">Email</label>

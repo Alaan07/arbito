@@ -1,19 +1,13 @@
-import React, {useRef, useEffect, useState } from "react";
-import {
-  FaHome,
-  FaBlog,
-  FaTrophy,
-  FaCalendar,
-} from "react-icons/fa";
+import React, { useRef, useEffect, useState } from "react";
+import { FaHome, FaBlog, FaTrophy, FaCalendar, FaUser } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
 import "../Styles/addformevents.css";
-import axios from '../api/axios.js'
+import axios from "../api/axios.js";
 
 const AddBlog = () => {
-
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("mode") === "dark"
@@ -39,99 +33,91 @@ const AddBlog = () => {
   const [showProfile, setShowProfile] = useState(false);
 
   const [formData, setFormData] = useState({
-      _id: "",
-      name: "",
-      email: "",
-      phone: "",
-      password: "",
-    });
+    _id: "",
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
 
+  const ranOnce = useRef(false);
 
-    
-      const ranOnce = useRef(false);
-    
-    
-      useEffect(() => {
-          const fetchUserData = async () => {
-            try {
-                const res = await axios.get("/api/getuserpro");
-                setFormData({
-                  _id: res.data._id,
-                  name: res.data.username || "",
-                  email: res.data.email || res.data.emai || "",
-                  phone: res.data.contact || "",
-                  password: "",
-                }); 
-                if (ranOnce.current) return;
-                  ranOnce.current = true;
-    
-                  if (!res.data.islogin) {
-                    alert("unauthorized access.");
-                    window.location.href = "/login";
-                  }
-            } catch (err) {
-              console.error("Failed to fetch user data:", err);
-            }
-          };
-          fetchUserData();
-        }, []);
-    
-        const handlelogoutToHome = async() => {
-         try{
-          const res = await axios.get("/api/logout");
-          if (res.status === 200) {
-            alert("Logout successful");
-          } else {
-            alert("Logout failed, please try again");
-          }
-         }catch(err){
-          console.error("Logout error:", err);
-          alert("An error occurred while logging out. Please try again.");
-         }
-        sessionStorage.setItem("homeRedirectOnce", "true");
-        window.location.href = "/";
-      };
-    
-    
-    
-    
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await axios.get("/api/getuserpro");
+        setFormData({
+          _id: res.data._id,
+          name: res.data.username || "",
+          email: res.data.email || res.data.emai || "",
+          phone: res.data.contact || "",
+          password: "",
+        });
+        if (ranOnce.current) return;
+        ranOnce.current = true;
 
-      // ******************addachivements backend start*******************
+        if (!res.data.islogin) {
+          alert("unauthorized access.");
+          window.location.href = "/login";
+        }
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+      }
+    };
+    fetchUserData();
+  }, []);
 
-      const [achivementTitle, setachivementTitle] = useState('');
-      const [achivementdesc, setachivementdesc] = useState('');
-      const [achivementimg, setachivemnetimg] = useState('');
+  const handlelogoutToHome = async () => {
+    try {
+      const res = await axios.get("/api/logout");
+      if (res.status === 200) {
+        alert("Logout successful");
+      } else {
+        alert("Logout failed, please try again");
+      }
+    } catch (err) {
+      console.error("Logout error:", err);
+      alert("An error occurred while logging out. Please try again.");
+    }
+    sessionStorage.setItem("homeRedirectOnce", "true");
+    window.location.href = "/";
+  };
 
+  // ******************addachivements backend start*******************
 
+  const [achivementTitle, setachivementTitle] = useState("");
+  const [achivementdesc, setachivementdesc] = useState("");
+  const [achivementimg, setachivemnetimg] = useState("");
 
-      const handleaddachivementclick = async (e) => {
-             e.preventDefault();
-              const formData = new FormData();
-                      formData.append("AchivementTitle", achivementTitle);
-                      formData.append("achivementdesc", achivementdesc);
-                      formData.append("achivementimg", achivementimg);
-              try {
-                const res = await axios.post('/api/addachivement?uploadType=achivements', formData, {
-                                headers: {
-                                  'Content-Type': 'multipart/form-data',
-                                }
-                              });
-                console.log("Success:", res.data);
-                if(res.data.achivementcreated){
-                  alert("achivement created")
-                }
-                navigate('/achievements')
-              } catch (err) {
-                console.error("Error uploading achivements:", err);
-              }
-            };
+  const handleaddachivementclick = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("AchivementTitle", achivementTitle);
+    formData.append("achivementdesc", achivementdesc);
+    formData.append("achivementimg", achivementimg);
+    try {
+      const res = await axios.post(
+        "/api/addachivement?uploadType=achivements",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Success:", res.data);
+      if (res.data.achivementcreated) {
+        alert("achivement created");
+      }
+      navigate("/achievements");
+    } catch (err) {
+      console.error("Error uploading achivements:", err);
+    }
+  };
 
-        // ******************addachivements backend end*******************
-
+  // ******************addachivements backend end*******************
 
   const toggleProfile = () => setShowProfile(!showProfile);
-
-
 
   return (
     <>
@@ -169,13 +155,19 @@ const AddBlog = () => {
                 <span className="adm-link-name">Events</span>
               </Link>
             </li>
+            <li>
+              <Link to="/aboutdashboard">
+                <FaUser className="adm-logo" />
+                <span className="adm-link-name">About</span>
+              </Link>
+            </li>
           </ul>
 
           <ul className="adm-logout-mode">
             <li onClick={handlelogoutToHome} style={{ cursor: "pointer" }}>
-                        <IoMdLogOut className="adm-logo" />
-                        <span className="adm-link-name">Logout</span>
-                      </li>
+              <IoMdLogOut className="adm-logo" />
+              <span className="adm-link-name">Logout</span>
+            </li>
           </ul>
         </div>
       </nav>
@@ -191,27 +183,27 @@ const AddBlog = () => {
               onClick={toggleProfile}
             />
 
-              {showProfile && (
-               <div className="adm-profile-dropdown">
-                 <div className="adm-profile-image">
-                   <img src="/public/img/user-profile.jpg" alt="Admin Large" />
-                 </div>
-                 <div className="adm-profile-info">
-                   <p>
-                     <strong>Name:</strong> {formData.name}
-                   </p>
-                   <p>
-                     <strong>Email:</strong> {formData.email}
-                   </p>
-                   <p>
-                     <strong>Phone:</strong> {formData.phone}
-                   </p>
-                   <Link to="/editprofile" className="adm-edit-btn">
-                     Edit Profile
-                   </Link>
-                 </div>
-               </div>
-             )}
+            {showProfile && (
+              <div className="adm-profile-dropdown">
+                <div className="adm-profile-image">
+                  <img src="/public/img/user-profile.jpg" alt="Admin Large" />
+                </div>
+                <div className="adm-profile-info">
+                  <p>
+                    <strong>Name:</strong> {formData.name}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {formData.email}
+                  </p>
+                  <p>
+                    <strong>Phone:</strong> {formData.phone}
+                  </p>
+                  <Link to="/editprofile" className="adm-edit-btn">
+                    Edit Profile
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -225,16 +217,18 @@ const AddBlog = () => {
             </div>
 
             <div className="adm-blog-add-form">
-              <form className="adm-blog-form"
-                    onSubmit={handleaddachivementclick}
-                    encType="multipart/form-data">
+              <form
+                className="adm-blog-form"
+                onSubmit={handleaddachivementclick}
+                encType="multipart/form-data"
+              >
                 <div className="adm-form-group">
                   <label htmlFor="eventTitle">Title</label>
                   <input
                     type="text"
                     id="eventTitle"
                     name="title"
-                    onChange={(e)=>setachivementTitle(e.target.value)}
+                    onChange={(e) => setachivementTitle(e.target.value)}
                     placeholder="Enter event title"
                     required
                   />
@@ -245,7 +239,7 @@ const AddBlog = () => {
                   <textarea
                     id="eventDescription"
                     name="description"
-                    onChange={(e)=>setachivementdesc(e.target.value)}
+                    onChange={(e) => setachivementdesc(e.target.value)}
                     placeholder="Enter event description"
                     rows="4"
                     required
@@ -254,7 +248,10 @@ const AddBlog = () => {
 
                 <div className="adm-form-group">
                   <label htmlFor="image">Image (JPG, max 20MB)</label>
-                  <input type="file" id="image" accept=".jpg"
+                  <input
+                    type="file"
+                    id="image"
+                    accept=".jpg"
                     onChange={(e) => {
                       const file = e.target.files[0];
                       if (file && file.size <= 20 * 1024 * 1024) {
@@ -264,7 +261,6 @@ const AddBlog = () => {
                         e.target.value = "";
                       }
                     }}
-
                     required
                   />
                 </div>

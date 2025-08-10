@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  FaHome,
-  FaBlog,
-  FaTrophy,
-  FaCalendar,
-  FaPlus,
-} from "react-icons/fa";
+import { FaHome, FaBlog, FaTrophy, FaCalendar, FaPlus, FaUser } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link } from "react-router-dom";
 import "../Styles/dashboard.css";
@@ -19,7 +13,7 @@ const Blog = () => {
   const [isSidebarClosed, setIsSidebarClosed] = useState(
     localStorage.getItem("status") === "close"
   );
-   const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     _id: "",
     name: "",
     email: "",
@@ -29,14 +23,14 @@ const Blog = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-          const res = await axios.get("/api/getuserpro");
-          setFormData({
-            _id: res.data._id,
-            name: res.data.username || "",
-            email: res.data.email || res.data.emai || "",
-            phone: res.data.contact || "",
-            password: "",
-          }); 
+        const res = await axios.get("/api/getuserpro");
+        setFormData({
+          _id: res.data._id,
+          name: res.data.username || "",
+          email: res.data.email || res.data.emai || "",
+          phone: res.data.contact || "",
+          password: "",
+        });
       } catch (err) {
         console.error("Failed to fetch user data:", err);
       }
@@ -58,32 +52,32 @@ const Blog = () => {
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [blogData, setBlogData] = useState([]);
   const [deleteId, setDeleteId] = useState(null);
-        useEffect(() => {
-          const fetchBlogs = async () => {
-            try {
-              const res = await axios.get("/api/blogs");
-              setBlogData(res.data);
-            } catch (error) {
-              console.error("Failed to fetch blogs:", error);
-            }
-          };
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await axios.get("/api/blogs");
+        setBlogData(res.data);
+      } catch (error) {
+        console.error("Failed to fetch blogs:", error);
+      }
+    };
 
-          fetchBlogs();
-        }, []);
-      const handleDeleteClick = (id) => {
-        setDeleteId(id);
-        setShowConfirm(true);
-      };
-      const confirmDelete = async () => {
-        try {
-          await axios.delete(`/api/blogsdelete/${deleteId}`);
-          const updatedData = blogData.filter((blog) => blog._id !== deleteId);
-          setBlogData(updatedData);
-          setShowConfirm(false);
-        } catch (error) {
-          console.error("Failed to delete blog:", error);
-        }
-      };
+    fetchBlogs();
+  }, []);
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setShowConfirm(true);
+  };
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(`/api/blogsdelete/${deleteId}`);
+      const updatedData = blogData.filter((blog) => blog._id !== deleteId);
+      setBlogData(updatedData);
+      setShowConfirm(false);
+    } catch (error) {
+      console.error("Failed to delete blog:", error);
+    }
+  };
   const cancelDelete = () => {
     setShowConfirm(false);
     setDeleteIndex(null);
@@ -91,7 +85,7 @@ const Blog = () => {
   // **************************************************************************
   const [showProfile, setShowProfile] = useState(false);
   const toggleProfile = () => setShowProfile(!showProfile);
-    const handlelogoutToHome = () => {
+  const handlelogoutToHome = () => {
     sessionStorage.setItem("homeRedirectOnce", "true");
     window.location.href = "/";
   };
@@ -132,13 +126,19 @@ const Blog = () => {
                 <span className="adm-link-name">Events</span>
               </Link>
             </li>
+            <li>
+              <Link to="/aboutdashboard">
+                <FaUser className="adm-logo" />
+                <span className="adm-link-name">About</span>
+              </Link>
+            </li>
           </ul>
 
           <ul className="adm-logout-mode">
             <li onClick={handlelogoutToHome} style={{ cursor: "pointer" }}>
-                        <IoMdLogOut className="adm-logo" />
-                        <span className="adm-link-name">Logout</span>
-                      </li>
+              <IoMdLogOut className="adm-logo" />
+              <span className="adm-link-name">Logout</span>
+            </li>
           </ul>
         </div>
       </nav>
@@ -154,27 +154,27 @@ const Blog = () => {
               onClick={toggleProfile}
             />
 
-              {showProfile && (
-               <div className="adm-profile-dropdown">
-                 <div className="adm-profile-image">
-                   <img src="/public/img/user-profile.jpg" alt="Admin Large" />
-                 </div>
-                 <div className="adm-profile-info">
-                   <p>
-                     <strong>Name:</strong> {formData.name}
-                   </p>
-                   <p>
-                     <strong>Email:</strong> {formData.email}
-                   </p>
-                   <p>
-                     <strong>Phone:</strong> {formData.phone}
-                   </p>
-                   <Link to="/editprofile" className="adm-edit-btn">
-                     Edit Profile
-                   </Link>
-                 </div>
-               </div>
-             )}
+            {showProfile && (
+              <div className="adm-profile-dropdown">
+                <div className="adm-profile-image">
+                  <img src="/public/img/user-profile.jpg" alt="Admin Large" />
+                </div>
+                <div className="adm-profile-info">
+                  <p>
+                    <strong>Name:</strong> {formData.name}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {formData.email}
+                  </p>
+                  <p>
+                    <strong>Phone:</strong> {formData.phone}
+                  </p>
+                  <Link to="/editprofile" className="adm-edit-btn">
+                    Edit Profile
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -203,15 +203,22 @@ const Blog = () => {
                   </tr>
                 </thead>
                 <tbody>
-                {/* ***********************************************************main */}
+                  {/* ***********************************************************main */}
                   {blogData.map((blog, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{blog.title}</td>
                       <td>{blog.intoduction}</td>
-                      <td>{Array.isArray(blog.category) ? blog.category.join(", ") : blog.category}</td>
                       <td>
-                        <Link to={`/editblogs/${blog._id}`} className="adm-blog-edit-btn">
+                        {Array.isArray(blog.category)
+                          ? blog.category.join(", ")
+                          : blog.category}
+                      </td>
+                      <td>
+                        <Link
+                          to={`/editblogs/${blog._id}`}
+                          className="adm-blog-edit-btn"
+                        >
                           Edit
                         </Link>
                         <button

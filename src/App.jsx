@@ -20,6 +20,9 @@ import EditProfile from "./Components/EditProfile";
 import Eventpage from "./Components/Eventpage";
 import Footer from './Components/Footer';
 import About from './Components/About';
+import Aboutdashboard from './Components/Aboutdashboard';
+import AddAboutcore from './Components/AddAboutcore';
+import AddAboutcommunity from './Components/AddAboutcommunity';
 
 function Layout() {
   const location = useLocation();
@@ -33,7 +36,10 @@ function Layout() {
     "/addblog",
     "/addevent",
     "/addachievement",
-    "/editprofile"
+    "/editprofile",
+    "/aboutdashboard",
+    "/addaboutcore",
+    "/addaboutcommunity"
   ].some(path => location.pathname === path) ||
      location.pathname.startsWith("/editblogs/") ||
      location.pathname.startsWith("/editevents/") ||
@@ -61,6 +67,9 @@ function Layout() {
         <Route path="/editachievement/:id" element={<EditAchievement />} />
         <Route path="/editprofile" element={<EditProfile />} />
         <Route path="/eventpage" element={<Eventpage />} />
+        <Route path="/aboutdashboard" element={<Aboutdashboard />} />
+        <Route path="/addaboutcore" element={<AddAboutcore />} />
+        <Route path="/addaboutcommunity" element={<AddAboutcommunity />} />
       </Routes>
 
       {!hideNavbar && <Footer />}

@@ -1,19 +1,13 @@
-import React, {useRef, useEffect, useState } from "react";
-import {
-  FaHome,
-  FaBlog,
-  FaTrophy,
-  FaCalendar,
-} from "react-icons/fa";
+import React, { useRef, useEffect, useState } from "react";
+import { FaHome, FaBlog, FaTrophy, FaCalendar, FaUser } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
-import { Link, useNavigate,useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
 import "../Styles/addformblogs.css";
-import axios from '../api/axios.js'
+import axios from "../api/axios.js";
 
 const AddBlog = () => {
-
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("mode") === "dark"
@@ -38,62 +32,55 @@ const AddBlog = () => {
 
   const [showProfile, setShowProfile] = useState(false);
   const [proformData, setproFormData] = useState({
-      _id: "",
-      name: "",
-      email: "",
-      phone: "",
-      password: "",
-    });
+    _id: "",
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
 
-
- 
   const ranOnce = useRef(false);
 
-
   useEffect(() => {
-      const fetchUserData = async () => {
-        try {
-            const res = await axios.get("/api/getuserpro");
-            setFormData({
-              _id: res.data._id,
-              name: res.data.username || "",
-              email: res.data.email || res.data.emai || "",
-              phone: res.data.contact || "",
-              password: "",
-            }); 
-            if (ranOnce.current) return;
-              ranOnce.current = true;
+    const fetchUserData = async () => {
+      try {
+        const res = await axios.get("/api/getuserpro");
+        setFormData({
+          _id: res.data._id,
+          name: res.data.username || "",
+          email: res.data.email || res.data.emai || "",
+          phone: res.data.contact || "",
+          password: "",
+        });
+        if (ranOnce.current) return;
+        ranOnce.current = true;
 
-              if (!res.data.islogin) {
-                alert("unauthorized access.");
-                window.location.href = "/login";
-              }
-        } catch (err) {
-          console.error("Failed to fetch user data:", err);
+        if (!res.data.islogin) {
+          alert("unauthorized access.");
+          window.location.href = "/login";
         }
-      };
-      fetchUserData();
-    }, []);
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+      }
+    };
+    fetchUserData();
+  }, []);
 
-    const handlelogoutToHome = async() => {
-     try{
+  const handlelogoutToHome = async () => {
+    try {
       const res = await axios.get("/api/logout");
       if (res.status === 200) {
         alert("Logout successful");
       } else {
         alert("Logout failed, please try again");
       }
-     }catch(err){
+    } catch (err) {
       console.error("Logout error:", err);
       alert("An error occurred while logging out. Please try again.");
-     }
+    }
     sessionStorage.setItem("homeRedirectOnce", "true");
     window.location.href = "/";
   };
-
-
-
-
 
   const toggleProfile = () => setShowProfile(!showProfile);
   const [timeInput, setTimeInput] = useState("");
@@ -101,86 +88,80 @@ const AddBlog = () => {
 
   const { id } = useParams();
 
-    const [formData, setFormData] = useState({
-  title: "",
-  content: "",
-  startdate: "",
-  enddate: "",
-  time: "",
-  location: "",
-  speaker: "",
-  thumbnail: "",
-});
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    startdate: "",
+    enddate: "",
+    time: "",
+    location: "",
+    speaker: "",
+    thumbnail: "",
+  });
 
-useEffect(() => {
-  axios.get(`/api/geteditevents/${id}`)
-    .then(res => {
-      const event = res.data?.events;
-      if (!event) return;
+  useEffect(() => {
+    axios
+      .get(`/api/geteditevents/${id}`)
+      .then((res) => {
+        const event = res.data?.events;
+        if (!event) return;
 
-      // convert to 24hr
-      let time24 = "";
-      if (event.time) {
-        const match = event.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
-        if (match) {
-          let [_, hours, minutes, ampm] = match;
-          hours = parseInt(hours);
-          if (ampm.toLowerCase() === "pm" && hours !== 12) hours += 12;
-          if (ampm.toLowerCase() === "am" && hours === 12) hours = 0;
-          time24 = `${String(hours).padStart(2, "0")}:${minutes}`;
+        // convert to 24hr
+        let time24 = "";
+        if (event.time) {
+          const match = event.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+          if (match) {
+            let [_, hours, minutes, ampm] = match;
+            hours = parseInt(hours);
+            if (ampm.toLowerCase() === "pm" && hours !== 12) hours += 12;
+            if (ampm.toLowerCase() === "am" && hours === 12) hours = 0;
+            time24 = `${String(hours).padStart(2, "0")}:${minutes}`;
+          }
         }
-      }
 
-      setFormData({
-        title: event.title || "",
-        content: event.content || "",
-        startdate: event.startdate || "",
-        enddate: event.enddate || "",
-        time: event.time || "",  // keep original 12hr
-        location: event.location || "",
-        speaker: event.Speaker || "",
-        thumbnail: "",
+        setFormData({
+          title: event.title || "",
+          content: event.content || "",
+          startdate: event.startdate || "",
+          enddate: event.enddate || "",
+          time: event.time || "", // keep original 12hr
+          location: event.location || "",
+          speaker: event.Speaker || "",
+          thumbnail: "",
+        });
+        setTimeInput(time24 || "");
+      })
+      .catch((err) => console.error(err));
+  }, [id]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append("uploadType", "event");
+    data.append("title", formData.title);
+    data.append("content", formData.content);
+    data.append("startdate", formData.startdate);
+    data.append("enddate", formData.enddate);
+    data.append("time", formData.time);
+    data.append("location", formData.location);
+    data.append("speaker", formData.speaker);
+
+    if (formData.thumbnail) {
+      data.append("thumbnail", formData.thumbnail);
+    }
+
+    try {
+      await axios.put(`/api/updateevents/${id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      setTimeInput(time24 || "");
-    })
-    .catch(err => console.error(err));
-}, [id]);
-
-
-
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  const data = new FormData();
-  data.append("uploadType", "event"); 
-  data.append("title", formData.title);
-  data.append("content", formData.content);
-  data.append("startdate", formData.startdate);
-  data.append("enddate", formData.enddate);
-  data.append("time", formData.time);
-  data.append("location", formData.location);
-  data.append("speaker", formData.speaker);
-
-  if (formData.thumbnail) {
-    data.append("thumbnail", formData.thumbnail);
-  }
-
-  try {
-    await axios.put(`/api/updateevents/${id}`, data, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    alert("event updated!");
-    navigate('/events');
-
-  } catch (err) {
-    console.error(err);
-    alert("Failed to update events");
-  }
-};
-
-
-
+      alert("event updated!");
+      navigate("/events");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update events");
+    }
+  };
 
   return (
     <>
@@ -218,13 +199,19 @@ const handleSubmit = async (e) => {
                 <span className="adm-link-name">Events</span>
               </Link>
             </li>
+            <li>
+              <Link to="/aboutdashboard">
+                <FaUser className="adm-logo" />
+                <span className="adm-link-name">About</span>
+              </Link>
+            </li>
           </ul>
 
           <ul className="adm-logout-mode">
             <li onClick={handlelogoutToHome} style={{ cursor: "pointer" }}>
-                        <IoMdLogOut className="adm-logo" />
-                        <span className="adm-link-name">Logout</span>
-                      </li>
+              <IoMdLogOut className="adm-logo" />
+              <span className="adm-link-name">Logout</span>
+            </li>
           </ul>
         </div>
       </nav>
@@ -240,27 +227,27 @@ const handleSubmit = async (e) => {
               onClick={toggleProfile}
             />
 
-              {showProfile && (
-               <div className="adm-profile-dropdown">
-                 <div className="adm-profile-image">
-                   <img src="/public/img/user-profile.jpg" alt="Admin Large" />
-                 </div>
-                 <div className="adm-profile-info">
-                   <p>
-                     <strong>Name:</strong> {proformData.name}
-                   </p>
-                   <p>
-                     <strong>Email:</strong> {proformData.email}
-                   </p>
-                   <p>
-                     <strong>Phone:</strong> {proformData.phone}
-                   </p>
-                   <Link to="/editprofile" className="adm-edit-btn">
-                     Edit Profile
-                   </Link>
-                 </div>
-               </div>
-             )}
+            {showProfile && (
+              <div className="adm-profile-dropdown">
+                <div className="adm-profile-image">
+                  <img src="/public/img/user-profile.jpg" alt="Admin Large" />
+                </div>
+                <div className="adm-profile-info">
+                  <p>
+                    <strong>Name:</strong> {proformData.name}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {proformData.email}
+                  </p>
+                  <p>
+                    <strong>Phone:</strong> {proformData.phone}
+                  </p>
+                  <Link to="/editprofile" className="adm-edit-btn">
+                    Edit Profile
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -282,7 +269,9 @@ const handleSubmit = async (e) => {
                     id="title"
                     name="title"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -294,7 +283,9 @@ const handleSubmit = async (e) => {
                     name="description"
                     rows="4"
                     value={formData.content}
-                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, content: e.target.value })
+                    }
                     required
                   ></textarea>
                 </div>
@@ -306,7 +297,9 @@ const handleSubmit = async (e) => {
                     id="startDate"
                     name="startDate"
                     value={formData.startdate}
-                    onChange={(e) => setFormData({ ...formData, startdate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, startdate: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -318,33 +311,36 @@ const handleSubmit = async (e) => {
                     id="endDate"
                     name="endDate"
                     value={formData.enddate}
-                    onChange={(e) => setFormData({ ...formData, enddate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, enddate: e.target.value })
+                    }
                     required
                   />
                 </div>
 
                 <div className="adm-form-group">
                   <label htmlFor="endDate">Time</label>
-                 <input
-                      type="time"
-                      value={timeInput}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setTimeInput(value);
+                  <input
+                    type="time"
+                    value={timeInput}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setTimeInput(value);
 
-                        if (value) {
-                          let [hours, minutes] = value.split(":").map(Number);
-                          let ampm = hours >= 12 ? "PM" : "AM";
-                          hours = hours % 12 || 12;
-                          const time12hr = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")} ${ampm}`;
-                          setFormData({ ...formData, time: time12hr });
-                        } else {
-                          setFormData({ ...formData, time: "" });
-                        }
-                      }}
-                    />
-
-
+                      if (value) {
+                        let [hours, minutes] = value.split(":").map(Number);
+                        let ampm = hours >= 12 ? "PM" : "AM";
+                        hours = hours % 12 || 12;
+                        const time12hr = `${String(hours).padStart(
+                          2,
+                          "0"
+                        )}:${String(minutes).padStart(2, "0")} ${ampm}`;
+                        setFormData({ ...formData, time: time12hr });
+                      } else {
+                        setFormData({ ...formData, time: "" });
+                      }
+                    }}
+                  />
                 </div>
 
                 <div className="adm-form-group">
@@ -354,7 +350,9 @@ const handleSubmit = async (e) => {
                     id="location"
                     name="location"
                     value={formData.speaker}
-                    onChange={(e) => setFormData({ ...formData, speaker: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, speaker: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -366,7 +364,9 @@ const handleSubmit = async (e) => {
                     id="location"
                     name="location"
                     value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, location: e.target.value })
+                    }
                     required
                   />
                 </div>

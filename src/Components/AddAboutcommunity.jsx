@@ -1,13 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
-import {
-  FaHome,
-  FaBlog,
-  FaTrophy,
-  FaCalendar,
-  FaUser,
-} from "react-icons/fa";
+import { FaHome, FaBlog, FaTrophy, FaCalendar, FaUser} from "react-icons/fa";
+
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Styles/dashboard.css";
 import "../Styles/Tablecontent.css";
 import "../Styles/addformevents.css";
@@ -15,16 +10,19 @@ import axios from "../api/axios.js";
 
 const AddBlog = () => {
   const navigate = useNavigate();
+
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("mode") === "dark"
   );
   const [isSidebarClosed, setIsSidebarClosed] = useState(
     localStorage.getItem("status") === "close"
   );
+
   useEffect(() => {
     document.body.classList.toggle("dark", isDarkMode);
     localStorage.setItem("mode", isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
+
   useEffect(() => {
     const nav = document.querySelector("nav");
     nav.classList.toggle("close", isSidebarClosed);
@@ -35,66 +33,7 @@ const AddBlog = () => {
   const toggleSidebar = () => setIsSidebarClosed(!isSidebarClosed);
 
   const [showProfile, setShowProfile] = useState(false);
-
-  const { id } = useParams();
   const [formData, setFormData] = useState({
-    title: "",
-    content: "",
-    thumbnail: "",
-  });
-
-  const [oldThumbnailName, setOldThumbnailName] = useState("");
-
-  useEffect(() => {
-    axios
-      .get(`/api/geteditachivement/${id}`)
-      .then((res) => {
-        const achivement = res.data?.achivements;
-
-        if (!achivement) {
-          console.warn("Achievement not found or invalid response");
-          return;
-        }
-
-        setFormData({
-          title: achivement.title || "",
-          content: achivement.content || "",
-          thumbnail: "",
-        });
-
-        if (achivement.thumbnail) {
-          const fileName = achivement.thumbnail.split("-").pop();
-          setOldThumbnailName(fileName);
-        }
-      })
-      .catch((err) => console.error(err));
-  }, [id]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const data = new FormData();
-    data.append("uploadType", "achivements");
-    data.append("title", formData.title);
-    data.append("content", formData.content);
-
-    if (formData.thumbnail) {
-      data.append("thumbnail", formData.thumbnail);
-    }
-
-    try {
-      await axios.put(`/api/updateachivements/${id}`, data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      alert("achivement updated!");
-      navigate("/achievements");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update achivements");
-    }
-  };
-
-  const [proformData, setproFormData] = useState({
     _id: "",
     name: "",
     email: "",
@@ -144,6 +83,57 @@ const AddBlog = () => {
     sessionStorage.setItem("homeRedirectOnce", "true");
     window.location.href = "/";
   };
+
+  // *****************backend ********************add*************
+
+  const [BlogTitle, setBlogTitle] = useState("");
+  const [blogCategory, setBlogCategory] = useState([]);
+  const [blogintro, setblogintro] = useState("");
+  const [blogdesc, setblogdesc] = useState("");
+  const [blogThumb, setblogThumb] = useState("");
+
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    const checked = e.target.checked;
+
+    setBlogCategory((prev) => {
+      if (checked) {
+        return prev.includes(value) ? prev : [...prev, value];
+      } else {
+        return prev.filter((cat) => cat !== value);
+      }
+    });
+  };
+
+  const handleaddblogclick = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("uploadType", "blogs");
+    formData.append("BlogTitle", BlogTitle);
+    formData.append("blogintro", blogintro);
+    formData.append("blogdesc", blogdesc);
+    formData.append("blogCategory", blogCategory);
+    formData.append("blogThumb", blogThumb);
+
+    try {
+      const res = await axios.post("/api/addblogs", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Success:", res.data);
+      if (res.data.blogcreated) {
+        alert("blogcreated");
+      }
+      navigate("/blogs");
+    } catch (err) {
+      console.error("Error uploading blog:", err);
+    }
+  };
+
+  // *****************backend ********************add*************
 
   const toggleProfile = () => setShowProfile(!showProfile);
 
@@ -218,13 +208,13 @@ const AddBlog = () => {
                 </div>
                 <div className="adm-profile-info">
                   <p>
-                    <strong>Name:</strong> {proformData.name}
+                    <strong>Name:</strong> {formData.name}
                   </p>
                   <p>
-                    <strong>Email:</strong> {proformData.email}
+                    <strong>Email:</strong> {formData.email}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {proformData.phone}
+                    <strong>Phone:</strong> {formData.phone}
                   </p>
                   <Link to="/editprofile" className="adm-edit-btn">
                     Edit Profile
@@ -235,72 +225,68 @@ const AddBlog = () => {
           </div>
         </div>
 
+        {/* *********************************************************main form file */}
         <div className="adm-dash-content">
           <div className="overview">
             <div className="adm-title">
               <div className="adm-title-left">
-                <FaTrophy className="adm-logo-left" />
-                <span className="adm-text">Achievement</span>
+                <FaUser className="adm-logo-left" />
+                <span className="adm-text">About Community</span>
               </div>
             </div>
 
             <div className="adm-blog-add-form">
-              <form className="adm-blog-form" onSubmit={handleSubmit}>
+              <form
+                className="adm-blog-form"
+                onSubmit={handleaddblogclick}
+                encType="multipart/form-data"
+              >
                 <div className="adm-form-group">
-                  <label htmlFor="title">Title</label>
+                  <label htmlFor="title">Name</label>
                   <input
                     type="text"
                     id="title"
-                    name="title"
-                    value={formData.title}
-                    onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
-                    }
+                    placeholder="Enter blog Name"
+                    onChange={(e) => setBlogTitle(e.target.value)}
                     required
                   />
                 </div>
 
                 <div className="adm-form-group">
-                  <label htmlFor="description">Description</label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    rows="4"
-                    value={formData.content}
-                    onChange={(e) =>
-                      setFormData({ ...formData, content: e.target.value })
-                    }
+                  <label htmlFor="intro">LinkedIn</label>
+                  <input
+                    type="text"
+                    id="intro"
+                    placeholder="Enter you linkedin link"
                     required
-                  ></textarea>
+                    onChange={(e) => setblogintro(e.target.value)}
+                  />
                 </div>
 
                 <div className="adm-form-group">
-                  <label htmlFor="image">
-                    Achivement Image (JPG, max 20MB)
-                    {formData.thumbnail instanceof File
-                      ? ` / ${formData.thumbnail.name}`
-                      : oldThumbnailName && ` / ${oldThumbnailName}`}
-                  </label>
-
+                  <label htmlFor="image">Image (JPG, max 20MB)</label>
                   <input
                     type="file"
                     id="image"
-                    name="image"
                     accept=".jpg"
                     onChange={(e) => {
                       const file = e.target.files[0];
-                      if (file && file.size > 20 * 1024 * 1024) {
+                      if (file && file.size <= 20 * 1024 * 1024) {
+                        setblogThumb(file);
+                      } else {
                         alert("File size must be less than 20MB");
-                        return;
+                        e.target.value = "";
                       }
-                      setFormData({ ...formData, thumbnail: file });
                     }}
+                    required
                   />
                 </div>
 
-                <button type="submit" className="adm-blog-submit-btn">
-                  Update Achievement
-                </button>
+                <div className="adm-form-group">
+                  <button type="submit" className="adm-blog-submit-btn">
+                    Submit
+                  </button>
+                </div>
               </form>
             </div>
           </div>

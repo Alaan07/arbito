@@ -1,11 +1,5 @@
-import React, {useRef, useEffect, useState } from "react";
-import {
-  FaHome,
-  FaBlog,
-  FaTrophy,
-  FaCalendar,
-  FaPlus,
-} from "react-icons/fa";
+import React, { useRef, useEffect, useState } from "react";
+import { FaHome, FaBlog, FaTrophy, FaCalendar, FaPlus, FaUser } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link } from "react-router-dom";
 import "../Styles/dashboard.css";
@@ -37,27 +31,22 @@ const Event = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(null);
 
-
-
-
-   const [eventData, seteventData] = useState([]);
-
+  const [eventData, seteventData] = useState([]);
 
   const [deleteId, setDeleteId] = useState(null);
 
-
   useEffect(() => {
-            const fetchAchivements = async () => {
-              try {
-                const res = await axios.get("/api/eventsdashboard");
-                seteventData(res.data);
-              } catch (error) {
-                console.error("Failed to fetch Achivements:", error);
-              }
-            };
-  
-            fetchAchivements();
-          }, []);
+    const fetchAchivements = async () => {
+      try {
+        const res = await axios.get("/api/eventsdashboard");
+        seteventData(res.data);
+      } catch (error) {
+        console.error("Failed to fetch Achivements:", error);
+      }
+    };
+
+    fetchAchivements();
+  }, []);
 
   const handleDeleteClick = (id) => {
     setDeleteId(id);
@@ -65,15 +54,15 @@ const Event = () => {
   };
 
   const confirmDelete = async () => {
-        try {
-          await axios.delete(`/api/eventsdelete/${deleteId}`);
-          const updatedData = eventData.filter((event) => event._id !== deleteId);
-          seteventData(updatedData);
-          setShowConfirm(false);
-        } catch (error) {
-          console.error("Failed to delete event:", error);
-        }
-      };
+    try {
+      await axios.delete(`/api/eventsdelete/${deleteId}`);
+      const updatedData = eventData.filter((event) => event._id !== deleteId);
+      seteventData(updatedData);
+      setShowConfirm(false);
+    } catch (error) {
+      console.error("Failed to delete event:", error);
+    }
+  };
   const cancelDelete = () => {
     setShowConfirm(false);
     setDeleteIndex(null);
@@ -81,59 +70,55 @@ const Event = () => {
 
   const [showProfile, setShowProfile] = useState(false);
   const [formData, setFormData] = useState({
-      _id: "",
-      name: "",
-      email: "",
-      phone: "",
-      password: "",
-    });
+    _id: "",
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
 
-
- 
   const ranOnce = useRef(false);
 
-
   useEffect(() => {
-      const fetchUserData = async () => {
-        try {
-            const res = await axios.get("/api/getuserpro");
-            setFormData({
-              _id: res.data._id,
-              name: res.data.username || "",
-              email: res.data.email || res.data.emai || "",
-              phone: res.data.contact || "",
-              password: "",
-            }); 
-            if (ranOnce.current) return;
-              ranOnce.current = true;
+    const fetchUserData = async () => {
+      try {
+        const res = await axios.get("/api/getuserpro");
+        setFormData({
+          _id: res.data._id,
+          name: res.data.username || "",
+          email: res.data.email || res.data.emai || "",
+          phone: res.data.contact || "",
+          password: "",
+        });
+        if (ranOnce.current) return;
+        ranOnce.current = true;
 
-              if (!res.data.islogin) {
-                alert("unauthorized access.");
-                window.location.href = "/login";
-              }
-        } catch (err) {
-          console.error("Failed to fetch user data:", err);
+        if (!res.data.islogin) {
+          alert("unauthorized access.");
+          window.location.href = "/login";
         }
-      };
-      fetchUserData();
-    }, []);
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+      }
+    };
+    fetchUserData();
+  }, []);
 
-    const handlelogoutToHome = async() => {
-     try{
+  const handlelogoutToHome = async () => {
+    try {
       const res = await axios.get("/api/logout");
       if (res.status === 200) {
         alert("Logout successful");
       } else {
         alert("Logout failed, please try again");
       }
-     }catch(err){
+    } catch (err) {
       console.error("Logout error:", err);
       alert("An error occurred while logging out. Please try again.");
-     }
+    }
     sessionStorage.setItem("homeRedirectOnce", "true");
     window.location.href = "/";
   };
-
 
   const toggleProfile = () => setShowProfile(!showProfile);
   return (
@@ -172,13 +157,19 @@ const Event = () => {
                 <span className="adm-link-name">Events</span>
               </Link>
             </li>
+            <li>
+              <Link to="/aboutdashboard">
+                <FaUser className="adm-logo" />
+                <span className="adm-link-name">About</span>
+              </Link>
+            </li>
           </ul>
 
           <ul className="adm-logout-mode">
             <li onClick={handlelogoutToHome} style={{ cursor: "pointer" }}>
-                        <IoMdLogOut className="adm-logo" />
-                        <span className="adm-link-name">Logout</span>
-                      </li>
+              <IoMdLogOut className="adm-logo" />
+              <span className="adm-link-name">Logout</span>
+            </li>
           </ul>
         </div>
       </nav>
@@ -188,33 +179,33 @@ const Event = () => {
           <IoMdMenu className="adm-sidebar-toggle" onClick={toggleSidebar} />
           <div className="adm-profile-container">
             <img
-               src="/public/img/user-profile.jpg"
+              src="/public/img/user-profile.jpg"
               alt="Admin"
               className="adm-profile-pic"
               onClick={toggleProfile}
             />
 
-               {showProfile && (
-                <div className="adm-profile-dropdown">
-                  <div className="adm-profile-image">
-                    <img src="/public/img/user-profile.jpg" alt="Admin Large" />
-                  </div>
-                  <div className="adm-profile-info">
-                    <p>
-                      <strong>Name:</strong> {formData.name}
-                    </p>
-                    <p>
-                      <strong>Email:</strong> {formData.email}
-                    </p>
-                    <p>
-                      <strong>Phone:</strong> {formData.phone}
-                    </p>
-                    <Link to="/editprofile" className="adm-edit-btn">
-                      Edit Profile
-                    </Link>
-                  </div>
+            {showProfile && (
+              <div className="adm-profile-dropdown">
+                <div className="adm-profile-image">
+                  <img src="/public/img/user-profile.jpg" alt="Admin Large" />
                 </div>
-              )}
+                <div className="adm-profile-info">
+                  <p>
+                    <strong>Name:</strong> {formData.name}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {formData.email}
+                  </p>
+                  <p>
+                    <strong>Phone:</strong> {formData.phone}
+                  </p>
+                  <Link to="/editprofile" className="adm-edit-btn">
+                    Edit Profile
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="adm-dash-content">
@@ -249,7 +240,10 @@ const Event = () => {
                       <td>{event.startdate}</td>
                       <td>{event.enddate}</td>
                       <td>
-                        <Link to={`/editevents/${event._id}`} className="adm-blog-edit-btn">
+                        <Link
+                          to={`/editevents/${event._id}`}
+                          className="adm-blog-edit-btn"
+                        >
                           Edit
                         </Link>
                         <button

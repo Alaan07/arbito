@@ -4,6 +4,7 @@ import {
   FaBlog,
   FaTrophy,
   FaCalendar,
+  FaUser
 } from "react-icons/fa";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
 import { Link } from "react-router-dom";
@@ -179,6 +180,12 @@ useEffect(() => {
               <Link to="/events">
                 <FaCalendar className="adm-logo" />
                 <span className="adm-link-name">Events</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/aboutdashboard">
+                <FaUser className="adm-logo" />
+                <span className="adm-link-name">About</span>
               </Link>
             </li>
           </ul>
