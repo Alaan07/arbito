@@ -29,7 +29,37 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-  
+
+const founder = [
+  {
+    name: 'Mohmmed Raiyan Khan',
+    college: 'college',
+    image: founderImage ,
+    field: 'Role',
+    link: 'https://www.linkedin.com/in/mohmmed-raiyan-khan-1340b9300?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app'
+  },
+];
+
+const president = [
+  {
+    name: ' Riya Shaikh',
+    college: 'Dayananda Sagar University',
+    image: coFounder1,
+    field: 'Role',
+    link: 'https://www.linkedin.com/in/riya-shaikh-a49771307'
+  },
+];
+
+const vicepresident = [
+  {
+    name: ' N Janani Yadav',
+    college: 'Jain (Deemed-to-be University)',
+    image: coFounder2,
+    field: 'Role',
+    link: 'https://www.linkedin.com/in/jay4janani?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app'
+  },
+];
+
 const About = () => {
 
   const sliderRef = useRef(null);
@@ -168,27 +198,6 @@ const About = () => {
     image: coremember19,
     field:'Role',
     link:'https://www.linkedin.com/in/m-mansa-53b022360/'
-  },
-  {
-    name: 'Mohmmed Raiyan Khan',
-    college: 'college',
-    image: founderImage ,
-    field: 'Role',
-    link: 'https://www.linkedin.com/in/mohmmed-raiyan-khan-1340b9300?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app'
-  },
-  {
-    name: ' Riya Shaikh',
-    college: 'Dayananda Sagar University',
-    image: coFounder1,
-    field: 'Role',
-    link: 'https://www.linkedin.com/in/riya-shaikh-a49771307'
-  },
-  {
-    name: ' N Janani Yadav',
-    college: 'Jain (Deemed-to-be University)',
-    image: coFounder2,
-    field: 'Role',
-    link: 'https://www.linkedin.com/in/jay4janani?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app'
   },
 ];
  const settings = {
