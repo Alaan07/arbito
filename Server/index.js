@@ -410,6 +410,17 @@ app.get('/api/achivementspage', async (req, res) => {
 
 
 
+app.get("/api/aboutmembersshow", async (req, res) => {
+  try {
+    const members = await Member.find().sort({ createdAt: -1 }); 
+    res.json(members);
+  } catch (error) {
+    console.error("Error fetching members:", error);
+    res.status(500).json({ message: "Server error fetching members" });
+  }
+});
+
+
 // *******************************************update*************************************
 
 

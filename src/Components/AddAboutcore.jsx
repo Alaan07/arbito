@@ -248,7 +248,7 @@ const AddBlog = () => {
                     <option value={""}>Select Role</option>
                     <option value={"Founder"}>Founder</option>
                     <option value={"President"}>President</option>
-                    <option value={"Vice Precident"}>Vice Precident</option>
+                    <option value={"Vice President"}>Vice President</option>
 
                   </select>
                 </div>
