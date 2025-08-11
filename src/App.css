@@ -1670,7 +1670,9 @@ input[type="text"] {
 
 /* ***************************************************************aboutmm */
 /* about page */
-.about-section {
+
+
+/* .about-section {
   padding: 60px 20px;
   background-color: #f8f9fa;
 }
@@ -1768,6 +1770,6 @@ input[type="text"] {
 
 .about-card-btn:hover {
   background-color: #e84141;
-}
+} */
 
 /* about page ends */
