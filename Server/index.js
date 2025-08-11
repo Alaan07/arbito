@@ -14,9 +14,10 @@ import Member from './userModels/MembersModel.js';
 
 dotenv.config({ path: path.resolve('server/.env') });
 
-mongoose.connect(process.env.MONGO_URL)
+mongoose.connect("mongodb+srv://silentsparrow007:Alaan007@cluster0.wuwjz2y.mongodb.net/Arbito")
   .then(() => console.log('✅ MongoDB connected'))
   .catch((err) => console.error('❌ MongoDB error:', err));
+
 
 const app = express();
 const port = process.env.PORT || 3000;
