@@ -319,7 +319,7 @@ const AddBlog = () => {
 
                 <div className="adm-form-group">
                   <label htmlFor="image">
-                    Blog Image (JPG, max 20MB)
+                    Blog Image (.jpg, .jpeg, .png .webp, max 20MB)
                     {formData.thumbnail instanceof File
                       ? ` / ${formData.thumbnail.name}`
                       : oldThumbnailName && ` / ${oldThumbnailName}`}
@@ -329,7 +329,7 @@ const AddBlog = () => {
                     type="file"
                     id="image"
                     name="image"
-                    accept=".jpg"
+                    accept=".jpg, .jpeg, .png .webp"
                     onChange={(e) => {
                       const file = e.target.files[0];
                       if (file && file.size > 20 * 1024 * 1024) {

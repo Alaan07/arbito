@@ -123,16 +123,6 @@ html {
   overflow-x: hidden;
 }
 
-/* .slider-card:hover {
-  transform: translateY(-25px);
-  box-shadow: 10px 20px 10px 20px rgba(0, 0, 0, 0.15);
-} */
-
-/* Pause autoplay on card hover
-.slider-container:hover .slick-slider {
-  animation-play-state: paused !important;
-} */
-
 .slider-wrapper {
   overflow: hidden;
   padding: 0 10px;
