@@ -224,10 +224,10 @@ html {
   width: 620px;
   min-height: 280px;
   padding: 0 2rem;
-  background-color: rgb(217 209 154);
+  background-color: rgba(225, 219, 172, 0.575);
   border-radius: 18px;
-  border: 1px solid #e0e0f0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  /* border: 1px solid #e0e0f0; */
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -235,10 +235,6 @@ html {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   margin: 2px;
 }
-
-/* .cofounder-card:hover {
-  transform: translateY(-5px);
-} */
 
 /* Image */
 .founder-img {
