@@ -118,10 +118,10 @@ const AddBlog = () => {
         if (ranOnce.current) return;
         ranOnce.current = true;
 
-        if (!res.data.islogin) {
-          alert("unauthorized access.");
-          window.location.href = "/login";
-        }
+        if (localStorage.getItem("islogin") !== "true" || !res.data.islogin) {
+                alert("unauthorized access.");
+                window.location.href = "/login";
+              }
       } catch (err) {
         console.error("Failed to fetch user data:", err);
       }
@@ -134,6 +134,7 @@ const AddBlog = () => {
       const res = await axios.get("/api/logout");
       if (res.status === 200) {
         alert("Logout successful");
+        localStorage.removeItem("islogin");
       } else {
         alert("Logout failed, please try again");
       }
