@@ -83,6 +83,7 @@ function AllBlogs() {
               <div className="allblogcard" key={index} onClick={() => setSelectedBlog(card)}>
                 <img src={`${card.thumbnail}`} alt="Blog Thumbnail" className="blogcardimg" />
                 {console.log(card.thumbnail)}
+                <div className="contentsectionallblogs">
                 <h3>{card.title}</h3>
                 <h4>
                   Category:{' '}
@@ -96,6 +97,7 @@ function AllBlogs() {
                   ))}
                 </h4>
                 <p>{card.content}</p>
+                </div>
               </div>
             ))}
           </div>
