@@ -79,10 +79,12 @@ const Dashboard = () => {
             if (ranOnce.current) return;
               ranOnce.current = true;
 
-              if (!res.data.islogin) {
+              if (localStorage.getItem("islogin") !== "true" || !res.data.islogin) {
                 alert("unauthorized access.");
                 window.location.href = "/login";
               }
+              
+
         } catch (err) {
           console.error("Failed to fetch user data:", err);
         }

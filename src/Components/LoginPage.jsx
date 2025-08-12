@@ -21,7 +21,10 @@ const LoginPage = () => {
     try {
   const userdata = await axios.post('/api/login', { username: updatedusername, password });
   if (userdata.data.islogin) {
+
+    
     alert("Login Successful");
+    localStorage.setItem("islogin", "true");
     sessionStorage.setItem("redirectedOnce", "true");
     window.location.href = "/dashbord";
   }
